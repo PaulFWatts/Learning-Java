@@ -1,0 +1,467 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>DN Task 8.3 Object-oriented Collection Manager</title>
+  <!--<style type="text/css">code{white-space: pre;}</style>-->
+  <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+  </style>
+  <link rel="stylesheet" href="../../templates/utas_ict_mylo.css">
+  <link rel="stylesheet" href="../../templates/task.css">
+  <!--<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script> Breaks toggling of sections, making style & script visible! -->
+  <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+  <script src="../../templates/solutions.js"></script>
+  <script type="text/javascript">
+    let onMyLO = () => window.location.host === 'mylo.utas.edu.au';
+    $(function() { if (onMyLO()) { $('.title, header').addClass('printonly'); } }); //avoid duplicating title, etc. in document and above iframe
+    var MYLO_SCROLL_DELAY = 350; //appears to work OK when hosted on MyLO
+    $(function() {
+      function toggleSection(heading, scrollTo) {
+        if (!heading) return;
+        heading.toggleClass('collapsed')
+               .children('span.expandable').toggle();
+        heading.nextUntil('h1').toggle(300)
+               .promise().done( function() {
+                 if (scrollTo) {
+                   let scrollIt = () => { scrollTo[0].scrollIntoView(true); };
+                   onMyLO() ? setTimeout(scrollIt, MYLO_SCROLL_DELAY) : scrollIt();
+                 }
+               });
+      }
+
+      var headings = $('h1').not('.title, .subtitle');
+      headings.css('cursor', 'pointer')
+              .prepend('<span class="expandable noprint" style="display: none;">&#9655;</span><span class="expandable noprint">&bigtriangledown;</span> ')
+              .click( function() { toggleSection( $(this) ); } );
+      if (headings.length == 0) { /* workaround until pandoc template understood better */
+        $('.expandAll').remove();
+      }
+
+      function toggleTarget(target, evt) { //evt is optional event that triggered this (indirectly)
+        var h = target.is('h1.collapsed') ? target : ( target.is(':hidden') ? target.prevAll('h1').first() : null );
+        if (h) {
+          if (evt) { evt.preventDefault(); } //Added so browser doesn't attempt to scroll to not-yet-visible element
+          toggleSection(h, target);
+        }
+      }
+
+      $('a[href^="#"]').click( function(evt) {
+        toggleTarget( $(this.hash), evt ); }
+      );
+      $('#openall').click( function(evt) {
+        evt.preventDefault();
+        var self = $(this);
+        var totoggle = self.children('.open:visible').length > 0 ? $('h1.collapsed') : $('h1').not('.collapsed');
+        self.children('.expandable').toggle();
+        totoggle.not('.title, .subtitle').each( function(i, el) { toggleSection($(el)); } );
+      });
+
+    });
+  </script>
+  <script type="text/javascript">
+  $(function() {
+    /* Formats learning outcomes, if present (revised 2019-1 as ILOs 6-8 were removed) */
+    //let iloIcons = ['', 'eye-open', 'random', 'pencil', 'th', 'duplicate', 'user', 'comment', 'question-sign'];
+    let iloIcons = ['', 'eye-open', 'random', 'pencil', 'th', 'duplicate'];
+    let ilos = ['',
+      'read code or identify errors',
+      'think algorithmically and use structured programming',
+      'write small programs',
+      'use functional decomposition to break down problems and solutions into smaller parts',
+      'document programs, both externally and within the code'];
+
+    function addILOIcons($ilos) {
+      let verb = $ilos.hasClass('assesses') ? 'assesses' : 'develops';
+      var formattedILOs = [];
+
+      for (let ilo of $ilos.html().split(', ')) {
+        let i = parseInt(ilo);
+	formattedILOs.push( `<span class="ilo" title="This task ${verb} your ability to ${ilos[i]}">${ilo} <span class="glyphicon glyphicon-${iloIcons[i]}"></span></span>` );
+      }
+      $ilos.html(formattedILOs.join('&emsp;'));
+    }
+
+    $('.ilos').each(function (i, e) { addILOIcons($(e)); });
+
+    /* Injects the cumbersome glyphicon for videos in front of my own tag <minilecture> */
+    $('<span class="glyphicon glyphicon-facetime-video" style="margin-right: 0.25em;"></span>').insertBefore('minilecture');
+  });
+  </script>
+</head>
+<body>
+<h1 class="unit title">KIT101 Programming Fundamentals</h1>
+<header>
+<h1 class="title">DN Task 8.3 Object-oriented Collection Manager</h1>
+</header>
+<!--
+<p class="noprint expandAll">[ <a href="#" id="openall"><span class="expandable open" style="display: none;">&harr; Expand</span><span class="expandable close">&cularr; Close</span> all sections</a> ] Only visible sections will be included when printing this document.</p>
+-->
+<h1 id="overview">Overview</h1>
+<table>
+<colgroup>
+<col width="22%" />
+<col width="77%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><p>Purpose:</p></td>
+<td><p>Learn how to refactor a single-source procedural application into a multi-source object-oriented one.</p></td>
+</tr>
+<tr class="even">
+<td><p>Task:</p></td>
+<td><p>Follow the instructions to first improve the functionality of your 7.1PP <em>Arrays of Objects</em> program and then reorganise the code into a small driver program and larger organiser class containing most of the functionality.</p></td>
+</tr>
+<tr class="odd">
+<td><p>Learning Outcomes:</p></td>
+<td><p><span class="ilos">2, 3, 4</span></p></td>
+</tr>
+<tr class="even">
+<td><p>Time:</p></td>
+<td><p>Start after tasks 6.2CR <em>Objects with More Abilities</em> and 7.1PP <em>Arrays of Objects</em> are complete or nearly so. Aim to complete this task before the start of Week 9, but it may also be completed later (<a href="#time-note">see note</a>).</p></td>
+</tr>
+<tr class="odd">
+<td><p>Resources:</p></td>
+<td><ul>
+<li>Introductory Programming Notes:
+<ul>
+<li>14 Object-oriented Program Design</li>
+</ul></li>
+</ul></td>
+</tr>
+</tbody>
+</table>
+<!-- Common resources: MyLO (a section on), Introductory Programming Notes, Echo360 (plus title(s) of videos) -->
+<div id="time-note" class="note box">
+<p><strong>Note:</strong> As this task builds on 6.2CR <em>Objects with More Abilities</em> and 7.1PP <em>Arrays of Objects</em> you should ensure they are completed or close to completed before starting in order to reduce duplication of corrections you may need to make.</p>
+<p>If you are not currently up to date you should skip this task and return to it once you are up to date with the PP tasks. Do not allow DN tasks to delay you in keeping up with the unit’s PP and CR tasks.</p>
+<p>This task will take at least 2 hours to complete, but can be done in two distinct sessions. Allow yourself enough time to learn from the included example and apply the changes to your original program.</p>
+</div>
+<h2 id="submission-details">Submission Details</h2>
+<p>Upload the following to the MyLO submission folder for this task:</p>
+<ul>
+<li>Program <strong>source code</strong> implementing a driver program, organiser class and data class (three .java files)</li>
+<li>A <strong>screenshot</strong> showing part of the execution of your program</li>
+</ul>
+<h2 id="assessment-criteria">Assessment Criteria</h2>
+<p>A <span class="status completed">Completed</span> submission will:</p>
+<ul>
+<li>Include the additional or modified functionality for your chosen option</li>
+<li>Be spread across three source files: one containing only main(), which starts the program; another that has methods for interacting with the user and managing the collection of objects; and a third which defines your custom data type</li>
+<li>Give each source file a meaningful name based on your chosen option (so <em>not</em> generic names like MainProgram or Organiser)</li>
+<li>Have appropriate instance data in the organiser/manager class (the Scanner, array, etc.); methods will still have parameters and return type as needed</li>
+<li>Follow the unit’s coding style for layout, variable names (use of case), and commenting (including your name at the top)</li>
+<li>Compile and run, with the screenshot showing that it works</li>
+</ul>
+<h1 id="instructions">Instructions</h1>
+<p>This task is the culmination of preparatory work you’ve done in 5.2PP <em>Collections of Strings</em> and follow up work with custom data types and arrays in 6.1PP <em>Objects as Records</em>, 6.2CR <em>Objects with More Abilities</em> and 7.1PP <em>Arrays of Objects</em>. You will be doing two complementary but distinct activities:</p>
+<ol style="list-style-type: decimal">
+<li><strong>Integrating your improved custom data type from 6.2CR <em>Objects with More Abilities</em> into your 7.1PP program</strong> (really a <em>copy</em> of that program, to be safe). Depending on your previously selected program option you may also make some changes to your methods for calculating summary data to make use of the data object’s enumerated type property.</li>
+<li><p><strong>Splitting your program source file into two files</strong>: a relatively small one containing main() and another, organiser class with all the actual program methods.</p>
+<p>The main() method will create an object of your new organiser class and call its method that runs the actual program (serving the same role that main() did). Your new organiser class will share some data via instance variables, accessible to all methods, instead of having to pass everything as parameters.</p></li>
+</ol>
+<p>We suggest you make the changes in the order above because it means you can apply all the necessary changes in step 2 in one pass.</p>
+<div class="tip box">
+<strong>Tip:</strong> Do Step 1 first, then take a break before allowing yourself at least an hour to work through Step 2. Step 2 isn’t actually <em>hard</em>, once you recognise the patterns in the changes you’re making, but since it’s likely the first time you’re doing it you’ll need to give yourself adequate time.
+</div>
+<h2 id="step-1-upgrading-to-use-your-improved-object-type">Step 1: Upgrading to use your improved object type</h2>
+<p>Before you do anything else, <strong>create a copy</strong> of your program from 7.1PP <em>Arrays of Objects</em>. And if you haven’t already <strong>copy the source file for your improved data class</strong> from 6.2CR <em>Objects with More Abilities</em> into the same folder.</p>
+<div class="note box">
+<strong>Important:</strong> If your 7.1PP program used the more basic object type from 6.1PP then copy (from 6.2CR) the necessary code to prompt for and read a value of the enumerated type defined in your 6.2CR object.
+</div>
+<p><span id="options">It’s now time to make some improvements to your collection management program to use your improved object type. The functionality changes are described for <strong>each of the five original options</strong> below (after which you should return to this point and work through <a href="#refactoring">Step 2</a>). The illustrative algorithms are presented as they would be <em>prior to refactoring the code into a main class and organiser class</em>:</span></p>
+<ol style="list-style-type: decimal">
+<li><a href="#expenses">Cost Calculator</a></li>
+<li><a href="#readings">Sensor Readings</a></li>
+<li><a href="#high-scores">High Scores</a></li>
+<li><a href="#stars">Casting Agent’s Talent List</a></li>
+<li><a href="#own">Make your own…</a></li>
+</ol>
+<p><strong>Test your program</strong> before proceeding. <strong>Take a backup</strong> of your program at this point, too.</p>
+<h2 id="refactoring">Step 2: Refactoring the code</h2>
+<p>One common approach to creating an object-oriented program is to define a class of object that implements the program’s top-level algorithm, with a separate source file containing main() that instantiates that class and tells it to run. (Up until now you’ve been implementing everything in the main program and there was no object implementing the algorithm [all the methods have been <code class="sourceCode java"><span class="dt">static</span></code>]).</p>
+<p>When refactoring a program to move the core functionality from main() and static methods that it calls into an organiser class there are two key changes: removing the keyword <code class="sourceCode java"><span class="dt">static</span></code> from their declarations (as they will be instance methods, belonging to the organiser object); and deciding which data that was declared in main() should become instance data of the organiser object, making it available to all methods of that object.</p>
+<p>Here is an example with similarities to your current program, followed by the same program divided into a main class and an organiser class (actual instructions for what to change are <a href="#applying-changes">given later</a>). The links below the samples will open each in its own tab so you can more easily view them side-by-side to see what was changed.</p>
+<style type="text/css">
+#single-source p, #multi-source p { margin-top: 0; }
+</style>
+<div id="single-source">
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java"><span class="kw">import</span><span class="im"> java.util.Scanner;</span>
+
+<span class="kw">public</span> <span class="kw">class</span> MainProgram {
+
+    <span class="kw">public</span> <span class="dt">static</span> <span class="dt">int</span> <span class="fu">addNumber</span>(<span class="bu">Scanner</span> in, <span class="dt">int</span>[] data, <span class="dt">int</span> numItems) {
+        <span class="kw">if</span> (numItems &lt; data.<span class="fu">length</span>) {
+            <span class="bu">System</span>.<span class="fu">out</span>.<span class="fu">print</span>(<span class="st">&quot;Enter next value: &quot;</span>);
+            data[numItems] = in.<span class="fu">nextInt</span>();
+            numItems++;
+        }
+        <span class="kw">return</span> numItems;
+    }
+
+    <span class="kw">public</span> <span class="dt">static</span> <span class="dt">int</span> <span class="fu">total</span>(<span class="dt">int</span>[] data, <span class="dt">int</span> numItems) {
+        <span class="dt">int</span> sum = <span class="dv">0</span>;
+        <span class="kw">for</span> (<span class="dt">int</span> i = <span class="dv">0</span>; i &lt; numItems) {
+            sum += data[i];
+        }
+        <span class="kw">return</span> sum;
+    } 
+
+    <span class="kw">public</span> <span class="dt">static</span> <span class="dt">void</span> <span class="fu">main</span>(<span class="bu">String</span>[] args) {
+        <span class="bu">Scanner</span> sc = <span class="kw">new</span> <span class="bu">Scanner</span>(<span class="bu">System</span>.<span class="fu">in</span>);
+        <span class="dt">final</span> <span class="dt">int</span> CAPACITY = <span class="dv">10</span>; <span class="co">//maximum number of things</span>
+        <span class="dt">int</span>[] data = <span class="kw">new</span> <span class="dt">int</span>[CAPACITY]; <span class="co">//a collection of numbers</span>
+        <span class="dt">int</span> numItems = <span class="dv">0</span>; <span class="co">//number of items currently in collection</span>
+        <span class="dt">int</span> sum; <span class="co">//total of items in collection</span>
+
+        <span class="co">//Emulating a menu where the user happened to do Add action 3 times</span>
+        numItems = <span class="fu">addNumber</span>(sc, data, numItems);
+        numItems = <span class="fu">addNumber</span>(sc, data, numItems);
+        numItems = <span class="fu">addNumber</span>(sc, data, numItems);
+
+        <span class="co">//Emulating a menu where user then chose to display total of items</span>
+        sum = <span class="fu">total</span>(data, numItems);
+        <span class="bu">System</span>.<span class="fu">out</span>.<span class="fu">println</span>(<span class="st">&quot;Total of items is &quot;</span> + sum);
+    }
+}</code></pre></div>
+<p><a href="all_in_one.html" target="_blank">View this source code in its own tab or window</a></p>
+</div>
+<p>Which may be refactored into the following two file program:</p>
+<div id="multi-source">
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java"><span class="kw">public</span> <span class="kw">class</span> MainProgram {
+
+    <span class="kw">public</span> <span class="dt">static</span> <span class="dt">void</span> <span class="fu">main</span>(<span class="bu">String</span>[] args) {
+        Organiser organiser = <span class="kw">new</span> <span class="fu">Organiser</span>(); <span class="co">//name would describe purpose</span>
+
+        organiser.<span class="fu">showMenu</span>(); <span class="co">//showMenu may have different name, depending on purpose</span>
+    }
+
+}</code></pre></div>
+<p>and, in Organiser.java:</p>
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java"><span class="kw">import</span><span class="im"> java.util.Scanner;</span>
+
+<span class="kw">public</span> <span class="kw">class</span> Organiser {
+    <span class="kw">private</span> <span class="dt">final</span> <span class="dt">int</span> CAPACITY = <span class="dv">10</span>; <span class="co">//maximum number of things</span>
+
+    <span class="kw">private</span> <span class="bu">Scanner</span> scanner; <span class="co">//for reading user input</span>
+    <span class="kw">private</span> <span class="dt">int</span>[] data; <span class="co">//a collection of numbers</span>
+    <span class="kw">private</span> <span class="dt">int</span> numItems; <span class="co">//number of items currently in collection</span>
+
+    <span class="kw">public</span> <span class="fu">Organiser</span>() {
+        <span class="co">//These initialisations could also be done when the variables are declared</span>
+        sc = <span class="kw">new</span> <span class="bu">Scanner</span>(<span class="bu">System</span>.<span class="fu">in</span>);
+        data = <span class="kw">new</span> <span class="dt">int</span>[CAPACITY];
+        numItems = <span class="dv">0</span>; <span class="co">//numItems is already initialised to 0, but this makes it explicit</span>
+    }
+
+    <span class="kw">public</span> <span class="dt">void</span> <span class="fu">addNumber</span>() {
+        <span class="kw">if</span> (numItems &lt; data.<span class="fu">length</span>) {
+            <span class="bu">System</span>.<span class="fu">out</span>.<span class="fu">print</span>(<span class="st">&quot;Enter next value: &quot;</span>);
+            data[numItems] = in.<span class="fu">nextInt</span>();
+            numItems++;
+        }
+    }
+
+    <span class="kw">public</span> <span class="dt">int</span> <span class="fu">total</span>() {
+        <span class="co">//We _could_ have left the parameters data and numItems to make this</span>
+        <span class="co">//  method reusable with other arrays, if the program had more than one</span>
+        <span class="dt">int</span> sum = <span class="dv">0</span>;
+        <span class="kw">for</span> (<span class="dt">int</span> i = <span class="dv">0</span>; i &lt; numItems) {
+            sum += data[i];
+        }
+        <span class="kw">return</span> sum;
+    } 
+
+    <span class="kw">public</span> <span class="dt">void</span> <span class="fu">showMenu</span>() {
+        <span class="dt">int</span> sum; <span class="co">//total of items in collection</span>
+
+        <span class="co">//Emulating a menu where the user happened to do Add action 3 times</span>
+        <span class="fu">addNumber</span>();
+        <span class="fu">addNumber</span>();
+        <span class="fu">addNumber</span>();
+
+        <span class="co">//Emulating a menu where user then chose to display total of items</span>
+        sum = <span class="fu">total</span>();
+        <span class="bu">System</span>.<span class="fu">out</span>.<span class="fu">println</span>(<span class="st">&quot;Total of items is &quot;</span> + sum);
+    }
+
+}</code></pre></div>
+<p><a href="main_and_organiser.html" target="_blank">View this source code in its own tab or window</a></p>
+</div>
+<style type="text/css">.notopmargin { margin-top: 0; }</style>
+<div class="box">
+<h3 id="what-local-variables-from-main-can-and-should-be-converted-to-instance-variables-in-the-organiser" class="notopmargin">What local variables from main() can and should be converted to instance variables in the organiser?</h3>
+<p>Since our organiser class will have a single method implementing the top-level algorithm (equivalent to main() in the original, single file program) we <em>could</em> keep all variable declarations local and pass them around as parameters to the methods that will need them. However, as you’ve seen, this leads to methods with many parameters, quite often passing the same data around. In general apply the following heuristics to decide what should be instance data and what parameters each method should have:</p>
+<ul>
+<li>What is the lifetime of the variable? If it will maintain a value for the duration of the program then it may become instance data.</li>
+<li>How many methods require access to a variable? If a large number of methods make use of a piece of instance data then consider removing it from the parameter list and instead having those methods access to the variable directly.</li>
+<li>Will you use some methods on <em>different</em> objects of the same type? If you think you may apply a method to a different instance of a piece of data (for example, if you expanded your program to work with two arrays of the same kind of information) then leave that data as a parameter, even if you use it most commonly on an instance variable.<br />
+</li>
+</ul>
+</div>
+<h3 id="applying-changes">Applying the changes to your program</h3>
+<ol style="list-style-type: decimal">
+<li>Create a new class file to be your organiser class and give it an appropriate name. For example, if you chose the cost calculator option you may wish to call your organiser class ExpensesManager, as that is a succinct description of its role in managing a collection of expenses.</li>
+<li>Following the <a href="#multi-source">example above</a>:
+<ol style="list-style-type: lower-alpha">
+<li>Move the relevant variables from main() and make them <code class="sourceCode java"><span class="kw">private</span></code> instance variables</li>
+<li>Create a parameterless constructor in the organiser and place all initialisation code in it</li>
+<li>Move and adapt the methods from the source file containing main() into the organiser class (remove <code class="sourceCode java"><span class="dt">static</span></code>, remove parameters that relate to instance data, and make any other changes now that they can modify instance data directly)</li>
+<li>Create a new method in the organsier class named <strong>showMenu</strong> (you may give it a different name if you wish) and move into it the remaining code from main(). You may need to make some minor changes to the code at this point, depending on how many statements you moved versus copied in step (b).</li>
+<li>Adapt main() to match the <a href="#multi-source">example above</a> so that it creates an object of your organiser class and then requests that it show its menu.</li>
+</ol></li>
+<li>Compile the program and correct errors (there are likely to be some after such a major refactoring effort).</li>
+<li><strong>Test your program</strong> to ensure it still behaves the same as before (from the user’s perspective nothing has changed). Remember to select the source file containing main() before clicking Run.</li>
+<li><strong>Take a screenshot</strong> of your program during its operation (this only needs to show a subset of its functionality) and submit the screenshot and three source files to the task’s submission folder on MyLO.</li>
+</ol>
+<h1 id="expenses">Functionality changes in Option 1: Cost Calculator</h1>
+<p>Modify <strong>totalExpense</strong> and <strong>largestExpense</strong> so that they accept an additional parameter of type <code class="sourceCode java">Expense.<span class="fu">Kind</span></code> and select only matching Expense objects. This is illustrated below for <strong>totalExpense</strong>:</p>
+<pre class="listing box">Method: int <strong>totalExpense</strong>(Expense[] expenses, int numExpenses, Expense.Kind kind)
+
+Parameters:
+Expense[] expenses<em>, array of Expense objects</em>
+int numExpenses<em>, current number of items in the array</em>
+Expense.Kind kind<em>, the kind of expenses to total</em>
+
+Returns (result):
+int<em>, the sum of all expenses' costs with the matching kind</em>
+
+Variables:
+int sum<em>, the sum of expenses' costs, initialised to 0</em>
+
+Steps:
+For int <em>i</em> is 0 to <em>numExpenses</em> - 1 (i.e., while <em>i</em> < <em>numExpenses</em>)
+|   If the <em>i</em><sup>th</sup> expense's <em>kind</em> equals <em>kind</em> then
+|   |   Assign <em>sum</em> the value of <em>sum</em> + the <em>i</em><sup>th</sup> expense's <em>cost</em>
+Return <em>sum</em></pre>
+<div class="tip box">
+<strong>Tip:</strong> If in your original implementation of largestExpense you initialised the variable holding the result to the first expense’s cost then instead use a value like -1 or 0, since the first expense may not be of the appropriate kind.
+</div>
+<p>Modify your program’s menu to indicate that options 3 &amp; 4 are for the total and largest <em>for a kind</em> and, prior to calling totalExpense or largestExpense, ask the user to enter the kind of expense to check.</p>
+<p><a href="#refactoring">Now proceed with Step 2 to refactor your program</a></p>
+<h1 id="readings">Functionality changes in Option 2: Sensor Readings</h1>
+<p>Modify <strong>averageReading</strong> and <strong>largestReading</strong> so that they accept an additional parameter of type <code class="sourceCode java">Reading.<span class="fu">Kind</span></code> and select only matching Reading objects. This is illustrated below for <strong>averageReading</strong>:</p>
+<pre class="listing box">Method: double <strong>averageReading</strong>(Reading[] readings, int numReadings, Reading.Kind kind)
+
+Parameters:
+Reading[] readings<em>, array of Reading objects</em>
+int numReadings<em>, current number of items in the array</em>
+Reading.Kind kind<em>, the kind of readings to average</em>
+
+Returns (result):
+double<em>, the average of all readings' values with the matching kind</em>
+
+Variables:
+double sum<em>, the sum of readings' values, initialised to 0</em>
+int count<em>, number of readings of that kind, initialised to 0</em>
+
+Steps:
+For int <em>i</em> is 0 to <em>numReadings</em> - 1 (i.e., while <em>i</em> < <em>numReadings</em>)
+|   If the <em>i</em><sup>th</sup> reading's <em>kind</em> equals <em>kind</em> then
+|   |   Assign <em>sum</em> the value of <em>sum</em> + the <em>i</em><sup>th</sup> reading's <em>value</em>
+|   |   Increment <em>count</em> by 1
+If <em>count</em> is larger than 0 then
+|   Return <em>sum</em> / <em>count</em>
+Else
+|   Return <em>sum</em> (<em>a default value if nothing to average</em>)</pre>
+<div class="tip box">
+<strong>Tip:</strong> If in your original implementation of largestReading you initialised the variable holding the result to the first reading’s value then instead use a value like -1 or 0, since the first reading may not be of the appropriate kind.
+</div>
+<p>Modify your program’s menu to indicate that options 3 &amp; 4 are for the average and largest <em>for a kind</em> and, prior to calling averageReading or largestReading, ask the user to enter the kind of readings to consider.</p>
+<p><a href="#refactoring">Now proceed with Step 2 to refactor your program</a></p>
+<h1 id="high-scores">Functionality changes in Option 3: High Scores</h1>
+<p>Add a new method named <strong>userReputation</strong> that returns the sum of a named user’s reputation points (or 0 if there is no such user):</p>
+<pre class="listing box">Method: int <strong>userReputation</strong>(GameScore[] scores, int numScores, String name)
+
+Parameters:
+GameScore[] scores<em>, array of GameScore objects</em>
+int numScores<em>, current number of items in the array</em>
+String name<em>, user name to filter scores</em>
+
+Returns (result):
+int<em>, the sum of </em>name<em>'s reputation points</em>
+
+Variables:
+int sum<em>, the sum of </em>name<em>'s reputation points, initialised to 0</em>
+
+Steps:
+For int <em>i</em> is 0 to <em>numScores</em> - 1 (i.e., <em>i</em> < <em>numScores</em>)
+|   If the <em>i</em><sup>th</sup> game score's <em>userName</em> equals <em>name</em> then
+|   |   Assign <em>sum</em> the value of <em>sum</em> + the <em>i</em><sup>th</sup> game scores's <em>reputation points</em>
+Return <em>sum</em></pre>
+<p>Add a menu option to access this new functionality and, like those for average and highest user scores, prompt the user for the user name to report on.</p>
+<p><a href="#refactoring">Now proceed with Step 2 to refactor your program</a></p>
+<h1 id="stars">Functionality changes in Option 4: Casting Agent’s Talent List</h1>
+<p>Modify <strong>mostValuableActor</strong> and <strong>averageActorRevenue</strong> so that they accept an additional parameter of type <code class="sourceCode java">Actor.<span class="fu">Skill</span></code> and select only matching Actor objects. This is illustrated below for <strong>mostValuableActor</strong>, which is quite different to equivalent methods in other options (due to returning an object instead of a primitive value):</p>
+<pre class="listing box">Method: Actor <strong>mostValuableActor</strong>(Actor[] actors, int numActors, Actor.Skill skill)
+
+Parameters:
+Actor[] actors<em>, array of Actor objects</em>
+int numActors<em>, current number of items in the array</em>
+Actor.Skill skill<em>, the skill level of actors to consider</em>
+
+Returns (result):
+Actor<em>, the actor of a particular skill level with the highest revenue potential,
+        or </em>null<em> if no such actor is in the collection</em>
+
+Variables:
+Actor highest<em>, the most valuable actor of a particular skill level</em>
+
+Steps:
+Assign <em>highest</em> a default value of <strong>null</strong>
+For int <em>i</em> is 0 to <em>numActors</em> - 1 (i.e., <em>i</em> < <em>numActors</em>)
+|   If the <em>i</em><sup>th</sup> actor's <em>skill</em> equals <em>skill</em> then
+|   |   If <em>highest</em> equals <strong>null</strong> or the <em>i</em><sup>th</sup> actor's <em>revenue</em> is larger than <em>highest</em>'s <em>revenue</em> then
+|   |   |   Assign <em>highest</em> the value of the <em>i</em><sup>th</sup> element of <em>actors</em>
+Return <em>highest</em></pre>
+<div class="tip box">
+<p><strong>Tip:</strong> Where you call this method you may wish to choose between two different output messages depending on what value it returns: if it returns <code class="sourceCode java"><span class="kw">null</span></code> you could print “No actor of that skill level”, otherwise display the returned Actor object.</p>
+<p>Equally, the program will work fine if you merely display the returned value, since System.out.println() will convert the <code class="sourceCode java"><span class="kw">null</span></code> value to the String “null” for display purposes.</p>
+</div>
+<p>Modify your program’s menu to indicate that options 3 &amp; 4 are for the most valuable and average <em>for a particular skill level</em> and, prior to calling mostValuableActor or averageActorRevenue, ask the user to enter the skill level to consider.</p>
+<p><a href="#refactoring">Now proceed with Step 2 to refactor your program</a></p>
+<h1 id="own">Functionality changes in Option 5: Make your own…</h1>
+<p>Use the above four examples to guide you to modify your two summary functions so that they apply conditional selection of the data to summarise. This may be based on the ‘type’ of data (value of the enumerated property) or some other characteristic of the data (as done in the High Scores program).</p>
+<p><a href="#refactoring">Now proceed with Step 2 to refactor your program</a></p>
+<hr />
+</body>
+</html>

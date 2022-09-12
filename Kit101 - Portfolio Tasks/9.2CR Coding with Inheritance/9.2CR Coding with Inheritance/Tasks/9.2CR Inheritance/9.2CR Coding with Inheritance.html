@@ -1,0 +1,411 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>CR Task 9.2 Coding with Inheritance</title>
+  <!--<style type="text/css">code{white-space: pre;}</style>-->
+  <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+  </style>
+  <link rel="stylesheet" href="../../templates/utas_ict_mylo.css">
+  <link rel="stylesheet" href="../../templates/task.css">
+  <!--<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script> Breaks toggling of sections, making style & script visible! -->
+  <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+  <script src="../../templates/solutions.js"></script>
+  <script type="text/javascript">
+    let onMyLO = () => window.location.host === 'mylo.utas.edu.au';
+    $(function() { if (onMyLO()) { $('.title, header').addClass('printonly'); } }); //avoid duplicating title, etc. in document and above iframe
+    var MYLO_SCROLL_DELAY = 350; //appears to work OK when hosted on MyLO
+    $(function() {
+      function toggleSection(heading, scrollTo) {
+        if (!heading) return;
+        heading.toggleClass('collapsed')
+               .children('span.expandable').toggle();
+        heading.nextUntil('h1').toggle(300)
+               .promise().done( function() {
+                 if (scrollTo) {
+                   let scrollIt = () => { scrollTo[0].scrollIntoView(true); };
+                   onMyLO() ? setTimeout(scrollIt, MYLO_SCROLL_DELAY) : scrollIt();
+                 }
+               });
+      }
+
+      var headings = $('h1').not('.title, .subtitle');
+      headings.css('cursor', 'pointer')
+              .prepend('<span class="expandable noprint" style="display: none;">&#9655;</span><span class="expandable noprint">&bigtriangledown;</span> ')
+              .click( function() { toggleSection( $(this) ); } );
+      if (headings.length == 0) { /* workaround until pandoc template understood better */
+        $('.expandAll').remove();
+      }
+
+      function toggleTarget(target, evt) { //evt is optional event that triggered this (indirectly)
+        var h = target.is('h1.collapsed') ? target : ( target.is(':hidden') ? target.prevAll('h1').first() : null );
+        if (h) {
+          if (evt) { evt.preventDefault(); } //Added so browser doesn't attempt to scroll to not-yet-visible element
+          toggleSection(h, target);
+        }
+      }
+
+      $('a[href^="#"]').click( function(evt) {
+        toggleTarget( $(this.hash), evt ); }
+      );
+      $('#openall').click( function(evt) {
+        evt.preventDefault();
+        var self = $(this);
+        var totoggle = self.children('.open:visible').length > 0 ? $('h1.collapsed') : $('h1').not('.collapsed');
+        self.children('.expandable').toggle();
+        totoggle.not('.title, .subtitle').each( function(i, el) { toggleSection($(el)); } );
+      });
+
+    });
+  </script>
+  <script type="text/javascript">
+  $(function() {
+    /* Formats learning outcomes, if present (revised 2019-1 as ILOs 6-8 were removed) */
+    //let iloIcons = ['', 'eye-open', 'random', 'pencil', 'th', 'duplicate', 'user', 'comment', 'question-sign'];
+    let iloIcons = ['', 'eye-open', 'random', 'pencil', 'th', 'duplicate'];
+    let ilos = ['',
+      'read code or identify errors',
+      'think algorithmically and use structured programming',
+      'write small programs',
+      'use functional decomposition to break down problems and solutions into smaller parts',
+      'document programs, both externally and within the code'];
+
+    function addILOIcons($ilos) {
+      let verb = $ilos.hasClass('assesses') ? 'assesses' : 'develops';
+      var formattedILOs = [];
+
+      for (let ilo of $ilos.html().split(', ')) {
+        let i = parseInt(ilo);
+	formattedILOs.push( `<span class="ilo" title="This task ${verb} your ability to ${ilos[i]}">${ilo} <span class="glyphicon glyphicon-${iloIcons[i]}"></span></span>` );
+      }
+      $ilos.html(formattedILOs.join('&emsp;'));
+    }
+
+    $('.ilos').each(function (i, e) { addILOIcons($(e)); });
+
+    /* Injects the cumbersome glyphicon for videos in front of my own tag <minilecture> */
+    $('<span class="glyphicon glyphicon-facetime-video" style="margin-right: 0.25em;"></span>').insertBefore('minilecture');
+  });
+  </script>
+</head>
+<body>
+<h1 class="unit title">KIT101 Programming Fundamentals</h1>
+<header>
+<h1 class="title">CR Task 9.2 Coding with Inheritance</h1>
+</header>
+<!--
+<p class="noprint expandAll">[ <a href="#" id="openall"><span class="expandable open" style="display: none;">&harr; Expand</span><span class="expandable close">&cularr; Close</span> all sections</a> ] Only visible sections will be included when printing this document.</p>
+-->
+<h1 id="overview">Overview</h1>
+<table>
+<colgroup>
+<col width="22%" />
+<col width="77%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><p>Purpose:</p></td>
+<td><p>Learn about inheritance (of data and methods) in an object-oriented programming language.</p></td>
+</tr>
+<tr class="even">
+<td><p>Task:</p></td>
+<td><p>Complete the implementations of various subclasses of an abstract Shape (that knows its centre and can draw itself with a Turtle).</p></td>
+</tr>
+<tr class="odd">
+<td><p>Learning Outcomes:</p></td>
+<td><p><span class="ilos">1, 2, 3, 4</span></p></td>
+</tr>
+<tr class="even">
+<td><p>Time:</p></td>
+<td><p>Aim to complete this task before the start of Week 10, but it may also be completed later (<a href="#time-note">see note</a>).</p></td>
+</tr>
+<tr class="odd">
+<td><p>Resources:</p></td>
+<td><ul>
+<li>Introductory Programming Notes:
+<ul>
+<li>12 More Object Orientation</li>
+</ul></li>
+</ul></td>
+</tr>
+</tbody>
+</table>
+<!-- Common resources: MyLO (a section on), Introductory Programming Notes, Echo360 (plus title(s) of videos) -->
+<div id="time-note" class="note box">
+<strong>Note:</strong> If you are not currently up to date you should skip this task and return to it once you are up to date with the PP tasks. Do not allow CR tasks to delay you in keeping up with the unit’s PP tasks.
+</div>
+<h2 id="submission-details">Submission Details</h2>
+<p>Upload the following to the MyLO submission folder for this task:</p>
+<ul>
+<li><strong>Source code</strong> for ShapeTest, Rectangle, Circle and an additional shape subclass of your choosing (e.g., Triangle, Hexagon, etc.)</li>
+<li>A <strong>screenshot</strong> showing both the console output and the turtle graphics window during execution (this can be two separate images if necessary)</li>
+</ul>
+<h2 id="assessment-criteria">Assessment Criteria</h2>
+<p>A <span class="status completed">Completed</span> submission will:</p>
+<ul>
+<li>Implement all constructors and methods specified in the task, for Rectangle, Circle and the additional shape subclass (<a href="#checklist">see the checklist</a>)</li>
+<li>Define, in ShapeTest, examples of each of the different kinds of shape (two Polygons, a Rectangle, a Circle, and the additional shape subclass), located at a variety of the pre-identified target locations, and in different colours</li>
+<li>Compile and run, with the screenshot showing that the required toString methods have been implemented and that the shapes are correctly drawn with their centres at one of the predefined targets</li>
+<li>Follow the unit’s coding style for layout, including a brief method header comment on each new method</li>
+</ul>
+<h1 id="instructions">Instructions</h1>
+<p>Object-oriented languages allow classes to be extended so that (1) functionality can be reused without rewriting the same code and (2) refinements (specialisations) of more basic classes can be created. The subclass inherits all of the public (and also <code class="sourceCode java"><span class="kw">protected</span></code>) methods and instance variables of its superclass, and can use them as if they were declared in its own source file.</p>
+<p>Consider the following three source file program, where the class B extends the class A, adds a new method (helloHello) as well as using the method defined originally in class A (hello):</p>
+<div class="activity box">
+<p>A.java:</p>
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java"><span class="kw">public</span> <span class="kw">class</span> A {
+    <span class="kw">public</span> <span class="dt">void</span> <span class="fu">hello</span>(<span class="bu">String</span> name) {
+        <span class="bu">System</span>.<span class="fu">out</span>.<span class="fu">print</span>(<span class="st">&quot;Hello &quot;</span> + name);
+    }
+}</code></pre></div>
+<p>B.java:</p>
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java"><span class="kw">public</span> <span class="kw">class</span> B <span class="kw">extends</span> A {
+    <span class="kw">public</span> <span class="dt">void</span> <span class="fu">helloHello</span>(<span class="bu">String</span> name) {
+        <span class="kw">for</span> (<span class="dt">int</span> i = <span class="dv">0</span>; i &lt; <span class="dv">2</span>; i++) {
+            <span class="fu">hello</span>(name);
+            <span class="bu">System</span>.<span class="fu">out</span>.<span class="fu">print</span>(<span class="st">&quot;! &quot;</span>);
+        }
+        <span class="bu">System</span>.<span class="fu">out</span>.<span class="fu">println</span>();
+    }
+}</code></pre></div>
+<p>Program.java:</p>
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java"><span class="kw">public</span> <span class="kw">class</span> Program {
+    <span class="kw">public</span> <span class="dt">static</span> <span class="dt">void</span> <span class="fu">main</span>(<span class="bu">String</span>[] args) {
+        B b = <span class="kw">new</span> <span class="fu">B</span>();
+        b.<span class="fu">hello</span>(<span class="st">&quot;Jane</span><span class="sc">\n</span><span class="st">&quot;</span>); <span class="co">//prints Hello Jane</span>
+        b.<span class="fu">helloHello</span>(<span class="st">&quot;John&quot;</span>); <span class="co">//prints Hello John! Hello John!</span>
+    }
+}</code></pre></div>
+</div>
+<p><strong>In this task you will complete the implementation of a program for drawing different kinds of shape, where each kind of shape is different class that builds on the features of a top-level <code>Shape</code> class.</strong> The task is as much about reading the provided code as it is adding your own code. There are some advanced features in the provided code that we indicate as such and which you can safely ignore (or learn from them if you feel ready).</p>
+<script>
+$(function() {
+  $('img').click(function() { window.open(this.src, "_blank"); })
+          .each(function(i, el) { el.title += '. Click to open in a new tab'; });
+  $('h1:contains("Part ")').click(); //collapse the main sections
+});
+</script>
+<style type="text/css">
+img { cursor: pointer; }
+</style>
+<h1 id="part-1-understanding-the-structure-of-the-project">Part 1: Understanding the structure of the project</h1>
+<ol style="list-style-type: decimal">
+<li><p>Download the <strong>9.2CR Coding with Inheritance Starter Code</strong> and extract the contents. The program currently consists of a driver program <code>ShapeTest.java</code> (that you will add a little to), the base class defined in <code>Shape.java</code> (that you will not modify), a specialisation of that defined in <code>Polygon.java</code> and incomplete implementations of a rectangle (<code>Rectangle.java</code>) and a circle (<code>Circle.java</code>). Don’t open the last two until you are up to the relevant step, as they won’t compile yet. By the end of the task , the class relationships will look like the following:</p>
+<!--Class diagram of the completed program, with some of the alternatives you will implement shown faded.-->
+<p><img src="shape_class_hierarchy_w_ShapeTest.svg" style="max-width: 60em;" title="Class diagram of the completed program, with some of the alternatives you will implement shown faded (click to open in new window)" alt="Class diagram of the completed program, with some of the alternatives you will implement shown faded"/></p>
+<ul>
+<li><strong>ShapeTest</strong> is the main program. It contains code to create a Turtle graphics device, draw some aiming markers on the screen (that you will create shapes around), and holds a collection of Shape objects that it asks to draw themselves as well as displaying their description to the console. <strong>You will add code to create different kinds of shape and add them to the collection.</strong></li>
+<li><p><strong>Shape</strong> is an <em>abstract</em> class, meaning that no object of type Shape can be instantiated. It has properties for its <strong>centre</strong>, an (x, y) coordinate, its <strong>color</strong> and a Turtle graphics drawing <strong>device</strong>. These are all marked <code class="sourceCode java"><span class="kw">protected</span></code>, so they are accessible inside Shape.java and any other source code that <code class="sourceCode java">extend</code>s it. (In the class diagram + means public, # protected and - private.)</p>
+<div class="note box">
+<strong>Note:</strong> Strictly speaking anything marked <code class="sourceCode java"><span class="kw">protected</span></code> is visible in any source file in the same package. Since we’re not using packages to organise our source files this means the protected variables are accessible from the driver program, but we’ll be ‘good’ and will not attempt to directly access them.
+</div>
+We’ll cover the details of <a href="#drawing">how drawing works later</a>, but for the moment notice that the <code class="sourceCode java"><span class="fu">draw</span>()</code> method is <code class="sourceCode java"><span class="kw">abstract</span></code> and has no method body. This means any subclass of Shape must provide an implementation for this method.</li>
+<li><strong>Polygon</strong> represents a regular polygon with a number of <strong>sides</strong>, each with a particular <strong>side length</strong>, as well as a <strong>centre</strong>, <strong>color</strong>, and Turtle graphics drawing <strong>device</strong>. It extends Shape, and when you look at its code you’ll see that:
+<ul>
+<li>it only declares sides and sideLength as instance variables (the others are inherited from Shape);</li>
+<li><p>the first line of its constructor uses the keyword <code class="sourceCode java"><span class="kw">super</span></code> to execute the code in Shape’s constructor:</p>
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java"><span class="kw">super</span>(x, y, color, device);</code></pre></div>
+which passes the centre location, colour and drawing device to Shape’s constructor so it can initialise those instance variables; and</li>
+<li>it provides an implementation of <code class="sourceCode java"><span class="fu">draw</span>()</code> and overrides (replaces) the implementation of <code class="sourceCode java"><span class="fu">moveToStart</span>()</code>.</li>
+</ul></li>
+<li><strong>Rectangle</strong> is a four-sided shape where the <strong>width</strong> and <strong>height</strong> may be unequal. It extends Shape, so has a <strong>centre</strong>, <strong>color</strong>, and Turtle graphics drawing <strong>device</strong>. <a href="#rectangle"><strong>You will provide—with guidance—implementations of the methods required for it to draw itself around its centre.</strong></a></li>
+<li><strong>Circle</strong> represents a circle with a <strong>radius</strong>, <strong>centre</strong>, <strong>color</strong>, and Turtle graphics drawing <strong>device</strong>. It extends Polygon and, when you are finished, will require very little code: to a computer a drawn circle is just a polygon with lots of very short sides. <a href="#circle"><strong>You will complete its implementation.</strong></a></li>
+<li><p>Triangle, Square, Pentagon, Hexagon, Heptagon, etc. are optional convenience classes that extend Polygon and which require very little code. <a href="#convenience"><strong>You will implement <em>one</em> of these of your choosing.</strong></a></p></li>
+</ul></li>
+<li><p><a id="drawing"></a> <strong>But how does drawing work?</strong> The structure chart below shows another view of the same program, focusing on the methods. ShapeTest contains main and some support methods for drawing the targets. Shape, and all of its subclasses, perform their drawing according to the following pattern:</p>
+<ul>
+<li>draw() must call startDrawing() before it executes any drawing commands, and must call endDrawing() as its last instruction (start… and endDrawing() save and then restore the Turtle’s state, as you did in 3.3PP Stamp Method)</li>
+<li>startDrawing(), which you never need to modify, calls moveToStart() to reposition the drawing device at the first vertex (which in this program is the ‘bottom left’ of the shape, the leftmost position at the bottom of the shape)</li>
+</ul>
+<p><img src="ShapeTest_structure_chart.svg" style="max-width: 50em;" title="Structure chart for the program" alt="Structure chart for the program"/></p>
+<p><strong>Subclasses provide (or replace) implementations of draw() and moveToStart() to suit the kind of shape they are.</strong> Polygon provides valid implementations of both of these for all regular polygons. Rectangle does not yet provide proper implementations of these. By replacing the behaviour of those two methods, a particular subclass of Shape changes its drawing behaviour.</p></li>
+</ol>
+<h1 id="part-2-add-your-first-shape">Part 2: Add your first shape</h1>
+<ol start="3" style="list-style-type: decimal">
+<li><p>Polygon already works, so let’s add one to the collection of shapes in ShapeTest.java. Ensure that Circle.java and Rectangle.java are <em>not</em> open at the moment, since they won’t compile yet. In ShapeTest.java, at the indicated location, add a statement following this pattern:</p>
+<!-- Using the additional formatting classes is tedious, but will make this easier to parse... I think -->
+<pre><code>shapes.<span class="fu">add</span>(<span class="kw">new</span> Polygon(<em>sides</em>, <em>side length</em>, <em>x</em>, <em>y</em>, <em>colour</em>, device));</code></pre>
+<p>where you need to choose values for <em>sides</em> (try a value ≥ 5), <em>side length</em>, <em>x</em>, <em>y</em> and <em>colour</em> (e.g., Color.BLUE).</p>
+<div class="note box">
+<strong>Important:</strong> Each shape you add should be centred at one of the targets, so use the constants LEFT_X, RIGHT_X, BOTTOM_Y, CENTRE_X, etc. as the values of <em>x</em> and <em>y</em>
+</div></li>
+<li>Compile and run the program. Adjust the values passed to the constructor until you are happy with the result. Take a look at the console output too; see how it works?</li>
+<li><p>Before moving on to the next part, repeat what you just did to add another Polygon with a different number of sides, centred at one of the other target locations.</p></li>
+</ol>
+<h1 id="rectangle">Part 3: Implementing the Rectangle</h1>
+<p>In this stage of the task you will complete the implementation of the Rectangle by implementing its constructor, draw(), moveToStart() and providing a toString() method.</p>
+<ol start="6" style="list-style-type: decimal">
+<li>Ensure that Rectangle.java and ShapeTest.java are open in DrJava.</li>
+<li><p>Complete the Rectangle constructor according to the following algorithm:</p>
+<pre class="listing box">1 Call <strong>super</strong> with <em>x</em>, <em>y</em>, <em>color</em>, <em>device</em>
+2 Assign <em>this.width</em> the value of <em>width</em>      
+3 Assign <em>this.height</em> the value of <em>height</em></pre></li>
+<li><p>Return to ShapeTest.java and, after the polygon you added earlier, add a statement following this pattern:</p>
+<pre><code>shapes.<span class="fu">add</span>(<span class="kw">new</span> Rectangle(<em>width</em>, <em>height</em>, <em>x</em>, <em>y</em>, <em>colour</em>, device));</code></pre>
+<p>where <em>width</em> and <em>height</em> should have different values and, as before, <em>x</em> and <em>y</em> are chosen to be one of the target locations.</p>
+<div class="note box">
+<strong>Note:</strong> Each of the kinds of shape you define has different parameters for its constructor. Remember to check the parameter list to ensure you’re passing a value for the correct property
+</div></li>
+<li><p>You should be able to compile the program, but if you run it there’s no shape drawn on the screen, and the console output isn’t much better. Let’s fix that by implementing draw().</p>
+<p><br>Drawing a rectangle involves drawing the horizontal side, turning 90 degrees, drawing the vertical side… twice:</p>
+<pre class="listing box">Method: <strong>Rectangle.draw()</strong>
+
+Steps:
+1    Call <strong>startDrawing</strong>
+2    For <em>i</em> is 1 to 2 (i.e., while <em>i</em> <= 2)
+2-1  |   Call device.<strong>move</strong> with <em>width</em>
+2-2  |   Call device.<strong>turn</strong> with 90
+2-3  |   Call device.<strong>move</strong> with <em>height</em>
+2-4  |   Call device.<strong>turn</strong> with 90
+3    Call <strong>endDrawing</strong></pre></li>
+<li><p><strong>But wait!</strong> We need to start drawing at the bottom-left of the shape, not its centre, so add a moveToStart method (which will replace the one inherited from Shape):</p>
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java"><span class="co">/** Moves to the first (bottom-left) vertex, relative to the centre. */</span>
+<span class="kw">protected</span> <span class="dt">void</span> <span class="fu">moveToStart</span>() {
+    <span class="co">//TODO Add one line of code here to relocate to the bottom-left vertex</span>
+}</code></pre></div>
+<p>Because the bottom-left of a rectangle is half its width and half its height from its centre, replace the <code class="sourceCode java"><span class="co">//TODO</span></code> comment with code to <em>move to</em> (centre’s <em>x</em> – <em>width</em>/2, centre’s <em>y</em> – <em>height</em>/2).</p>
+<p><br><strong>Need that expressed more explicitly?</strong></p>
+<div class="solution">
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java">device.<span class="fu">moveTo</span>(centre.<span class="fu">x</span> - width/<span class="dv">2</span>, centre.<span class="fu">y</span> - height/<span class="dv">2</span>);</code></pre></div>
+</div></li>
+<li><p>Return to ShapeTest, recompile and run the program. You should now see the rectangle at the correct location. But we’re not quite done. The console output still just says the shape is a Shape (and displays its centre). Return to Rectangle.java and define a toString() method:</p>
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java"><span class="co">/** Returns a String representation of the rectangle. */</span>
+<span class="kw">public</span> <span class="bu">String</span> <span class="fu">toString</span>() {
+    <span class="co">//TODO Return a one-line description of the rectangle</span>
+}</code></pre></div>
+<p>Follow the same pattern as in Shape and Polygon’s toString() methods and create a String based on the pattern:</p>
+<p><br> <em>ClassName</em> (“<em>property1</em>=” + <em>property1</em> + “, <em>property2</em>=” + <em>property2</em> + “, centre=” + centre + “)”;</p>
+<p><br><strong>Need that expressed more explicitly?</strong></p>
+<div class="solution">
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java"><span class="kw">return</span> <span class="st">&quot;Rectangle(width=&quot;</span> + width + <span class="st">&quot;, height=&quot;</span> + height + <span class="st">&quot;, centre=&quot;</span> + centre + <span class="st">&quot;)&quot;</span>;</code></pre></div>
+</div></li>
+<li><p>Recompile and run ShapeTest to see the more informative console output.</p></li>
+</ol>
+<h1 id="circle">Part 4: Implement the Circle</h1>
+<p>In this stage of the task you will complete the implementation of the Circle by implementing its constructor and providing a toString() method.</p>
+<ol start="13" style="list-style-type: decimal">
+<li><p>Ensure that Circle.java and ShapeTest.java are open in DrJava. A circle can be represent by a polygon with many small sides. Note near the top of Circle’s definition a constant named <code>FINENESS</code>: the larger this value the cleaner/finer the circle will appear (up to a limit, since the Turtle can’t draw anything smaller than one pixel). You should not need to modify this value, but you will use this value in <strong>Circle’s constructor</strong>, which you should implement as follows:</p>
+<ol style="list-style-type: decimal">
+<li><p>the first line should call <code class="sourceCode java"><span class="kw">super</span></code>, passing FINENESS as the number of sides and <code class="sourceCode java"><span class="bu">Math</span>.<span class="fu">sin</span>(<span class="bu">Math</span>.<span class="fu">PI</span>/FINENESS) * radius * <span class="dv">2</span></code> as the length of each side. The values of <em>x</em>, <em>y</em>, <em>color</em> and <em>device</em> should be passed unchanged.</p>
+<strong>Need a hint?</strong>
+<div class="solution">
+Are you sure?
+<div class="solution">
+You know, you really should try translating that into code yourself first…
+<div class="solution">
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java"><span class="kw">super</span>(FINENESS, <span class="bu">Math</span>.<span class="fu">sin</span>(<span class="bu">Math</span>.<span class="fu">PI</span>/FINENESS) * radius * <span class="dv">2</span>, x, y, color, device);</code></pre></div>
+</div>
+</div>
+<?div></li>
+<li><p>the second line should assign <code class="sourceCode java"><span class="kw">this</span>.<span class="fu">radius</span></code> the value of the parameter <em>radius</em>.</p></li>
+</ol></li>
+<li>Back in ShapeTest, add a new Circle object to the collection of shapes, selecting a different target location to the Polygons and Rectangle you added before. Compile and run the program to see if your circle appears as you expect.</li>
+<li><p>Before we leave Circle, <strong>add a toString() method</strong> that follows the pattern for the other shapes and reports the value of the Circle’s radius and centre.</p></li>
+</ol>
+<h1 id="convenience">Part 5: Add one more shape for convenience</h1>
+<p>A relatively common feature of object-oriented programming is the creation of additional subclasses that customise the behaviour of a more general superclass but that don’t add any new functionality. For example, imagine we were using our Shape classes in a program where we needed a lot of triangles. While we <em>could</em> create a lot of Polygons with <em>sides</em> set to 3, it could be more convenient to define a new, very small subclass of Polygon that fixes the value of sides. That’s what you’ll do in this final stage.</p>
+<ol start="16" style="list-style-type: decimal">
+<li><p>Select a regular (convex) polygon, a shape with at least three sides and no corners that go in toward the centre. There are lots to choose from: triangles, squares, pentagons, … dodecagons, etc. Create a new class definition based on the code in Circle.java but much simpler:</p>
+<ul>
+<li>it will need <em>no</em> instance variables, so</li>
+<li>it will need no getters, and</li>
+<li>to keep things simple we’ll remove the toString method (so really it will <em>only</em> contain a constructor)</li>
+</ul>
+<p>Remember to name your class after the polygon shape you’ve selected.</p></li>
+<li>The constructor will have the same parameters as Polygon’s constructor except without the <em>sides</em> parameter. It will consist of a single call to <code class="sourceCode java"><span class="kw">super</span></code> to initialise the Polygon (because by extending Polygon your new shape is also a Polygon) to the correct number of sides.</li>
+<li>Add an instance of this new shape to the collection of shapes in ShapeTest, again placing it at one of the target locations. Compile and run the program again.</li>
+<li><strong>Take a screenshot</strong> showing both the console (the DrJava Interactions pane) containing the text output from the program <em>and</em> the Turtle graphics window.</li>
+<li><p>Double check you’ve completed everything using the <a href="#checklist">checklist below</a> and upload the screenshot, ShapeTest.java, Rectanlge.java, Circle.java and the source for the final shape subclass to the submission folder for this task on MyLO.</p></li>
+</ol>
+<h1 id="checklist">Checklist</h1>
+<p>Before you submit your work, double-check that you’ve implemented all the things you need to. The checkboxes below ‘work’, but that’s just so there’s a visual indicator for you. They’re not connected to any other part of the system.</p>
+<script>
+$(function() {
+  $('div#thelist li').prepend('<input type="checkbox">').wrapInner('<label></label>');
+  let NUM_ITEMS = $('div#thelist input').length;
+  $('div#thelist input').change(function(e) {
+    $(e.target).closest('label')[e.target.checked ? 'addClass' : 'removeClass']('done');
+    $('#submit_now')[$('div#thelist input:checked').length == NUM_ITEMS ? 'removeClass' : 'addClass']('hidden');
+  }); 
+});
+</script>
+<style type="text/css">
+div#thelist > ul { padding-left: 0em !important; }
+div#thelist ul { list-style-type: none; padding-left: 2em; }
+label.done { background: lightgreen; }
+div#thelist input:checked { outline: solid 0.2em green; }
+</style>
+<div id="thelist">
+<ul>
+<li>In ShapeTest, added the following to the shapes collection, each at a different target location and colour:
+<ul>
+<li>two Polygons of at least 5 sides</li>
+<li>a Rectangle</li>
+<li>a Circle</li>
+<li>a subclass of Polygon representing one of the regular shapes (triangle, square, pentagon, etc.)</li>
+</ul></li>
+<li>In Rectangle:
+<ul>
+<li>completed the constructor, Rectangle()</li>
+<li>completed draw()</li>
+<li>added moveToStart()</li>
+<li>added toString()</li>
+</ul></li>
+<li>In Circle:
+<ul>
+<li>completed the constructor, Circle()</li>
+<li>added toString()</li>
+</ul></li>
+<li>Defined an additional regular shape (Triangle, Square, Pentagon, etc.) by extending Polygon, with:
+<ul>
+<li>a constructor</li>
+</ul></li>
+<li>Taken a screenshot showing both the text output from the program and the Turtle graphics window</li>
+</ul>
+</div>
+<p>
+ <span id="submit_now" class="hidden"><strong>Looks like you’re ready to submit!</strong></span>
+</p>
+<hr />
+</body>
+</html>

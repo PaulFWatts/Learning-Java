@@ -1,0 +1,380 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Self-study 4 Activity 1: Write and test conditional expressions</title>
+  <!--<style type="text/css">code{white-space: pre;}</style>-->
+  <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+  </style>
+  <link rel="stylesheet" href="../../templates/utas_ict_mylo.css">
+  <script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
+  <script src="../../templates/solutions.js"></script>
+  <script type="text/javascript">
+    $(function() {
+      function toggleSection(heading, scrollTo) {
+        if (!heading) return;
+        heading.toggleClass('collapsed')
+               .children('span.expandable').toggle();
+        heading.nextUntil('h1').toggle(300)
+               .promise().then( function() {
+                 if (scrollTo) {
+                   $('body, html').animate({ scrollTop: scrollTo.offset().top });
+                 }
+               });
+      }
+
+      var headings = $('h1').not('.title, .subtitle');
+      headings.css('cursor', 'pointer')
+              .prepend('<span class="expandable noprint" style="display: none;">&#9655;</span><span class="expandable noprint">&bigtriangledown;</span> ')
+              .click( function() { toggleSection( $(this) ); } );
+      if (headings.length == 0) { /* workaround until pandoc template understood better */
+        $('.expandAll').remove();
+      }
+
+      function toggleTarget(target) {  
+        var h = target.is('h1.collapsed') ? target : ( target.is(':hidden') ? target.prevAll('h1').first() : null );
+        toggleSection(h, target);
+      }
+
+      $('a[href^="#"]').click( function() {
+        toggleTarget( $(this.hash) );
+      });
+      $('#openall').click( function(evt) {
+        evt.preventDefault();
+        var self = $(this);
+        var totoggle = self.children('.open:visible').length > 0 ? $('h1.collapsed') : $('h1').not('.collapsed');
+        self.children('.expandable').toggle();
+        totoggle.not('.title, .subtitle').each( function(i, el) { toggleSection($(el)); } );
+      });
+
+    });
+  </script>
+</head>
+<body>
+<header>
+<h1 class="title">Self-study 4 Activity 1: Write and test conditional expressions</h1>
+</header>
+<p class="noprint expandAll">[ <a href="#" id="openall"><span class="expandable open" style="display: none;">&harr; Expand</span><span class="expandable close">&cularr; Close</span> all sections</a> ] Only visible sections will be included when printing this document.</p>
+<h2 id="expected-outcomes">Expected outcomes</h2>
+<ul>
+<li>Know the operators that can be used to write conditional expressions</li>
+<li>Be able to use variables of type boolean</li>
+<li>Be able to convert “word versions” of conditional tests into valid conditional expressions</li>
+<li>Plan, and write code to implement tests of conditional expressions</li>
+</ul>
+<h2 id="starting-point">Starting point</h2>
+<p>If you haven’t already, download and unzip the <a href="self-study04.zip" title="Download a zip file of the files used in the exercise">Self-study 4 starter files</a>. <strong>You will be using <code>TestCond.java</code> in this activity.</strong></p>
+<h2 id="steps">Steps</h2>
+<p>Open the program source file <code>TestCond.java</code> and look at the code.</p>
+<ol type="1">
+<li>List the variables of <em>primitive</em> types. What value is stored in each?
+<div class="solution">
+<table>
+<colgroup>
+<col style="width: 29%" />
+<col style="width: 29%" />
+<col style="width: 29%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Variable Identifier</th>
+<th style="text-align: left;">Type</th>
+<th style="text-align: left;">Value Stored</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">number</td>
+<td style="text-align: left;">int</td>
+<td style="text-align: left;">10</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">state</td>
+<td style="text-align: left;">boolean</td>
+<td style="text-align: left;">true</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">letter1</td>
+<td style="text-align: left;">char</td>
+<td style="text-align: left;">‘b’</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">letter2</td>
+<td style="text-align: left;">char</td>
+<td style="text-align: left;">‘v’</td>
+</tr>
+</tbody>
+</table>
+</div></li>
+<li>List the <em>reference</em> variables. What value is stored in each?
+<div class="solution">
+<table>
+<colgroup>
+<col style="width: 26%" />
+<col style="width: 73%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Variable Identifier</th>
+<th style="text-align: left;">Contents</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">word1</td>
+<td style="text-align: left;">A reference to a String which has the contents “testing”</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">word2</td>
+<td style="text-align: left;">A reference to a String which has the contents “testing”, but note that this is a different String from <code>word1</code> (This means that there will be two areas of memory set aside, both of which happen to have the same contents)</td>
+</tr>
+</tbody>
+</table>
+</div></li>
+<li>Would this program compile and run as it is? If not why not? <sol class="boxed">No, the empty <code>(   )</code> after the <code>if</code> will cause a problem.</sol></li>
+</ol>
+<p>Write conditional expressions to test each of the things given in the table below. Test each of your answers in turn. Do not move on to the next condition until you are satisfied that you have the current one correct. Remember, trying something out on a few simple values is <em>not</em> testing! To test your expressions:</p>
+<ul>
+<li>Write the code that you believe will implement the test into you copy of <code>TestCond.java</code> (the place you need to add it is marked by a comment in the code).</li>
+<li>Work out values to assign to the variables so that you will be able to test whether or not your conditional expression is working as you hoped.</li>
+<li>Compile and run the program as many times as it takes to be sure that you have correctly implemented the test.</li>
+</ul>
+<div class="tip box">
+<strong>Hint:</strong> Remember that if an integer (say <code>n</code>) is evenly divisible by another number (say <code>k</code>) then if we divide <code>n</code> by <code>k</code> the remainder will be zero.
+</div>
+<p>The solutions below are examples; you might come up with something different that is still correct.</p>
+<table>
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col>
+</colgroup>
+<thead>
+<tr>
+<th>
+Condition to test (in words)
+</th>
+<th>
+Your conditional expression <br>to try out in the program
+</th>
+<th>
+Values of variables to test (with results)
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<code>number</code> is between 10 and 20 inclusive (i.e., include 10 and 20)
+</td>
+<td>
+<div class="solution">
+<p>There are a number of possibilities, but the most straightforward is:</p>
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java">((number &gt;= <span class="dv">10</span>) &amp;&amp; (number &lt;= <span class="dv">20</span>))</code></pre></div>
+Note the need to repeat <code>number</code>: the intuitive <code class="sourceCode java">(number &gt;= <span class="dv">10</span> &amp;&amp; &lt;=<span class="dv">20</span>)</code> gives a compiler error, as does <code class="sourceCode java">(<span class="dv">10</span> &lt;= number &lt;= <span class="dv">20</span>)</code> (although this is allowed in some other programming languages)
+</div>
+</td>
+<td>
+<sol>number = 9 (false)<br> number = 10 (true)<br> number = 11 (true)<br> number = 19 (true)<br> number = 20 (true)<br> number = 21 (false)<br> </sol>
+</td>
+</tr>
+<tr>
+<td>
+<code>number</code> is between 10 and 20 exclusive (i.e., exclude 10 and 20)
+</td>
+<td>
+<div class="solution">
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java">((number &gt; <span class="dv">10</span> ) &amp;&amp; (number &lt; <span class="dv">20</span>))`</code></pre></div>
+</div>
+</td>
+<td>
+<sol>number = 9 (false)<br> number = 10 (false)<br> number = 11 (true)<br> number = 19 (true)<br> number = 20(false)<br> number = 21 (false)</sol>
+</td>
+</tr>
+<tr>
+<td>
+<code>number</code> is even
+</td>
+<td>
+<div class="solution">
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java">(number % <span class="dv">2</span> == <span class="dv">0</span>)</code></pre></div>
+Note that operator precedence ensures that the remainder is done before the equality comparison. If you think it reads more clearly as <code class="sourceCode java">((number % <span class="dv">2</span>) == <span class="dv">0</span>)</code> then that is OK as well
+</div>
+</td>
+<td>
+<sol>number = 1(false)<br> number = 2 (true)<br> number = 0 (true)<br> a variety of other ints (positive &amp; negative, even and odd)</sol>
+</td>
+</tr>
+<tr>
+<td>
+<code>number</code> is divisible by 4
+</td>
+<td>
+<div class="solution">
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java">(number % <span class="dv">4</span> == <span class="dv">0</span>)</code></pre></div>
+</div>
+</td>
+<td>
+<sol>A variety of ints (positive and negative), some divisible by 4, some not, would be suitable test values. A good approach would be to select sequential values so that all possible remainders (0–3) are produced by the remainder operator, e.g.:<br> number = 16 (remainder 0)<br> number = 17 (remainder 1)<br> number = 18 (remainder 2)<br> number = 19 (remainder 3)</sol>
+</td>
+</tr>
+</tr>
+<tr>
+<td>
+<code>number</code> is divisible by 400
+</td>
+<td>
+<div class="solution">
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java">(number % <span class="dv">400</span> == <span class="dv">0</span>)</code></pre></div>
+</div>
+</td>
+<td>
+<sol>A variety of ints (positive and negative), some divisible by 400, some not, would be suitable test values. Trying all the possible non-zero remainders (1–399) would be <em>very</em> tedious and probably not necessary.
+</td>
+</tr>
+<tr>
+<td>
+<code>number</code> is not divisible by 100
+</td>
+<td>
+<div class="solution">
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java">(number % <span class="dv">100</span> != <span class="dv">0</span>)</code></pre></div>
+<p>An alternative form would be</p>
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java">(!(number % <span class="dv">100</span> == <span class="dv">0</span>))</code></pre></div>
+<p>Note the parentheses: it is necessary to do both the remainder and the comparison before the logical negation</p>
+</div>
+</td>
+<td>
+<sol>A variety of ints (positive and negative), some divisible by 100, some not, would be suitable test values. Trying all the possible non-zero remainders (1–99) would be <em>very</em> tedious and probably not necessary.
+</td>
+</tr>
+<tr>
+<td>
+<code>state</code> is <code class="sourceCode java"><span class="kw">false</span></code>
+</td>
+<td>
+<div class="solution">
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java">(!state)</code></pre></div>
+<p>Note the use of the logical <em>not</em> operator. This operator needs just one operand and inverts its truth value. You could also write this condition as</p>
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java">(state == <span class="kw">false</span>)</code></pre></div>
+<p>but this actually results in two boolean tests being performed (the equality comparison followed by testing if that result is true and the <code>if</code> should be executed) so the first approach is preferred.</p>
+</div>
+</td>
+<td>
+<sol>state = true<br> (condition evaluates to false)<br><br> state = false<br> (condition evaluates to true)
+</td>
+</sol>
+</td>
+</tr>
+<tr>
+<td>
+<code>letter1</code> has the value <code>'b'</code> stored in it
+</td>
+<td>
+<div class="solution">
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java">(letter1 == &#39;b&#39;)</code></pre></div>
+<p>Note that the letter b must have single quotes to represent a single <code>char</code> value. It would also be possible to do something more elaborate for this test:</p>
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java"><span class="dt">final</span> <span class="dt">char</span> TEST = &#39;b&#39;;</code></pre></div>
+<p>near the top of the program, and then the test would become</p>
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java">(letter1 == TEST)</code></pre></div>
+</div>
+</td>
+<td>
+<sol>letter = ‘b’ (true)<br>a variety of other values (e.g., ‘B’, ‘1’, etc.)</sol>
+</td>
+</tr>
+<tr>
+<td>
+<code>letter1</code> and <code>letter2</code> each have the same value stored
+</td>
+<td>
+<div class="solution">
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java">(letter1 == letter2)</code></pre></div>
+</td>
+<td>
+<sol>various values for both letter1 and letter2 (sometimes both the same, sometimes different)</sol>
+</td>
+</tr>
+<tr>
+<td>
+<code>word1</code> and <code>word2</code> both hold references to <code>Strings</code> with the same contents
+</td>
+<td>
+<div class="solution">
+<p>Any of</p>
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java">(word1.<span class="fu">equals</span>(word2))</code></pre></div>
+<p>or</p>
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java">(word2.<span class="fu">equals</span>(word1))</code></pre></div>
+<p>or even</p>
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java">(word1.<span class="fu">compareTo</span>(word2) == <span class="dv">0</span>)</code></pre></div>
+<p>or with the order reversed</p>
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java">(word2.<span class="fu">compareTo</span>(word1) == <span class="dv">0</span>)</code></pre></div>
+</div>
+</td>
+<td>
+<sol>various values for the Strings (sometimes both the same, sometimes different; try making the only difference be case. The equals method will return false)</sol>
+</td>
+</tr>
+<tr>
+<td>
+<code>word1</code> and <code>word2</code> both hold references to the very same <code>String</code> (NB not two <code>Strings</code> with the same contents)
+</td>
+<td>
+<div class="solution">
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java">(word1 == word2)</code></pre></div>
+</div>
+</td>
+<td>
+<div class="solution">
+<p>With the starting values given this will be false (as the are two different objects in memory). To make it true it is necessary to make the two references the same, such as by assigning the value of one to the other:</p>
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java">word1 = word2;</code></pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="showAllSolutions">
+
+</div>
+</body>
+</html>

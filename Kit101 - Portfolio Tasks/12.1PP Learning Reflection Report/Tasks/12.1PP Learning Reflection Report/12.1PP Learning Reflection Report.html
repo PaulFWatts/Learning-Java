@@ -1,0 +1,171 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>PP Task 12.1 Learning Reflection Report</title>
+  <!--<style type="text/css">code{white-space: pre;}</style>-->
+  <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link rel="stylesheet" href="../../templates/utas_ict_mylo.css">
+  <link rel="stylesheet" href="../../templates/task.css">
+  <!--<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script> Breaks toggling of sections, making style & script visible! -->
+  <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+  <script src="../../templates/solutions.js"></script>
+  <script type="text/javascript">
+    let onMyLO = () => window.location.host === 'mylo.utas.edu.au';
+    $(function() { if (onMyLO()) { $('.title, header').addClass('printonly'); } }); //avoid duplicating title, etc. in document and above iframe
+    var MYLO_SCROLL_DELAY = 350; //appears to work OK when hosted on MyLO
+    $(function() {
+      function toggleSection(heading, scrollTo) {
+        if (!heading) return;
+        heading.toggleClass('collapsed')
+               .children('span.expandable').toggle();
+        heading.nextUntil('h1').toggle(300)
+               .promise().done( function() {
+                 if (scrollTo) {
+                   let scrollIt = () => { scrollTo[0].scrollIntoView(true); };
+                   onMyLO() ? setTimeout(scrollIt, MYLO_SCROLL_DELAY) : scrollIt();
+                 }
+               });
+      }
+
+      var headings = $('h1').not('.title, .subtitle');
+      headings.css('cursor', 'pointer')
+              .prepend('<span class="expandable noprint" style="display: none;">&#9655;</span><span class="expandable noprint">&bigtriangledown;</span> ')
+              .click( function() { toggleSection( $(this) ); } );
+      if (headings.length == 0) { /* workaround until pandoc template understood better */
+        $('.expandAll').remove();
+      }
+
+      function toggleTarget(target, evt) { //evt is optional event that triggered this (indirectly)
+        var h = target.is('h1.collapsed') ? target : ( target.is(':hidden') ? target.prevAll('h1').first() : null );
+        if (h) {
+          if (evt) { evt.preventDefault(); } //Added so browser doesn't attempt to scroll to not-yet-visible element
+          toggleSection(h, target);
+        }
+      }
+
+      $('a[href^="#"]').click( function(evt) {
+        toggleTarget( $(this.hash), evt ); }
+      );
+      $('#openall').click( function(evt) {
+        evt.preventDefault();
+        var self = $(this);
+        var totoggle = self.children('.open:visible').length > 0 ? $('h1.collapsed') : $('h1').not('.collapsed');
+        self.children('.expandable').toggle();
+        totoggle.not('.title, .subtitle').each( function(i, el) { toggleSection($(el)); } );
+      });
+
+    });
+  </script>
+  <script type="text/javascript">
+  $(function() {
+    /* Formats learning outcomes, if present (revised 2019-1 as ILOs 6-8 were removed) */
+    //let iloIcons = ['', 'eye-open', 'random', 'pencil', 'th', 'duplicate', 'user', 'comment', 'question-sign'];
+    let iloIcons = ['', 'eye-open', 'random', 'pencil', 'th', 'duplicate'];
+    let ilos = ['',
+      'read code or identify errors',
+      'think algorithmically and use structured programming',
+      'write small programs',
+      'use functional decomposition to break down problems and solutions into smaller parts',
+      'document programs, both externally and within the code'];
+
+    function addILOIcons($ilos) {
+      let verb = $ilos.hasClass('assesses') ? 'assesses' : 'develops';
+      var formattedILOs = [];
+
+      for (let ilo of $ilos.html().split(', ')) {
+        let i = parseInt(ilo);
+	formattedILOs.push( `<span class="ilo" title="This task ${verb} your ability to ${ilos[i]}">${ilo} <span class="glyphicon glyphicon-${iloIcons[i]}"></span></span>` );
+      }
+      $ilos.html(formattedILOs.join('&emsp;'));
+    }
+
+    $('.ilos').each(function (i, e) { addILOIcons($(e)); });
+
+    /* Injects the cumbersome glyphicon for videos in front of my own tag <minilecture> */
+    $('<span class="glyphicon glyphicon-facetime-video" style="margin-right: 0.5em;"></span>').insertBefore('minilecture');
+  });
+  </script>
+</head>
+<body>
+<h1 class="unit title">KIT101 Programming Fundamentals</h1>
+<header>
+<h1 class="title">PP Task 12.1 Learning Reflection Report</h1>
+</header>
+<!--
+<p class="noprint expandAll">[ <a href="#" id="openall"><span class="expandable open" style="display: none;">&harr; Expand</span><span class="expandable close">&cularr; Close</span> all sections</a> ] Only visible sections will be included when printing this document.</p>
+-->
+<h1 id="overview">Overview</h1>
+<!-- To be eligible for top marks in this unit, you must demonstrate significant depth of understanding of the topics and concepts related to the unit learning outcomes. -->
+<table>
+<colgroup>
+<col width="22%" />
+<col width="77%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><p>Purpose:</p></td>
+<td><p>Application for a passing grade in the unit, with justifications against the assessment criteria in preparation for portfolio submission.</p></td>
+</tr>
+<tr class="even">
+<td><p>Task:</p></td>
+<td><p>Complete the learning reflection report.</p></td>
+</tr>
+<tr class="odd">
+<td><p>Learning Outcomes:</p></td>
+<td><p><span class="assesses ilos">1, 2, 3, 4, 5</span></p></td>
+</tr>
+<tr class="even">
+<td><p>Time:</p></td>
+<td><p>This task must be completed before the start of week 13 to ensure you can get feedback!</p></td>
+</tr>
+<tr class="odd">
+<td><p>Resources:</p></td>
+<td><ul>
+<li>MyLO: Portfolio Tasks &gt; Task Learning Outcomes</li>
+</ul></td>
+</tr>
+</tbody>
+</table>
+<h2 id="submission-details">Submission Details</h2>
+<p>Upload the following to the MyLO submission folder for this task:</p>
+<ul>
+<li>A <strong>PDF document</strong> with your description</li>
+</ul>
+<h2 id="assessment-criteria">Assessment Criteria</h2>
+<p>A <span class="status completed">Completed</span> submission will:</p>
+<ul>
+<li>Clearly demonstrate how you have met the unit’s learning outcomes, with reference to the tasks you have completed during the semester</li>
+<li>Be your own work and expresses your ideas in your own words. Where ideas and descriptions are related to other people they are appropriately cited and referenced (you are not required to refer to any external sources though)</li>
+</ul>
+<div class="note box">
+<strong>Note:</strong> Your submission will be marked as <span class="status completed">Completed</span> when it is of the minimally acceptable standard, <em>not</em> when it reaches a high standard. This means you can, and probably should, further improve it based on the feedback you receive before submitting the version to be assessed as part of your final grade.
+</div>
+<h1 id="instructions">Instructions</h1>
+<p>The Learning Reflection Report is your opportunity to outline how the work you have completed demonstrates that you have met all of the unit’s learning outcomes. In this document you will indicate the grade you are applying for, and provide reasons why you should be awarded this grade based on the unit’s assessment criteria.</p>
+<p>Download the template for the Learning Reflection Report and prepare a first draft. Try to include some of the following aspects:</p>
+<ul>
+<li><p>Use the <strong>Task Learning Outcomes</strong> document under Portfolio Tasks in MyLO to assess how the tasks you have completed relate to the unit learning outcomes. Make sure that you have a range of evidence for each of the unit learning outcomes.</p>
+<img src="task_ilos.png" title="Screenshot of Task Learning Outcomes page on MyLO" style="display: block; width: 70%; margin: 1em auto 1em auto; border: 1px solid grey;"></li>
+<li>In the report, indicate the grade you think you will be able to achieve.</li>
+<li>Read over the checklist, and make sure you will have the required work to achieve this grade.</li>
+<li><p>Write something up for the reflections section of the Learning Reflection Report, or list some dot points you can expand later.</p></li>
+</ul>
+<p>Submit the draft for feedback, and this will be discussed in the tutorial class in week 13.</p>
+<div class="tip box">
+<strong>Tip:</strong> The Learning Reflection Report has a <em>large</em> impact on your final result. This is the document where you make a case that you should be awarded a certain grade. The more clearly you can demonstrate good quality work in this document the better grade you are likely to receive. Aim to be clear and concise, and refer to the work you have included to demonstrate your understanding.
+</div>
+<div class="note box">
+<strong>Note:</strong> Week 12 is the last week to submit things for feedback. Make sure you finish off any tasks you have outstanding—get them signed off during consultation—and make sure you get this weeks material done on time!
+</div>
+<div class="note box">
+<strong>Note:</strong> In this <em>summary</em> of your semester’s work just refer to the other pieces included in your portfolio (that is, submitted to MyLO) rather than re-writing them here. Think of the Learning Reflection Report like an index referring the reader to other pieces of work—your programs, code traces, reports, diagrams, and so on—that demonstrate your achievements.
+</div>
+<!-- Keeping this for when we can actually generate a portfolio without a day's effort being required: <div class="note box">**Note:** The Learning Reflection Report will go at the start <todo>of your portfolio</todo>. It will be followed by all of your programs, code traces, reports, diagrams, and so on. In this *summary* of your semester's work just refer to the other pieces included in your portfolio rather than re-writing them here. Think of this like an index referring the reader to other pieces that demonstrate your achievements.</div>-->
+<hr />
+</body>
+</html>

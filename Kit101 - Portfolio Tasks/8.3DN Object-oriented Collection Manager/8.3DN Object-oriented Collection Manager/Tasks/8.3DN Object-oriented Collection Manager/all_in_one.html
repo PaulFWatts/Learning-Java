@@ -1,0 +1,180 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title></title>
+  <!--<style type="text/css">code{white-space: pre;}</style>-->
+  <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+  </style>
+  <link rel="stylesheet" href="../../templates/utas_ict_mylo.css">
+  <link rel="stylesheet" href="../../templates/task.css">
+  <!--<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script> Breaks toggling of sections, making style & script visible! -->
+  <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+  <script src="../../templates/solutions.js"></script>
+  <script type="text/javascript">
+    let onMyLO = () => window.location.host === 'mylo.utas.edu.au';
+    $(function() { if (onMyLO()) { $('.title, header').addClass('printonly'); } }); //avoid duplicating title, etc. in document and above iframe
+    var MYLO_SCROLL_DELAY = 350; //appears to work OK when hosted on MyLO
+    $(function() {
+      function toggleSection(heading, scrollTo) {
+        if (!heading) return;
+        heading.toggleClass('collapsed')
+               .children('span.expandable').toggle();
+        heading.nextUntil('h1').toggle(300)
+               .promise().done( function() {
+                 if (scrollTo) {
+                   let scrollIt = () => { scrollTo[0].scrollIntoView(true); };
+                   onMyLO() ? setTimeout(scrollIt, MYLO_SCROLL_DELAY) : scrollIt();
+                 }
+               });
+      }
+
+      var headings = $('h1').not('.title, .subtitle');
+      headings.css('cursor', 'pointer')
+              .prepend('<span class="expandable noprint" style="display: none;">&#9655;</span><span class="expandable noprint">&bigtriangledown;</span> ')
+              .click( function() { toggleSection( $(this) ); } );
+      if (headings.length == 0) { /* workaround until pandoc template understood better */
+        $('.expandAll').remove();
+      }
+
+      function toggleTarget(target, evt) { //evt is optional event that triggered this (indirectly)
+        var h = target.is('h1.collapsed') ? target : ( target.is(':hidden') ? target.prevAll('h1').first() : null );
+        if (h) {
+          if (evt) { evt.preventDefault(); } //Added so browser doesn't attempt to scroll to not-yet-visible element
+          toggleSection(h, target);
+        }
+      }
+
+      $('a[href^="#"]').click( function(evt) {
+        toggleTarget( $(this.hash), evt ); }
+      );
+      $('#openall').click( function(evt) {
+        evt.preventDefault();
+        var self = $(this);
+        var totoggle = self.children('.open:visible').length > 0 ? $('h1.collapsed') : $('h1').not('.collapsed');
+        self.children('.expandable').toggle();
+        totoggle.not('.title, .subtitle').each( function(i, el) { toggleSection($(el)); } );
+      });
+
+    });
+  </script>
+  <script type="text/javascript">
+  $(function() {
+    /* Formats learning outcomes, if present (revised 2019-1 as ILOs 6-8 were removed) */
+    //let iloIcons = ['', 'eye-open', 'random', 'pencil', 'th', 'duplicate', 'user', 'comment', 'question-sign'];
+    let iloIcons = ['', 'eye-open', 'random', 'pencil', 'th', 'duplicate'];
+    let ilos = ['',
+      'read code or identify errors',
+      'think algorithmically and use structured programming',
+      'write small programs',
+      'use functional decomposition to break down problems and solutions into smaller parts',
+      'document programs, both externally and within the code'];
+
+    function addILOIcons($ilos) {
+      let verb = $ilos.hasClass('assesses') ? 'assesses' : 'develops';
+      var formattedILOs = [];
+
+      for (let ilo of $ilos.html().split(', ')) {
+        let i = parseInt(ilo);
+	formattedILOs.push( `<span class="ilo" title="This task ${verb} your ability to ${ilos[i]}">${ilo} <span class="glyphicon glyphicon-${iloIcons[i]}"></span></span>` );
+      }
+      $ilos.html(formattedILOs.join('&emsp;'));
+    }
+
+    $('.ilos').each(function (i, e) { addILOIcons($(e)); });
+
+    /* Injects the cumbersome glyphicon for videos in front of my own tag <minilecture> */
+    $('<span class="glyphicon glyphicon-facetime-video" style="margin-right: 0.25em;"></span>').insertBefore('minilecture');
+  });
+  </script>
+</head>
+<body>
+<h1 class="unit title">KIT101 Programming Fundamentals</h1>
+<!--
+<p class="noprint expandAll">[ <a href="#" id="openall"><span class="expandable open" style="display: none;">&harr; Expand</span><span class="expandable close">&cularr; Close</span> all sections</a> ] Only visible sections will be included when printing this document.</p>
+-->
+<script type="text/javascript">
+$(function() {
+  $('h1.title').html('An all-in-one application');
+});
+</script>
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java"><span class="kw">import</span><span class="im"> java.util.Scanner;</span>
+
+<span class="kw">public</span> <span class="kw">class</span> MainProgram {
+
+    <span class="kw">public</span> <span class="dt">static</span> <span class="dt">int</span> <span class="fu">addNumber</span>(<span class="bu">Scanner</span> in, <span class="dt">int</span>[] data, <span class="dt">int</span> numItems) {
+        <span class="kw">if</span> (numItems &lt; data.<span class="fu">length</span>) {
+            <span class="bu">System</span>.<span class="fu">out</span>.<span class="fu">print</span>(<span class="st">&quot;Enter next value: &quot;</span>);
+            data[numItems] = in.<span class="fu">nextInt</span>();
+            numItems++;
+        }
+        <span class="kw">return</span> numItems;
+    }
+
+    <span class="kw">public</span> <span class="dt">static</span> <span class="dt">int</span> <span class="fu">total</span>(<span class="dt">int</span>[] data, <span class="dt">int</span> numItems) {
+        <span class="dt">int</span> sum = <span class="dv">0</span>;
+        <span class="kw">for</span> (<span class="dt">int</span> i = <span class="dv">0</span>; i &lt; numItems) {
+            sum += data[i];
+        }
+        <span class="kw">return</span> sum;
+    } 
+
+    <span class="kw">public</span> <span class="dt">static</span> <span class="dt">void</span> <span class="fu">main</span>(<span class="bu">String</span>[] args) {
+        <span class="bu">Scanner</span> sc = <span class="kw">new</span> <span class="bu">Scanner</span>(<span class="bu">System</span>.<span class="fu">in</span>);
+        <span class="dt">final</span> <span class="dt">int</span> CAPACITY = <span class="dv">10</span>; <span class="co">//maximum number of things</span>
+        <span class="dt">int</span>[] data = <span class="kw">new</span> <span class="dt">int</span>[CAPACITY]; <span class="co">//a collection of numbers</span>
+        <span class="dt">int</span> numItems = <span class="dv">0</span>; <span class="co">//number of items currently in collection</span>
+        <span class="dt">int</span> sum; <span class="co">//total of items in collection</span>
+
+        <span class="co">//Emulating a menu where the user happened to do Add action 3 times</span>
+        numItems = <span class="fu">addNumber</span>(sc, data, numItems);
+        numItems = <span class="fu">addNumber</span>(sc, data, numItems);
+        numItems = <span class="fu">addNumber</span>(sc, data, numItems);
+
+        <span class="co">//Emulating a menu where user then chose to display total of items</span>
+        sum = <span class="fu">total</span>(data, numItems);
+        <span class="bu">System</span>.<span class="fu">out</span>.<span class="fu">println</span>(<span class="st">&quot;Total of items is &quot;</span> + sum);
+    }
+}</code></pre></div>
+</body>
+</html>

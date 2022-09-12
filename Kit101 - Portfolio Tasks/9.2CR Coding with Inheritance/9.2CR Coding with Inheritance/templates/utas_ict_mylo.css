@@ -1,0 +1,411 @@
+/******************************************
+An adaptation of earlier styles used on School of Computing and Information
+Systems unit sites to suit the 2014 version of MyLO. Far from perfect, but
+contains some reasonable accommodations for basic syntax highlighting (if not
+done natively by your HTML generator) and for documents with clearly deliniated
+sections.
+
+Key revisions:
+2014--2016	Various changes
+2017-02-26	Changed default font (to Open Sans) and size (10pt -> 11pt)
+			Added various info boxes
+
+Author: James Montgomery (james.montgomery@utas.edu.au)
+******************************************/
+
+@import url(https://fonts.googleapis.com/css?family=Open+Sans);
+
+body {
+	background-color: #FFFFFF;
+	color: #000000;
+	font-family: "Open Sans", Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11pt;
+	border: 0.5em solid #FFFFFF;
+	white-space: normal;
+	margin-right: 1em;
+	margin-left: 1em;
+}
+
+table {
+	border: thin solid #999999;
+	border-collapse: collapse;
+}
+
+th {
+	background-color: #255584;
+	color: white;
+	font-family: inherit; /*Verdana, Arial, Helvetica, sans-serif;*/
+/*	font-size: 1em;*/
+	font-size: 11pt; /* For text not inside paragraph inside a table header */
+	/*border: 1px solid #9999CC;*/
+	padding: 0.5em;
+	text-align: left;
+}
+
+th.rowhead {
+	text-align: center;
+}
+
+td {
+	font-family: inherit; /*Verdana, Arial, Helvetica, sans-serif;*/
+/*	font-size: 1em;*/
+	font-size: 11pt; /* For text not inside paragraph inside a table */
+	border: 1px solid #BBBBBB;
+	padding: 0.5em;
+	vertical-align: top;
+	/*margin: 1px;*/
+}
+
+/* For those times that table is just used to create a 'tabular' layout */
+table.borderless { border: none; }
+.borderless td { border: none;  }
+
+.borderless td > ul { padding-left: 1.2em;  }
+
+p, li {
+/*	font-family: Verdana, Arial, Helvetica, sans-serif;*/
+/*	font-size: 1em;*/
+/*	font-size: 10pt; */
+}
+
+/* Refinement of standard spacing */
+td > ul, td > p { margin-top: 0em; }
+p + ul, div.boxed p + ul { margin-top: -1em; }
+li > p + ul { margin-top: 0em; }
+li > p { margin: 0em; } /* Only needed when pandoc decides to wrap li contents in p */
+li pre { margin: 0.2em 0em; }
+div.boxed > ul { margin-top: 0.5em; margin-bottom: 0.5em; }
+
+h1, h2, h3, h4, h5, h6 {
+	color: #255584;
+}
+
+h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {
+	text-decoration: none;
+	color: #255584;
+}
+
+h1 a:hover, h2 a:hover, h3 a:hover, h4 a:hover, h5 a:hover, h6 a:hover {
+	text-decoration: underline;
+}
+
+h1 {
+	/* border-bottom: 1px solid #255584; */
+	border-bottom: 1px solid #669ACC; /*3983CC;*/
+	/*line-height: 2em;*/
+	font-size: 1.5em;
+}
+
+h2 {
+/*	background-color: #DDDDDD; */
+	line-height: 1.6em;
+	font-size: 1.3em;
+/*	text-indent: 4pt; */
+}
+
+h3 {
+	line-height: 1.5em;
+	font-size: 1.15em;
+}
+
+h4 {
+	line-height: 1.4em;
+	font-size: 1em;
+	font-style: normal;
+}
+
+h5 {
+	font-size: 1em;
+	font-weight: bold;
+}
+
+h6 {
+	font-size: 12px;
+	font-weight: bold;
+}
+
+/* Pandoc generated classes */
+
+h1.title {
+	border-top: none;
+	margin-top: 0em;
+	border-bottom: 1px solid #255584;
+	padding-bottom: 0.5em;
+}
+
+h2.author {
+	font-size: 1.2em;
+	text-indent: 0;
+	line-height: normal;
+	background: none;
+}
+/*h2.author:before { content: "Contributors: "; }*/
+
+h3.date {
+	line-height: normal;
+}
+h3.date:before { content: "Revised: "; }
+
+/** Block quote */
+
+blockquote {
+  background: #f9f9f9;
+  border-left: 10px solid #ccc;
+  margin: 0em 10px;
+  padding: 0.5em 10px;
+}
+
+blockquote p {
+  display: inline;
+}
+
+/** Other small icon-like features */
+
+/* Use to insert a small 'test yourself' icon before an activity section */
+span.selftest:before { content: "\2611"; }
+
+/** Information boxes **/
+
+.box {
+	border-radius: 0.5em;
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+div.box {
+	padding: 1em 1em 1em 1em;
+	border-radius: 0.5em;
+	border-width: 2px;
+	border-style: solid;
+}
+
+div.box p:first-child {
+	margin-top: 0;
+}
+
+div.box p:last-child, div.box ul:last-child, div.box ol:last-child {
+	margin-bottom: 0;
+}
+
+
+div.tip {
+	border-color: green;
+	background: #bbffbb;
+}
+
+div.note {
+	border-color: orange;
+	background: #ffffbb;
+}
+
+
+div.activity {
+	border-color: grey;
+	background: #ffffe0;
+}
+
+div.listing, pre.listing {
+	border: 2px solid purple;
+	background: #ffbbff;
+	font-family: monospace;
+	white-space: pre;
+}
+
+/* ILOs are mostly formatted by JavaScript (adding glyph icons), but a little colour higlighting is also warranted */
+
+.ilos.assesses { color: DarkGreen; }
+
+/* A monospaced 'listing' that is not just code */
+
+div.listing p {
+	margin: 0;
+}
+
+div.listing code { background: none; }
+
+/* Useful styles for marking up lab sheets and the like to attract attention to particular points. */
+
+/* An action item for the author to address */
+todo { font-weight: bold; color: red; }
+
+/* Note, task or other non-heading, inline 'heading' */
+.nb {
+	font-variant: small-caps;
+	font-weight: bold;
+	color: navy;
+}
+
+.aside {
+	font-style: italic;
+	color: grey;
+}
+
+/* An answer. Firebrick is relatively bright, but still provides good contrast and appears as green to most people with colour blindness. */
+ans {
+	font-style: italic;
+	color: firebrick;
+}
+
+/* Code formatting */
+
+pre {
+	background: #eee;
+	overflow: auto;
+	white-space: pre-wrap;
+	padding: 1em;
+}
+
+/* When defining a 'template' for a code construct with nested 'boxed' elements, need more vertical space for them. */
+pre.template {
+	 line-height: 150%;
+}
+
+/* Required now pandoc emits code blocks as pre inside an enclosing div, so margins around paragraph and pre are no longer shared */
+div > pre {
+	margin: inherit;
+}
+
+code {
+	background: #eee;
+}
+
+/* code in a table header should do away with the grey background (or th's white text) */
+th code {
+	background: none;
+}
+
+/* adjust width of the line numbers 'block', when present. */
+.lineNumbers > pre { min-width: 1.5em; max-width: 2em; }
+
+pre.noWrap, table.noWrap pre { white-space: pre; }
+table.sourceCode { line-height: normal !important; }
+td.sourceCode { width: 95%; } /* have the source code side fill as much as possible */
+
+.codeblock {
+	border: 1px solid lightgrey;
+	background: #eee;
+}
+
+/* Keywords */
+code .kw, kw {
+	color: MediumBlue;
+	font-weight: bold;
+}
+
+/* Keyboard/user input */
+code.kb, code kb, pre kb {
+	color: OrangeRed;
+	font-weight: bold;
+}
+
+/* Class diagrams with tables */
+
+table.classdiagram { background: LightYellow; }
+
+.classdiagram tr:nth-child(1)>td { text-align: center; }
+.classdiagram td { border: 2px solid black; padding 1em; }
+
+/*
+a:link {
+ 	color: #6633CC;
+}
+
+a:visited {
+ 	color: #663399;
+}
+
+a:active {
+	color: #333333;
+}
+*/
+
+/* Printing related */
+
+/* To _hide_ content when viewed on screen, but include when printed (e.g., prevent document titles from being displayed when inside an iframe with a heading above it */
+@media screen {
+  .printonly { display: none; }
+}
+
+@media print {
+  .noprint { display: none !important; }
+  body {
+   	margin: 0em;
+  }
+  a {
+    color: blue;
+  }
+  div.solution > a, .showAllSolutions, div.enableSolutions {
+    display: none !important;
+  }
+
+  pre {
+    word-wrap: break-word;
+  }
+}
+
+/* Override pandoc's default colour for some code element types; need a more permanent solution */
+
+code > span.im { color: #0000dd; }
+
+/* Solution/spolier blocks */
+
+/* Hide the short sol(ution) wrapper element unless script does its magic to convert to a proper solution with link. */
+sol, .hidden {
+	display: none !important;
+}
+
+div.solution > a:first-child {
+	text-decoration: none;
+	display: block;
+	font-weight: bold;
+	line-height: 150%;
+}
+
+div.solution > a.showSol:first-child:before, div.showAllSolutions > button.showAll:first-child:before {
+	content: 'Show ';
+}
+
+div.solution > a:first-child:before, div.showAllSolutions > button:first-child:before {
+	content: 'Hide ';
+}
+
+a.hideSol + div:not(.boxed) > p { margin-top: 0em; }
+a.hideSol + div.boxed > p { margin-top: 0.5em; }
+
+div.showAllSolutions, div.enableSolutions {
+	margin: 1em 0em;
+}
+
+.boxed {
+	padding: 0em 0.5em;
+	border: 1px solid navy;
+}
+
+/* So tables with only solutions show cells with some more normal height */
+td > div.solution { min-height: 1em; }
+
+iframe.code {
+	border: none;
+	width: 100%;
+}
+
+/** Task related elements (which may appear in tasks or other documents. If moving to Sass or less then this could be placed somewhere else and mixed in as needed. */
+
+span.status { padding-left: 0.5em; padding-right: 0.5em; }
+/* Task or test */
+span.status.completed:before { content: '\1f3c1\a0 ' }
+span.status.completed { background-color: #99CC99; }
+/* Task */
+span.status.discuss:before { content: '\1f4ac\a0 ' }
+span.status.discuss { background-color: #99CCFF; }
+/* Task and test, but different meaning */
+span.status.redo:before { content: '\1f501\a0 ' }
+span.status.fix:before { content: '\1f527\a0 ' }
+span.status.redo, span.status.fix { background-color: #FFCC66; }
+/* Task */
+span.status.overdue:before { content: '\1f559\a0 ' }
+span.status.overdue { background-color: #FFCCFF; }
+/* Task and tests */
+span.status.fail:before { content: '\274c\a0 ' }
+span.status.resit:before { content: '\1f501\a0 ' }
+span.status.fail, span.status.resit { background-color: #FF9999; }

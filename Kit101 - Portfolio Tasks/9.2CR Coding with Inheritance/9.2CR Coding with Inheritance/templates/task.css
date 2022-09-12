@@ -1,0 +1,33 @@
+@import url(bootstrap-icons/bootstrap-icons.css);
+
+/*body {
+	font-size: 12pt;
+}
+*/
+
+/* Override default behaviour for unit title */
+.unit.title {
+	border: none;
+	margin-bottom: 0;
+}
+
+#overview ~ table:first-of-type { border: none; }
+#overview ~ table:first-of-type colgroup col { width: auto; }
+#overview ~ table:first-of-type td { border: none; padding-left: 0; }
+#overview ~ table:first-of-type td:first-child { font-weight: bold; white-space:nowrap; }
+#overview ~ table:first-of-type p { margin: 0; }
+#overview ~ table:first-of-type ul { padding-left: 1.5em; margin-bottom: 0; }
+
+.ilo {
+	cursor: help;
+}
+
+
+/*
+h1#instructions { page-break-before: always; }
+*/
+
+ol > li {
+	margin-bottom: 1em;
+}
+

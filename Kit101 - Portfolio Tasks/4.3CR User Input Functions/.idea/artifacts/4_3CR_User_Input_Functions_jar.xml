@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="4.3CR User Input Functions:jar">
+    <output-path>$PROJECT_DIR$/../../java-jars</output-path>
+    <root id="archive" name="4.3CR User Input Functions.jar">
+      <element id="module-output" name="4.3CR User Input Functions" />
+    </root>
+  </artifact>
+</component>

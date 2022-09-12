@@ -1,0 +1,125 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>KIT101 Self-study 5: Loops</title>
+  <!--<style type="text/css">code{white-space: pre;}</style>-->
+  <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link rel="stylesheet" href="../../templates/utas_ict_mylo.css">
+  <script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
+  <script src="../../templates/solutions.js"></script>
+  <script type="text/javascript">
+    $(function() {
+      function toggleSection(heading, scrollTo) {
+        if (!heading) return;
+        heading.toggleClass('collapsed')
+               .children('span.expandable').toggle();
+        heading.nextUntil('h1').toggle(300)
+               .promise().then( function() {
+                 if (scrollTo) {
+                   $('body, html').animate({ scrollTop: scrollTo.offset().top });
+                 }
+               });
+      }
+
+      var headings = $('h1').not('.title, .subtitle');
+      headings.css('cursor', 'pointer')
+              .prepend('<span class="expandable noprint" style="display: none;">&#9655;</span><span class="expandable noprint">&bigtriangledown;</span> ')
+              .click( function() { toggleSection( $(this) ); } );
+      if (headings.length == 0) { /* workaround until pandoc template understood better */
+        $('.expandAll').remove();
+      }
+
+      function toggleTarget(target) {  
+        var h = target.is('h1.collapsed') ? target : ( target.is(':hidden') ? target.prevAll('h1').first() : null );
+        toggleSection(h, target);
+      }
+
+      $('a[href^="#"]').click( function() {
+        toggleTarget( $(this.hash) );
+      });
+      $('#openall').click( function(evt) {
+        evt.preventDefault();
+        var self = $(this);
+        var totoggle = self.children('.open:visible').length > 0 ? $('h1.collapsed') : $('h1').not('.collapsed');
+        self.children('.expandable').toggle();
+        totoggle.not('.title, .subtitle').each( function(i, el) { toggleSection($(el)); } );
+      });
+
+    });
+  </script>
+</head>
+<body>
+<header>
+<h1 class="title">KIT101 Self-study 5: Loops</h1>
+</header>
+<p class="noprint expandAll">[ <a href="#" id="openall"><span class="expandable open" style="display: none;">&harr; Expand</span><span class="expandable close">&cularr; Close</span> all sections</a> ] Only visible sections will be included when printing this document.</p>
+<h2 id="overview">Overview</h2>
+<p>These activities give you practise in reading and writing code that contains loops.</p>
+<h2 id="objectives">Objectives</h2>
+<p>After completing these activities you should be able to:</p>
+<ul>
+<li>Recognise the components of a loop in code</li>
+<li>Plan, implement, test, and debug programs that use loops to solve problems</li>
+<li>Plan, implement, test, and debug programs that use nested flow of control to solve problems</li>
+</ul>
+<h2 id="preparation">Preparation</h2>
+<style type="text/css">
+div.sidebyside { vertical-align: top; margin-left: 0.5em; margin-top: 0.5em;}
+.sidebyside { display: inline-block; }
+.sidebyside p { margin: 0; }
+</style>
+<ol type="1">
+<li>Review the relevant lectures and notes.</li>
+<li><a href="self-study05.zip" title="Download a zip file of the files used in these exercises">Download the starter files</a> (zipped folder) for these activities. Different files are used in different activities, but it is faster to download the full set all at once. Make sure you unzip the files to your work area.</li>
+<li><p>Check that you can write the “template” code for each of the loop constructs in Java.</p>
+<div class="box">
+<p><strong>while loop</strong></p>
+<pre class="template sidebyside"><code>while ( <em class="boxed">boolean expression</em> ) {
+    <em class="boxed">statement(s)</em>
+}</code></pre>
+<div class="sidebyside">
+<p>I: before code of loop<br> T: in ( )<br> B: in block { }<br> U: in block</p>
+</div>
+<div class="note box">
+<strong>Note:</strong> As this is a <em>pre</em>-tested loop, terms in the test must have a value when the loop starts
+</div>
+</div>
+<div class="box">
+<p><strong>do while loop</strong></p>
+<pre class="template sidebyside"><code>do {
+    <em class="boxed">statement(s)</em>
+} while ( <em class="boxed">boolean expression</em> );</code></pre>
+<div class="sidebyside">
+<p>I: before code of loop<br> B: in block { }<br> U: in block<br> T: in ( )</p>
+</div>
+<div class="note box">
+<strong>Note:</strong> As this is a <em>post</em>-tested loop it will always execute at least once
+</div>
+</div>
+<div class="box">
+<p><strong>for loop</strong></p>
+<pre class="template sidebyside"><code>for (<em class="boxed">initialisation</em>; <em class="boxed">boolean expression</em>; <em class="boxed">increment</em>) {
+    <em class="boxed">statement(s)</em>
+}</code></pre>
+<div class="sidebyside">
+<p>I: first statement in ( ) <br> T: second statement in ( )<br> B: in block { }<br> U: third statement in ()</p>
+</div>
+<div class="note box">
+<strong>Note:</strong> This is a <em>pre</em>-tested loop
+</div>
+</div></li>
+</ol>
+<h2 id="activities">Activities</h2>
+<ol type="1">
+<li><a href="selfstudy0501.html">Identify components of loops in existing program code</a></li>
+<li><a href="selfstudy0502.html">Plan, implement, and test loop algorithms</a></li>
+<li><a href="selfstudy0503.html">Plan algorithms using nested control structures</a></li>
+</ol>
+<!-- <address>Last modified on 27 February 2016 by James Montgomery, School of Engineering &amp; ICT, University of Tasmania.</address> -->
+</body>
+</html>

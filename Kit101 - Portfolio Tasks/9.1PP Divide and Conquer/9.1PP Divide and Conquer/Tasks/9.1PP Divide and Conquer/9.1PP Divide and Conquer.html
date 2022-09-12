@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>PP Task 9.1 Divide and Conquer</title>
+  <!--<style type="text/css">code{white-space: pre;}</style>-->
+  <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+  </style>
+  <link rel="stylesheet" href="../../templates/utas_ict_mylo.css">
+  <link rel="stylesheet" href="../../templates/task.css">
+  <!--<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script> Breaks toggling of sections, making style & script visible! -->
+  <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+  <script src="../../templates/solutions.js"></script>
+  <script type="text/javascript">
+    let onMyLO = () => window.location.host === 'mylo.utas.edu.au';
+    $(function() { if (onMyLO()) { $('.title, header').addClass('printonly'); } }); //avoid duplicating title, etc. in document and above iframe
+    var MYLO_SCROLL_DELAY = 350; //appears to work OK when hosted on MyLO
+    $(function() {
+      function toggleSection(heading, scrollTo) {
+        if (!heading) return;
+        heading.toggleClass('collapsed')
+               .children('span.expandable').toggle();
+        heading.nextUntil('h1').toggle(300)
+               .promise().done( function() {
+                 if (scrollTo) {
+                   let scrollIt = () => { scrollTo[0].scrollIntoView(true); };
+                   onMyLO() ? setTimeout(scrollIt, MYLO_SCROLL_DELAY) : scrollIt();
+                 }
+               });
+      }
+
+      var headings = $('h1').not('.title, .subtitle');
+      headings.css('cursor', 'pointer')
+              .prepend('<span class="expandable noprint" style="display: none;">&#9655;</span><span class="expandable noprint">&bigtriangledown;</span> ')
+              .click( function() { toggleSection( $(this) ); } );
+      if (headings.length == 0) { /* workaround until pandoc template understood better */
+        $('.expandAll').remove();
+      }
+
+      function toggleTarget(target, evt) { //evt is optional event that triggered this (indirectly)
+        var h = target.is('h1.collapsed') ? target : ( target.is(':hidden') ? target.prevAll('h1').first() : null );
+        if (h) {
+          if (evt) { evt.preventDefault(); } //Added so browser doesn't attempt to scroll to not-yet-visible element
+          toggleSection(h, target);
+        }
+      }
+
+      $('a[href^="#"]').click( function(evt) {
+        toggleTarget( $(this.hash), evt ); }
+      );
+      $('#openall').click( function(evt) {
+        evt.preventDefault();
+        var self = $(this);
+        var totoggle = self.children('.open:visible').length > 0 ? $('h1.collapsed') : $('h1').not('.collapsed');
+        self.children('.expandable').toggle();
+        totoggle.not('.title, .subtitle').each( function(i, el) { toggleSection($(el)); } );
+      });
+
+    });
+  </script>
+  <script type="text/javascript">
+  $(function() {
+    /* Formats learning outcomes, if present (revised 2019-1 as ILOs 6-8 were removed) */
+    //let iloIcons = ['', 'eye-open', 'random', 'pencil', 'th', 'duplicate', 'user', 'comment', 'question-sign'];
+    let iloIcons = ['', 'eye-open', 'random', 'pencil', 'th', 'duplicate'];
+    let ilos = ['',
+      'read code or identify errors',
+      'think algorithmically and use structured programming',
+      'write small programs',
+      'use functional decomposition to break down problems and solutions into smaller parts',
+      'document programs, both externally and within the code'];
+
+    function addILOIcons($ilos) {
+      let verb = $ilos.hasClass('assesses') ? 'assesses' : 'develops';
+      var formattedILOs = [];
+
+      for (let ilo of $ilos.html().split(', ')) {
+        let i = parseInt(ilo);
+	formattedILOs.push( `<span class="ilo" title="This task ${verb} your ability to ${ilos[i]}">${ilo} <span class="glyphicon glyphicon-${iloIcons[i]}"></span></span>` );
+      }
+      $ilos.html(formattedILOs.join('&emsp;'));
+    }
+
+    $('.ilos').each(function (i, e) { addILOIcons($(e)); });
+
+    /* Injects the cumbersome glyphicon for videos in front of my own tag <minilecture> */
+    $('<span class="glyphicon glyphicon-facetime-video" style="margin-right: 0.5em;"></span>').insertBefore('minilecture');
+  });
+  </script>
+</head>
+<body>
+<h1 class="unit title">KIT101 Programming Fundamentals</h1>
+<header>
+<h1 class="title">PP Task 9.1 Divide and Conquer</h1>
+</header>
+<!--
+<p class="noprint expandAll">[ <a href="#" id="openall"><span class="expandable open" style="display: none;">&harr; Expand</span><span class="expandable close">&cularr; Close</span> all sections</a> ] Only visible sections will be included when printing this document.</p>
+-->
+<h1 id="overview">Overview</h1>
+<table>
+<colgroup>
+<col width="22%" />
+<col width="77%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><p>Purpose:</p></td>
+<td><p>Apply your functional decomposition skills to a new task with familiar elements.</p></td>
+</tr>
+<tr class="even">
+<td><p>Task:</p></td>
+<td><p>Implement a DNA sequence (i.e., String) manipulation program consisting of a number of relatively small methods.</p></td>
+</tr>
+<tr class="odd">
+<td><p>Learning Outcomes:</p></td>
+<td><p><span class="ilos">2, 3, 4, 5</span></p></td>
+</tr>
+<tr class="even">
+<td><p>Time:</p></td>
+<td><p>Aim to complete this task before the start of Week 10.</p></td>
+</tr>
+<tr class="odd">
+<td><p>Resources:</p></td>
+<td><ul>
+<li>Introductory Programming Notes:
+<ul>
+<li>05 Using Objects</li>
+<li>07 Methods in Self-contained Programs</li>
+<li>08 Making Decisions</li>
+<li>09 Repeating Actions with Loops</li>
+<li>13 Functional Decomposition</li>
+</ul></li>
+<li>Online Mini-lectures:
+<ul>
+<li>Making your own methods: <minilecture>…in self-contained programs</minilecture></li>
+</ul></li>
+</ul></td>
+</tr>
+</tbody>
+</table>
+<!-- Adjust resources to suit task. 05 is good for String manipulation tasks, while the array-related content can be removed if there are no arrays :-)
+Notes...
+|                    |     - 10 Managing Collections with Arrays
+mini-lectures...
+|                    |     - Arrays: <minilecture>Writing methods to work with arrays</minilecture>
+-->
+<h2 id="submission-details">Submission Details</h2>
+<p>Upload the following to the MyLO submission folder for this task:</p>
+<ul>
+<li>The <strong>source code</strong> for your program</li>
+<li>A <strong>screenshot</strong> of the program during execution</li>
+<li>An image (photo or scan) of the <strong>structure chart</strong> describing your program</li>
+</ul>
+<h2 id="assessment-criteria">Assessment Criteria</h2>
+<p>A <span class="status completed">Completed</span> submission will:</p>
+<ul>
+<li>Implement all required functionality</li>
+<li>Import only those additional classes that it actually uses <!-- Mostly this just for the alternative version --></li>
+<li>Have little code in main() (likely less than 10 lines of code, but also more than just one)</li>
+<li>Exhibit good use of functional decomposition, with a number of small methods to solve different parts of the task</li>
+<li>Show the connections between methods in your program in the structure chart</li>
+<li>Make use of String <!--or Character -->methods wherever suitable <!--- Make use of the utility methods in java.util.Arrays where suitable --></li>
+<li>Follow the unit’s coding style for layout, variable names (use of case), and commenting (including your name at the top)</li>
+<li>Compile and run, with the screenshot showing that it works</li>
+</ul>
+<h1 id="instructions">Instructions</h1>
+<p>In this task you will implement a single-source file program called <strong>DNA Sequencer</strong>, which will perform text operations on a String representing a <a href="https://en.wikipedia.org/wiki/DNA" title="Read about DNA at Wikipedia if you like, but all relevant details are included in the task description" target="_blank">DNA sequence</a>. You do not need to remember high school biology for this task. All relevant information is included here.</p>
+<p>In this task it is left to you to decide how the program should be broken down into methods (as a rough guide, a <span class="status completed">Completed</span> solution will have between 5 and 8 relatively small methods, including main). We will accept a broad range of solutions, not merely the sample solution we created when designing the task.</p>
+<p>A description of the program and its functionality is given next, followed by a number of suggestions for how to implement some of the trickier functionality.</p>
+<h3 id="background-information-about-dna">Background information about DNA</h3>
+<ul>
+<li>A DNA sequence consists of a restricted alphabet of ‘A’, ‘T’, ‘G’ and ‘C’, which are known as <em>bases</em>. Your program will read a single piece of text representing such a sequence</li>
+<li>Because DNA sequencing technology is imperfect the sequence given to your program may include invalid characters (which your program will replace with a special character meaning ‘unknown’)</li>
+<li>DNA strands are actually made up of two complementary sequences, with strict rules about which bases appear with which other bases (<em>A</em> only ever pairs with <em>T</em>, <em>G</em> only ever pairs with <em>C</em>). Your program will be able to switch between the original sequence and its complement (more details are given later)</li>
+<li>A common operation on a DNA sequence is <em>transcription</em>, where a part of the sequence is converted into <a href="https://en.wikipedia.org/wiki/DNA#Transcription_and_translation" title="Read about real DNA transcription at Wikiepedia if you like, but the rules are simple and are given here" target="_blank"><em>messenger RNA</em> (mRNA)</a>, which is an intermediate step to translating the code into proteins (this second step is beyond your program). RNA, which is an older form of genetic material than DNA, uses the same alphabet as DNA except that <em>T</em> is replaced by <em>U</em></li>
+</ul>
+<h2 id="dna-sequencer">DNA Sequencer</h2>
+<p>The program should implement the following high-level algorithm:</p>
+<pre class="listing box">Program: <strong>DNA Sequencer</strong>
+
+Steps:
+1    Display the program's name
+2    Prompt the user to enter a DNA sequence (any non-whitespace characters are allowed)
+3    Convert that String to upper case and replace all non-DNA characters with the lower case letter <em>n</em>
+4    Display the <a href="#error_rate" title="Jump to description of error rate">error rate</a> (details below) 
+5    Do
+5-1  |   Display a menu of operations for working with that DNA sequence
+6    While the use has not selected quit</pre>
+<p>After step 3, only the ‘cleaned’ sequence of characters will be used. For example, if the user typed ‘gaxTT/aca’ then it will be displayed later as ‘GAnTTnACA’. For each operation that displays some information the program should present that information with some suitable prefix, such as ‘Sequence: ’.</p>
+<p>The available operations are:</p>
+<ul>
+<li><strong>Display the sequence</strong>, which should display the current value of the sequence.</li>
+<li><span id="error_rate"></span> <strong>Display the error rate</strong>, which is the proportion of invalid characters in the sequence, expressed as a percentage. In the example above this is approximately 22%. (It’s OK if the program displays this with too much precision, that is, too many digits after the decimal place. We don’t cover number formatting in the unit.)</li>
+<li><strong>Transcribe</strong> the entire sequence, which should display the mRNA equivalent of the entire sequence (i.e., the sequence with all <em>T</em>s converted to <em>U</em>s)</li>
+<li><strong>Transcribe a section</strong> of the sequence, between two points. The user should be asked to give the start and end of the section to transcribe, which will be values between 1 and the length of the sequence, inclusive. Both the start and end should be included in the transcribed section so, given the example above, if the user asked to transcribe between positions 2 and 5 the program will produce ‘AnUU’.</li>
+<li><strong>Switch to the sequence’s complement</strong>, which should change the current value of the sequence to its complementary sequence and then display the new value. The rules to apply are: <em>A</em> becomes <em>T</em>, <em>T</em> becomes <em>A</em>, <em>G</em> becomes <em>C</em>, <em>C</em> becomes <em>G</em>, <em>n</em> remains unchanged. For example, the sequence above would change to CTnAAnTGT.</li>
+</ul>
+<p>Note that the last operation changes the value of the sequence that the program is working with. To get back to the original sequence the user needs to select the last option again.</p>
+<h2 id="implementation-advice">Implementation advice</h2>
+<h3 id="cleaning-the-input">Cleaning the input</h3>
+<p>Strings have a <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html#replaceAll-java.lang.String-java.lang.String-" target="_blank"><code class="sourceCode java"><span class="fu">replaceAll</span>(<span class="bu">String</span> regex, <span class="bu">String</span> replacement)</code></a> method that will replace all substrings that match the given <a href="https://en.wikipedia.org/wiki/Regular_expression" title="Read about regular expressions and their uses at Wikipedia" target="_blank"><em>regular expression</em></a> (a pattern that can match a variety of String values) with the given replacement. As we don’t cover regular expressions in the unit, here are some patterns that you will find useful:</p>
+<ul>
+<li><code class="sourceCode java"><span class="st">&quot;[XYZ]&quot;</span></code> matches any single character from the set ‘X’, ‘Y’ or ‘Z’</li>
+<li><code class="sourceCode java"><span class="st">&quot;[^XYZ]&quot;</span></code> matches any single character that is <em>not</em> in the the set ‘X’, ‘Y’ or ‘Z’</li>
+</ul>
+<p>You <em>should not</em> write a loop to clean the input text.</p>
+<h3 id="calculating-the-error-rate">Calculating the error rate</h3>
+<p>The error rate can be calculated either with a loop (which is conceptually easier) or using a combination of String methods (which is a little shorter).</p>
+<h3 id="transcribing-the-sequence">Transcribing the sequence</h3>
+<p>This is most easily done using a String method (mentioned above) instead of a loop. Remember you only need to change one of the characters.</p>
+<p>There’s another String method, discussed in the notes, that will help with transcribing a section, but remember that the user will describe positions in the sequence with values 1 and above.</p>
+<h3 id="constructing-the-sequences-complement">Constructing the sequence’s complement</h3>
+<p>This is possible with the use of several String methods, but is actually easier if you write a loop to construct a new String from the current value. Remember that, given a String variable <code>s</code>, initialised as <code class="sourceCode java"><span class="st">&quot;&quot;</span></code>, <code class="sourceCode java">s += <span class="st">&quot;some text&quot;</span>;</code> will append <em>some text</em> to the end of <code>s</code>.</p>
+<h2 id="ask-us-for-help">Ask us for help</h2>
+<p>We can give you additional advice if you tell us which part you’re stuck on. Just ask.</p>
+<hr />
+</body>
+</html>

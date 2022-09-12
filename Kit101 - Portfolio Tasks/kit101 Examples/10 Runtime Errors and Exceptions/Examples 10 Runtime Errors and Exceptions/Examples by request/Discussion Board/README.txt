@@ -1,0 +1,1 @@
+This example was created to illustrate creating a custom data type (the discussion board Post) and working with arrays of objects.

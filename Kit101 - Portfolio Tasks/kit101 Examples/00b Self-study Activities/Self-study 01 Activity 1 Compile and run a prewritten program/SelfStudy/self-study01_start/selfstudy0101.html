@@ -1,0 +1,376 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Self-study 1 Activity 1: Compile and run a prewritten program; make deliberate mistakes and observe the error messages produced</title>
+  <!--<style type="text/css">code{white-space: pre;}</style>-->
+  <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+  </style>
+  <link rel="stylesheet" href="../../templates/utas_ict_mylo.css">
+  <script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
+  <script src="../../templates/solutions.js"></script>
+  <script type="text/javascript">
+    $(function() {
+      function toggleSection(heading, scrollTo) {
+        if (!heading) return;
+        heading.toggleClass('collapsed')
+               .children('span.expandable').toggle();
+        heading.nextUntil('h1').toggle(300)
+               .promise().then( function() {
+                 if (scrollTo) {
+                   $('body, html').animate({ scrollTop: scrollTo.offset().top });
+                 }
+               });
+      }
+
+      var headings = $('h1').not('.title, .subtitle');
+      headings.css('cursor', 'pointer')
+              .prepend('<span class="expandable noprint" style="display: none;">&#9655;</span><span class="expandable noprint">&bigtriangledown;</span> ')
+              .click( function() { toggleSection( $(this) ); } );
+      if (headings.length == 0) { /* workaround until pandoc template understood better */
+        $('.expandAll').remove();
+      }
+
+      function toggleTarget(target) {  
+        var h = target.is('h1.collapsed') ? target : ( target.is(':hidden') ? target.prevAll('h1').first() : null );
+        toggleSection(h, target);
+      }
+
+      $('a[href^="#"]').click( function() {
+        toggleTarget( $(this.hash) );
+      });
+      $('#openall').click( function(evt) {
+        evt.preventDefault();
+        var self = $(this);
+        var totoggle = self.children('.open:visible').length > 0 ? $('h1.collapsed') : $('h1').not('.collapsed');
+        self.children('.expandable').toggle();
+        totoggle.not('.title, .subtitle').each( function(i, el) { toggleSection($(el)); } );
+      });
+
+    });
+  </script>
+</head>
+<body>
+<header>
+<h1 class="title">Self-study 1 Activity 1: Compile and run a prewritten program; make deliberate mistakes and observe the error messages produced</h1>
+</header>
+<p class="noprint expandAll">[ <a href="#" id="openall"><span class="expandable open" style="display: none;">&harr; Expand</span><span class="expandable close">&cularr; Close</span> all sections</a> ] Only visible sections will be included when printing this document.</p>
+<h2 id="expected-outcome">Expected outcome</h2>
+<p>You should be aware of the error messages produced by common errors.</p>
+<h2 id="background">Background</h2>
+<p>To do this activity you will need to be able to:</p>
+<ul>
+<li>Create a new file in your editor (i.e., DrJava)</li>
+<li>Use the file manager to see what files are in your area and to delete a file</li>
+<li>Use the editor to modify a file</li>
+<li>The first three errors you will investigate require you to use the command line to compile and (attempt) to run a program (you can use DrJava for everything else); you may do these later if you need help with the command line
+<ul>
+<li>The command to compile a Java program (in Test.java) at the command line is <code>javac Test.java</code></li>
+<li>The command to run a Java program (in Test.class) at the command line is <code>java Test</code></li>
+</ul></li>
+</ul>
+<h2 id="starting-point">Starting point</h2>
+<p>Start DrJava and paste the following into the editor window, then save the file in your work area, giving it the name <code>Test.java</code>:</p>
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java"><span class="co">/**</span>
+<span class="co"> * Test.java </span>
+<span class="co"> * A program to demonstrate syntax and identifiers</span>
+<span class="co"> * from L&amp;L Programming Project 1.1</span>
+<span class="co"> */</span>
+<span class="kw">public</span> <span class="kw">class</span> Test  { 
+
+    <span class="kw">public</span> <span class="dt">static</span> <span class="dt">void</span> <span class="fu">main</span> (String[] args) {
+        System.<span class="fu">out</span>.<span class="fu">println</span>(<span class="st">&quot;An Emergency Broadcast&quot;</span>);
+    }
+
+}</code></pre></div>
+<h2 id="steps">Steps</h2>
+<p>Compile the Test.java program.</p>
+<p><span class="nb">Question:</span> How will you know if compilation was successful?</p>
+<p><span class="nb">Answer:</span> There is no message: if you compiled it at the command prompt there will be no output, while in DrJava there will be a Compilation completed message only. If you look at the files in your work area you will see that a new file, <code>Test.class</code> has appeared, which is the compiled version of the program.</p>
+<p>Run this program (either using the <code>java</code> command at the command line or through DrJava). <em>What happens?</em></p>
+<h3 id="making-deliberate-mistakes">Making Deliberate Mistakes</h3>
+<p>Introduce each deliberate error listed in the table and record (on paper, or in MS Word or similar) whether the program compiles and what happens when you attempt to run it. Check the solutions <em>after</em> you have seen what happens for yourself.</p>
+<div class="note box">
+<p><strong>Note:</strong> To see what you should in these exercises it is important to</p>
+<ul>
+<li>Remove the file <code>Test.class</code> before each new test</li>
+<li>Fix each error before proceeding to the next one</li>
+</ul>
+</div>
+<table>
+<colgroup>
+<col style="width: 40%">
+<col style="width: 30%">
+<col style="width: 30%">
+</colgroup>
+<tbody>
+<tr>
+<th>
+Deliberate error
+</th>
+<th>
+Does the program compile?<br> (record error message if it does not)
+</th>
+<th>
+Does the program run?<br> (record the error message if it does not)
+</th>
+</tr>
+<tr>
+<td>
+<em>From the command prompt</em>, try to compile a program that does not exist: <code>javac MyProg.java</code>
+</td>
+<td>
+<div class="solution">
+<p>No, error message something like: <code>javac: file not found: MyProg.java</code></p>
+</div>
+</td>
+<td>
+<div class="solution">
+No, because it does not even compile
+</div>
+</td>
+</tr>
+<tr>
+<td>
+<em>From the command prompt</em>, try to <em>run</em> a program that does not exist: <code>java MyProg</code>
+</td>
+<td>
+N/A
+</td>
+<td>
+<div class="solution">
+<p>Obviously not! Error message something like:</p>
+<p><code>Error: Could not find or load main class MyProg</code></p>
+</div>
+</td>
+</tr>
+<tr>
+<td>
+<em>From the command prompt</em>, try to <em>run the source code</em> of a program: <code>java Test.java</code>
+</td>
+<td>
+N/A
+</td>
+<td>
+<div class="solution">
+<p>No. Error message something like:</p>
+<p><code>Error: Could not find or load main class Test.java</code></p>
+</div>
+</td>
+</tr>
+<tr>
+<th colspan="3">
+The rest of the tasks can be done in DrJava
+</th>
+</tr>
+<tr>
+<td>
+change <code>Test</code> to <code>test</code>
+</td>
+<td>
+<div class="solution">
+Won’t compile; error message indicates that file must have the same name as the class. This error would disappear if the file were renamed test.java, but what is wrong with this? (Think about naming conventions)
+</div>
+</td>
+<td>
+<div class="solution">
+No, because it won’t compile
+</div>
+</td>
+</tr>
+<tr>
+<td>
+change <code>Emergency</code> to <code>emergency</code>
+</td>
+<td>
+<div class="solution">
+Yes
+</div>
+</td>
+<td>
+<div class="solution">
+Yes, and the output now shows <code>emergency</code>
+</div>
+</td>
+</tr>
+<tr>
+<td>
+remove the first quotation mark (<code>&quot;</code>) in the String literal <code>&quot;An emergency broadcast&quot;</code>
+</td>
+<td>
+<div class="solution">
+<p>No, with 3 errors.Notice that just one of them, <code>unclosed string literal</code> actually refers to the problem. The others come about from the compiler trying to make sense of what has been written</p>
+<p>Notice the nature of the syntax error here: the thing inside the brackets after <code>System.out.println()</code> should be a String and a String <em>must</em> begin and end with double quotes</p>
+</div>
+</td>
+<td>
+<div class="solution">
+No, because it won’t compile. If it <em>did</em> run it is because the previously compiled <code>Test.class</code> file has not been removed.
+</td>
+</tr>
+<tr>
+<td>
+remove the last quotation mark (<code>&quot;</code>) in the String literal <code>&quot;An emergency broadcast&quot;</code>
+</td>
+<td>
+<div class="solution">
+<p>No, with 3 errors. Notice that just one of them, <code>unclosed string literal</code> actually refers to the problem. The others come about from the compiler trying to make sense of what has been written</p>
+<p>Notice the nature of the syntax error here: the thing inside the brackets after <code>System.out.println()</code> should be a String and a String <em>must</em> begin and end with double quotes</p>
+</div>
+</div>
+</td>
+<td>
+<div class="solution">
+No, because it did not compile
+</div>
+</td>
+</tr>
+<tr>
+<td>
+change <code>main</code> to <code>man</code>
+</td>
+<td>
+<div class="solution">
+Yes
+</div>
+</td>
+<td>
+<div class="solution">
+No, with output like:
+<pre><code>Error: Main method not found in class Test, please define the main method as:<br>public static void main(String[] args)</code></pre>
+<p>Although <code>main</code> is not a keyword in Java, a Java application must have a method called main if it is to run.</p>
+</div>
+</td>
+</tr>
+<tr>
+<td>
+change <code>println</code> to <code>bogus</code>
+</td>
+<td>
+<div class="solution">
+No, with 1 error
+<pre><code>"cannot find symbol"</code></pre>
+<p>This is because there is no method anywhere called bogus</p>
+</div>
+</td>
+<td>
+<div class="solution">
+No, because it didn’t compile
+</div>
+</td>
+</tr>
+<tr>
+<td>
+change <code>Broadcast</code> to <code>Brxoadxcaxst</code>
+</td>
+<td>
+<div class="solution">
+Yes
+</div>
+</td>
+<td>
+<div class="solution">
+Yes, and the output now shows <code>emergency</code>
+</div>
+</td>
+</tr>
+<tr>
+<td>
+remove the semicolon (;) at the end of<br> the <code>println</code> statement
+</td>
+<td>
+<div class="solution">
+No, with 1 error.
+<pre><code>';' expected</code></pre>
+<p>Note in this case this is exactly what the problem is, but beware, this is not always the case</p>
+</div>
+</td>
+<td>
+<div class="solution">
+No, because it did not compile
+</div>
+</td>
+</tr>
+<tr>
+<td>
+remove the last brace (}) in the program
+</td>
+<td>
+<div class="solution">
+No, with 1 error.
+<pre><code>error: reached the end of file while parsing</code></pre>
+</div>
+</td>
+<td>
+<div class="solution">
+No, because it did not compile
+</div>
+</td>
+</tr>
+<tr>
+<td>
+add the statement <code>System.out.println(&quot;error value: &quot; + (4/0));</code> after the first <code>println</code> statement
+</td>
+<td>
+<div class="solution">
+Yes
+</div>
+</td>
+<td>
+<div class="solution">
+Yes, but get error message
+<pre><code>Exception in thread "main" java.lang.ArithmeticException: / by zero</code></pre>
+<p>This is a runtime error.</p>
+The statement
+<pre><code>System.out.println(&quot;error value: &quot; + (4/0));</code></pre>
+<p>is a command to display a String which is made up of the String “error value:” with the value of the sum 4 divided by 0 added on to it. Dividing 4 by 0 is not possible and this causes a runtime error (called an <em>exception </em>in Java)</p>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="showAllSolutions">
+
+</div>
+</body>
+</html>

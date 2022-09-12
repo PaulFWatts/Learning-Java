@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>CR Task 8.2 Debug This</title>
+  <!--<style type="text/css">code{white-space: pre;}</style>-->
+  <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+  </style>
+  <link rel="stylesheet" href="../../templates/utas_ict_mylo.css">
+  <link rel="stylesheet" href="../../templates/task.css">
+  <!--<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script> Breaks toggling of sections, making style & script visible! -->
+  <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+  <script src="../../templates/solutions.js"></script>
+  <script type="text/javascript">
+    let onMyLO = () => window.location.host === 'mylo.utas.edu.au';
+    $(function() { if (onMyLO()) { $('.title, header').addClass('printonly'); } }); //avoid duplicating title, etc. in document and above iframe
+    var MYLO_SCROLL_DELAY = 350; //appears to work OK when hosted on MyLO
+    $(function() {
+      function toggleSection(heading, scrollTo) {
+        if (!heading) return;
+        heading.toggleClass('collapsed')
+               .children('span.expandable').toggle();
+        heading.nextUntil('h1').toggle(300)
+               .promise().done( function() {
+                 if (scrollTo) {
+                   let scrollIt = () => { scrollTo[0].scrollIntoView(true); };
+                   onMyLO() ? setTimeout(scrollIt, MYLO_SCROLL_DELAY) : scrollIt();
+                 }
+               });
+      }
+
+      var headings = $('h1').not('.title, .subtitle');
+      headings.css('cursor', 'pointer')
+              .prepend('<span class="expandable noprint" style="display: none;">&#9655;</span><span class="expandable noprint">&bigtriangledown;</span> ')
+              .click( function() { toggleSection( $(this) ); } );
+      if (headings.length == 0) { /* workaround until pandoc template understood better */
+        $('.expandAll').remove();
+      }
+
+      function toggleTarget(target, evt) { //evt is optional event that triggered this (indirectly)
+        var h = target.is('h1.collapsed') ? target : ( target.is(':hidden') ? target.prevAll('h1').first() : null );
+        if (h) {
+          if (evt) { evt.preventDefault(); } //Added so browser doesn't attempt to scroll to not-yet-visible element
+          toggleSection(h, target);
+        }
+      }
+
+      $('a[href^="#"]').click( function(evt) {
+        toggleTarget( $(this.hash), evt ); }
+      );
+      $('#openall').click( function(evt) {
+        evt.preventDefault();
+        var self = $(this);
+        var totoggle = self.children('.open:visible').length > 0 ? $('h1.collapsed') : $('h1').not('.collapsed');
+        self.children('.expandable').toggle();
+        totoggle.not('.title, .subtitle').each( function(i, el) { toggleSection($(el)); } );
+      });
+
+    });
+  </script>
+  <script type="text/javascript">
+  $(function() {
+    /* Formats learning outcomes, if present (revised 2019-1 as ILOs 6-8 were removed) */
+    //let iloIcons = ['', 'eye-open', 'random', 'pencil', 'th', 'duplicate', 'user', 'comment', 'question-sign'];
+    let iloIcons = ['', 'eye-open', 'random', 'pencil', 'th', 'duplicate'];
+    let ilos = ['',
+      'read code or identify errors',
+      'think algorithmically and use structured programming',
+      'write small programs',
+      'use functional decomposition to break down problems and solutions into smaller parts',
+      'document programs, both externally and within the code'];
+
+    function addILOIcons($ilos) {
+      let verb = $ilos.hasClass('assesses') ? 'assesses' : 'develops';
+      var formattedILOs = [];
+
+      for (let ilo of $ilos.html().split(', ')) {
+        let i = parseInt(ilo);
+	formattedILOs.push( `<span class="ilo" title="This task ${verb} your ability to ${ilos[i]}">${ilo} <span class="glyphicon glyphicon-${iloIcons[i]}"></span></span>` );
+      }
+      $ilos.html(formattedILOs.join('&emsp;'));
+    }
+
+    $('.ilos').each(function (i, e) { addILOIcons($(e)); });
+
+    /* Injects the cumbersome glyphicon for videos in front of my own tag <minilecture> */
+    $('<span class="glyphicon glyphicon-facetime-video" style="margin-right: 0.25em;"></span>').insertBefore('minilecture');
+  });
+  </script>
+</head>
+<body>
+<h1 class="unit title">KIT101 Programming Fundamentals</h1>
+<header>
+<h1 class="title">CR Task 8.2 Debug This</h1>
+</header>
+<!--
+<p class="noprint expandAll">[ <a href="#" id="openall"><span class="expandable open" style="display: none;">&harr; Expand</span><span class="expandable close">&cularr; Close</span> all sections</a> ] Only visible sections will be included when printing this document.</p>
+-->
+<h1 id="overview">Overview</h1>
+<table>
+<colgroup>
+<col width="22%" />
+<col width="77%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><p>Purpose:</p></td>
+<td><p>Practice your debugging skills.</p></td>
+</tr>
+<tr class="even">
+<td><p>Task:</p></td>
+<td><p>Apply your debugging skills to a previously unseen piece of code, document the errors, their causes and your fixes.</p></td>
+</tr>
+<tr class="odd">
+<td><p>Learning Outcomes:</p></td>
+<td><p><span class="ilos">1, 2, 5</span></p></td>
+</tr>
+<tr class="even">
+<td><p>Time:</p></td>
+<td><p>Aim to complete this task before the start of Week 10, but it may also be completed later (<a href="#time-note">see note</a>).</p></td>
+</tr>
+<tr class="odd">
+<td><p>Resources:</p></td>
+<td><ul>
+<li>Introductory Programming Notes</li>
+<li>Online Mini-lectures</li>
+</ul></td>
+</tr>
+</tbody>
+</table>
+<div id="time-note" class="note box">
+<strong>Note:</strong> If you are not currently up to date you should skip this task and return to it once you are up to date with the PP tasks. Do not allow CR tasks to delay you in keeping up with the unit’s PP tasks.
+</div>
+<h2 id="submission-details">Submission Details</h2>
+<p>Upload the following to the MyLO submission folder for this task:</p>
+<ul>
+<li><strong>Corrected source code</strong> with all errors removed</li>
+<li><strong>Debugging report</strong> in Word or PDF, using the template on MyLO</li>
+</ul>
+<h2 id="assessment-criteria">Assessment Criteria</h2>
+<p>A <span class="status completed">Completed</span> submission will:</p>
+<!-- SELECT FROM THESE FIRST TWO, DEPENDING ON THE KINDS OF ERRORS PRESENT -->
+<!-- - Remove the compilation and behavioural errors from the code -->
+<ul>
+<li>Remove the behavioural errors from the code</li>
+<li>Be free of any additional debugging code added during your analysis <!-- SELECT FROM OR ADAPT THE FOLLOWING, AS APPROPRIATE TO THE TASK --></li>
+<li>Summarise how the code was tested, where and what the errors were, how they were identified (merely stating ‘by looking at the code’ is insufficient), and what corrections needed to be made<br />
+<!-- - Summarise how the code was tested (using at least two different sets of inputs for each runtime error), where and what the errors were, how they were identified (merely stating 'by looking at the code' is insufficient), and what corrections needed to be made --></li>
+</ul>
+<h1 id="instructions">Instructions</h1>
+<p>You have been handed some source code for a number guessing game that supports different levels of difficulty (essentially different ranges of numbers).</p>
+<p>Accompanying the code you’ve been given some somewhat cryptic notes from the author about errors that she found and corrected. But you don’t have her corrections!</p>
+<p>Your task is to use her notes (below) to identify the cause of the errors and correct them. As you do so you should complete the accompanying report (available on MyLO) to document what you tried, what you observed, where and what the likely cause was, how you determined that, and what code you substituted to correct the error.</p>
+<div class="note box">
+<strong>Note:</strong> You may refer to any additional written resources to understand the code and how it is meant to operate. If one of your diagnoses or corrections is based on such a resource, note that in the report.
+</div>
+<p>You may uncover some the errors in a different order to what she did; document them in the order you find and fix them. You are <em>not</em> required to fix the obvious problems with the lack of comments in the code.</p>
+<div class="note box">
+<p><strong>Note:</strong> You may insert additional debugging statements during your analysis if you wish, but:</p>
+<ul>
+<li>remove this from the source code you submit; and</li>
+<li>report line numbers for errors where they appeared in the original source.</li>
+</ul>
+<p>And remember, the <em>error</em> is what caused the problem, and not necessarily the line at which the program malfunctions. You are looking for the causes of the problems.</p>
+</div>
+<p>When you are done, upload the <strong>corrected source code</strong> and <strong>report</strong> to the MyLO submission folder for this task.</p>
+<h2 id="notes-from-the-codes-author">Notes from the code’s author</h2>
+<p>GuessingGame is a version of the classic number guessing game in which the user can select the difficulty of the game. Easy games select a secret value in the range 1–25, Medium the range 1–100 and Hard in the range 1–1000. The user can play multiple games (or none). Within each game they are given feedback on their guesses (as being too low or too high) and may abandon their game by entering a special value. If they guess the secret number they are told how ‘efficient’ they were in their guessing (an approximation of how many numbers in the range they <em>didn’t</em> try; guessing the number straight away is considered 100% efficient).</p>
+<p>I encountered the following problems in the program, and fixed one error each time. But each time I discovered another error!<!--each correction revealed another error!--> My input is <code><kb>highlighted</kb></code>.</p>
+<style type="text/css">
+pre .exception { color: firebrick; }
+</style>
+<ol style="list-style-type: decimal">
+<li><p>When I first ran the program and tried to select a difficulty it wouldn’t accept any number that I entered and kept asking me to re-enter the difficulty setting.</p></li>
+<li><p>After fixing that error I ran the program again but the game difficulty wasn’t what I’d selected. Worse, when I tried to play a Hard game the program crashed!</p>
+<pre>Number Guess Deluxe
+
+Enter y to play (any other key to stop): <kb>y</kb>
+New Game
+1. Easy
+2. Medium
+3. Hard
+Select difficulty: <kb>3</kb>
+<span class="exception">java.lang.ArrayIndexOutOfBoundsException: 3
+    at GuessingGame.selectDifficulty(GuessingGame.java:29)
+    at GuessingGame.oneGame(GuessingGame.java:38)
+    at GuessingGame.play(GuessingGame.java:105)
+    at GuessingGame.main(GuessingGame.java:112)</span></pre></li>
+<li><p>Having fixed that error I was able to start an actual game, but after just one guess the number of attempts displayed was much larger than 1. I restarted the program but the same thing happened: after one guess the program reported I’d made some large, seemingly random number of attempts!</p></li>
+<li><p>After I’d corrected <em>that</em> problem the game appeared to work correctly, but during one particularly challenging game on Hard difficulty I decided I’d had enough so entered -1000 to end the game, only to be given this confusing output congratulating me on winning!</p>
+<pre><code>Bad luck. You gave up after 6 attempts
+The secret number was 897
+Congratulations 
+Number of attempts: 6
+Efficiency: 99.5%</code></pre></li>
+</ol>
+<h1 id="source-code">Source code</h1>
+<h2 id="guessinggame">GuessingGame</h2>
+<div class="sourceCode"><table class="sourceCode java numberLines"><tr class="sourceCode"><td class="lineNumbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+</pre></td><td class="sourceCode"><pre><code class="sourceCode java"><span class="kw">import</span><span class="im"> java.util.Random;</span>
+<span class="kw">import</span><span class="im"> java.util.Scanner;</span>
+
+<span class="co">/**</span>
+<span class="co"> * A number guessing game with varying degrees of difficulty.</span>
+<span class="co"> * </span><span class="kw">@author </span><span class="co">Anonymous, [add your name in corrected version]</span>
+<span class="co"> */</span>
+<span class="kw">public</span> <span class="kw">class</span> GuessingGame {
+    
+    <span class="kw">public</span> <span class="kw">enum</span> Outcome { CORRECT, TOO_HIGH, TOO_LOW, RAGE_QUIT };
+    
+    <span class="kw">private</span> <span class="dt">final</span> <span class="dt">int</span>[] DIFFICULTIES = { <span class="dv">25</span>, <span class="dv">100</span>, <span class="dv">1000</span> };
+    <span class="kw">private</span> <span class="bu">Random</span> generator = <span class="kw">new</span> <span class="bu">Random</span>();
+    <span class="kw">private</span> <span class="bu">Scanner</span> in = <span class="kw">new</span> <span class="bu">Scanner</span>(<span class="bu">System</span>.<span class="fu">in</span>);
+
+    <span class="kw">public</span> <span class="dt">int</span> <span class="fu">selectSecret</span>(<span class="dt">int</span> max) {
+        <span class="dt">int</span> secret = generator.<span class="fu">nextInt</span>(max) + <span class="dv">1</span>;
+        <span class="kw">return</span> secret;
+    }
+
+    <span class="kw">public</span> <span class="dt">int</span> <span class="fu">selectDifficulty</span>() {
+        <span class="dt">int</span> option;
+        
+        <span class="kw">do</span> {
+            <span class="bu">System</span>.<span class="fu">out</span>.<span class="fu">print</span>(<span class="st">&quot;New Game</span><span class="sc">\n</span><span class="st">1. Easy</span><span class="sc">\n</span><span class="st">2. Medium</span><span class="sc">\n</span><span class="st">3. Hard</span><span class="sc">\n</span><span class="st">Select difficulty: &quot;</span>);
+            option = in.<span class="fu">nextInt</span>();
+        } <span class="kw">while</span> (option &gt; <span class="dv">1</span> || option &lt; <span class="dv">3</span>);
+
+        <span class="kw">return</span> DIFFICULTIES[option];
+    }
+    
+    <span class="kw">public</span> <span class="dt">void</span> <span class="fu">oneGame</span>() {
+        <span class="dt">final</span> <span class="dt">int</span> STOP_WHEN;
+        Outcome result = <span class="kw">null</span>;
+        <span class="dt">int</span> attempts = <span class="dv">1</span>;
+        <span class="dt">int</span> max, secret, guess;        
+        
+        max = <span class="fu">selectDifficulty</span>();
+        STOP_WHEN = -max;
+        secret = <span class="fu">selectSecret</span>(max);
+        
+        <span class="bu">System</span>.<span class="fu">out</span>.<span class="fu">print</span>(<span class="st">&quot;Enter guess between 1 and &quot;</span> + max + <span class="st">&quot;, or &quot;</span> + STOP_WHEN + <span class="st">&quot; to give up: &quot;</span>);
+        guess = in.<span class="fu">nextInt</span>();
+        <span class="kw">while</span> (guess != secret &amp;&amp; guess != STOP_WHEN) {
+            <span class="kw">if</span> (guess &lt; secret) {
+                result = Outcome.<span class="fu">TOO_LOW</span>;
+            } <span class="kw">else</span> <span class="kw">if</span> (guess &gt; secret) {
+                result = Outcome.<span class="fu">TOO_HIGH</span>;
+            }
+            <span class="fu">showFeedback</span>(result, secret, attempts, max);
+            <span class="bu">System</span>.<span class="fu">out</span>.<span class="fu">print</span>(<span class="st">&quot;Enter guess between 1 and &quot;</span> + max + <span class="st">&quot;, or &quot;</span> + STOP_WHEN + <span class="st">&quot; to give up: &quot;</span>);
+            guess = in.<span class="fu">nextInt</span>();
+            attempts++;
+        }
+        
+        <span class="kw">if</span> (guess == secret) {
+            result = Outcome.<span class="fu">CORRECT</span>;
+        } <span class="kw">else</span> {
+            result = Outcome.<span class="fu">RAGE_QUIT</span>;
+        }
+        <span class="fu">showFeedback</span>(result, attempts, secret, max);
+    }
+    
+    <span class="kw">public</span> <span class="dt">void</span> <span class="fu">showFeedback</span>(Outcome outcome, <span class="dt">int</span> attempts, <span class="dt">int</span> secret, <span class="dt">int</span> max) {
+        <span class="kw">switch</span> (outcome) {
+            <span class="kw">case</span> TOO_LOW:
+                <span class="bu">System</span>.<span class="fu">out</span>.<span class="fu">println</span>(<span class="st">&quot;Too low!&quot;</span>);
+                <span class="bu">System</span>.<span class="fu">out</span>.<span class="fu">println</span>(<span class="st">&quot;Attempts so far: &quot;</span> + attempts);
+                <span class="kw">break</span>;
+            <span class="kw">case</span> TOO_HIGH:
+                <span class="bu">System</span>.<span class="fu">out</span>.<span class="fu">println</span>(<span class="st">&quot;Too high!&quot;</span>);
+                <span class="bu">System</span>.<span class="fu">out</span>.<span class="fu">println</span>(<span class="st">&quot;Attempts so far: &quot;</span> + attempts);
+                <span class="kw">break</span>;
+            <span class="kw">case</span> RAGE_QUIT:
+                <span class="bu">System</span>.<span class="fu">out</span>.<span class="fu">println</span>(<span class="st">&quot;Bad luck. You gave up after &quot;</span> + attempts + <span class="st">&quot; attempts&quot;</span>);
+                <span class="bu">System</span>.<span class="fu">out</span>.<span class="fu">println</span>(<span class="st">&quot;The secret number was &quot;</span> + secret);
+            <span class="kw">case</span> CORRECT:
+                <span class="bu">System</span>.<span class="fu">out</span>.<span class="fu">println</span>(<span class="st">&quot;Congratulations &quot;</span>);
+                <span class="bu">System</span>.<span class="fu">out</span>.<span class="fu">println</span>(<span class="st">&quot;Number of attempts: &quot;</span> + attempts);
+                <span class="bu">System</span>.<span class="fu">out</span>.<span class="fu">println</span>(<span class="st">&quot;Efficiency: &quot;</span> + <span class="fu">efficiency</span>(attempts, max) + <span class="st">&quot;%&quot;</span>);
+        }
+    }
+    
+    <span class="kw">public</span> <span class="dt">double</span> <span class="fu">efficiency</span>(<span class="dt">int</span> attempts, <span class="dt">int</span> range) {
+        <span class="dt">double</span> e;
+        
+        e = (<span class="dt">double</span>) (range - attempts + <span class="dv">1</span>) / range;
+        e = <span class="bu">Math</span>.<span class="fu">round</span>(e * <span class="dv">10000</span>) / <span class="fl">100.0</span>;
+        
+        <span class="kw">return</span> e;
+    }
+
+    <span class="kw">public</span> <span class="dt">char</span> <span class="fu">nextChar</span>() {
+        <span class="kw">return</span> in.<span class="fu">next</span>().<span class="fu">toLowerCase</span>().<span class="fu">charAt</span>(<span class="dv">0</span>);
+    }
+    
+    <span class="kw">public</span> <span class="dt">void</span> <span class="fu">play</span>() {
+        <span class="dt">char</span> keepGoing;
+        
+        <span class="bu">System</span>.<span class="fu">out</span>.<span class="fu">println</span>(<span class="st">&quot;Number Guess Deluxe&quot;</span>);
+        <span class="bu">System</span>.<span class="fu">out</span>.<span class="fu">println</span>();
+        <span class="bu">System</span>.<span class="fu">out</span>.<span class="fu">print</span>(<span class="st">&quot;Enter y to play (any other key to stop): &quot;</span>);
+        keepGoing = <span class="fu">nextChar</span>();
+        <span class="kw">while</span> (keepGoing == &#39;y&#39;) {
+            <span class="fu">oneGame</span>();
+            <span class="bu">System</span>.<span class="fu">out</span>.<span class="fu">print</span>(<span class="st">&quot;Enter y to play again (any other key to stop): &quot;</span>);
+            keepGoing = <span class="fu">nextChar</span>();
+        }
+    }
+    
+    <span class="kw">public</span> <span class="dt">static</span> <span class="dt">void</span> <span class="fu">main</span>(<span class="bu">String</span>[] args) {
+        <span class="kw">new</span> GuessingGame.<span class="fu">play</span>();
+    }
+}</code></pre></td></tr></table></div>
+<div class="note box">
+<strong>Note:</strong> When saving to PDF in portrait orientation the line numbers will not correctly line up as some longer lines will be wrapped. However, the line numbers shown in the browser (at the default window width) will match those shown in your code editor.
+</div>
+<hr />
+</body>
+</html>

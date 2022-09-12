@@ -1,0 +1,84 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>KIT101 Self-study 2: Algorithms &amp; Working with Primitive Data</title>
+  <!--<style type="text/css">code{white-space: pre;}</style>-->
+  <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link rel="stylesheet" href="../../templates/utas_ict_mylo.css">
+  <script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
+  <script src="../../templates/solutions.js"></script>
+  <script type="text/javascript">
+    $(function() {
+      function toggleSection(heading, scrollTo) {
+        if (!heading) return;
+        heading.toggleClass('collapsed')
+               .children('span.expandable').toggle();
+        heading.nextUntil('h1').toggle(300)
+               .promise().then( function() {
+                 if (scrollTo) {
+                   $('body, html').animate({ scrollTop: scrollTo.offset().top });
+                 }
+               });
+      }
+
+      var headings = $('h1').not('.title, .subtitle');
+      headings.css('cursor', 'pointer')
+              .prepend('<span class="expandable noprint" style="display: none;">&#9655;</span><span class="expandable noprint">&bigtriangledown;</span> ')
+              .click( function() { toggleSection( $(this) ); } );
+      if (headings.length == 0) { /* workaround until pandoc template understood better */
+        $('.expandAll').remove();
+      }
+
+      function toggleTarget(target) {  
+        var h = target.is('h1.collapsed') ? target : ( target.is(':hidden') ? target.prevAll('h1').first() : null );
+        toggleSection(h, target);
+      }
+
+      $('a[href^="#"]').click( function() {
+        toggleTarget( $(this.hash) );
+      });
+      $('#openall').click( function(evt) {
+        evt.preventDefault();
+        var self = $(this);
+        var totoggle = self.children('.open:visible').length > 0 ? $('h1.collapsed') : $('h1').not('.collapsed');
+        self.children('.expandable').toggle();
+        totoggle.not('.title, .subtitle').each( function(i, el) { toggleSection($(el)); } );
+      });
+
+    });
+  </script>
+</head>
+<body>
+<header>
+<h1 class="title">KIT101 Self-study 2: Algorithms &amp; Working with Primitive Data</h1>
+</header>
+<p class="noprint expandAll">[ <a href="#" id="openall"><span class="expandable open" style="display: none;">&harr; Expand</span><span class="expandable close">&cularr; Close</span> all sections</a> ] Only visible sections will be included when printing this document.</p>
+<h2 id="overview">Overview</h2>
+<p>The purpose of these activities is to practise working on algorithms (the steps you want the program to <em>do</em>) and then implementing those algorithms as program code. As you get better at reading and writing low-level program statements (the second step) you will also get better at thinking about and writing algorithms, because you’ll know how the solution to a problem needs to be broken down so that a computer can process it.</p>
+<h2 id="objectives">Objectives</h2>
+<p>After completing these activities you should be able to:</p>
+<ol type="1">
+<li>Work out high level and low level algorithms to solve simple problems.</li>
+<li>Write Java code to solve a problem by declaring and manipulating variables of primitive types. (This is implementing a low level algorithm.)</li>
+<li>Write Java source code to allow a user to enter values into variables of primitive types.</li>
+</ol>
+<!--
+## Preparation
+
+Revise the material covered in lecture 2.
+-->
+<p><a href="self-study02.zip" title="Download a zip file of the files used in the exercise">Download the starter files</a> (zipped folder) for this module. Different files are used in different activities, but it is faster to download the full set all at once. Make sure you unzip the files to your work area (which should <em>not</em> be the Downloads folder).</p>
+<h2 id="activities">Activities</h2>
+<ol type="1">
+<li><a href="selfstudy0201.html">Plan algorithms</a></li>
+<li><a href="selfstudy0202.html">Read, understand, and write Java code to solve a problem using data of primitive types</a></li>
+<li><a href="selfstudy0203.html">Write Java code to allow a user to enter values into variables of primitive types</a></li>
+</ol>
+<!-- <address>Last modified on 21 February 2016 by James Montgomery, School of Engineering &amp; ICT, University of Tasmania.</address> -->
+</body>
+</html>

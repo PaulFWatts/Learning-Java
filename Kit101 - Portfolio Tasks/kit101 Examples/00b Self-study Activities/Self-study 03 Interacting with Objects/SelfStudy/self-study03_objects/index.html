@@ -1,0 +1,140 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>KIT101 Self-study 3: Working with Objects</title>
+  <!--<style type="text/css">code{white-space: pre;}</style>-->
+  <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link rel="stylesheet" href="../../templates/utas_ict_mylo.css">
+  <script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
+  <script src="../../templates/solutions.js"></script>
+  <script type="text/javascript">
+    $(function() {
+      function toggleSection(heading, scrollTo) {
+        if (!heading) return;
+        heading.toggleClass('collapsed')
+               .children('span.expandable').toggle();
+        heading.nextUntil('h1').toggle(300)
+               .promise().then( function() {
+                 if (scrollTo) {
+                   $('body, html').animate({ scrollTop: scrollTo.offset().top });
+                 }
+               });
+      }
+
+      var headings = $('h1').not('.title, .subtitle');
+      headings.css('cursor', 'pointer')
+              .prepend('<span class="expandable noprint" style="display: none;">&#9655;</span><span class="expandable noprint">&bigtriangledown;</span> ')
+              .click( function() { toggleSection( $(this) ); } );
+      if (headings.length == 0) { /* workaround until pandoc template understood better */
+        $('.expandAll').remove();
+      }
+
+      function toggleTarget(target) {  
+        var h = target.is('h1.collapsed') ? target : ( target.is(':hidden') ? target.prevAll('h1').first() : null );
+        toggleSection(h, target);
+      }
+
+      $('a[href^="#"]').click( function() {
+        toggleTarget( $(this.hash) );
+      });
+      $('#openall').click( function(evt) {
+        evt.preventDefault();
+        var self = $(this);
+        var totoggle = self.children('.open:visible').length > 0 ? $('h1.collapsed') : $('h1').not('.collapsed');
+        self.children('.expandable').toggle();
+        totoggle.not('.title, .subtitle').each( function(i, el) { toggleSection($(el)); } );
+      });
+
+    });
+  </script>
+</head>
+<body>
+<header>
+<h1 class="title">KIT101 Self-study 3: Working with Objects</h1>
+</header>
+<p class="noprint expandAll">[ <a href="#" id="openall"><span class="expandable open" style="display: none;">&harr; Expand</span><span class="expandable close">&cularr; Close</span> all sections</a> ] Only visible sections will be included when printing this document.</p>
+<h2 id="overview">Overview</h2>
+<p>These activities give you practise in reading and writing code that makes use of code written by others. You will write code to instantiate objects of classes written by someone else and then call those objects’ methods (the actions they can perform).</p>
+<h2 id="objectives">Objectives</h2>
+<p>After completing these activities you should be able to plan and implement algorithms that use:</p>
+<ol type="1">
+<li>objects of prewritten classes</li>
+<li>class data and class methods</li>
+</ol>
+<h2 id="preparation">Preparation</h2>
+<ol type="1">
+<li>Review the relevant notes and lecture materials on MyLO.</li>
+<li><a href="self-study03.zip" title="Download a zip file of the files used in these exercises">Download the starter files</a> (zipped folder) for these activities. Different files are used in different activities, but it is faster to download the full set all at once. Make sure you unzip the files to your work area.</li>
+<li>Check that you can remember how to read and make sense of a method header. The vital components are:
+<table>
+<tr>
+<th>
+public
+</th>
+<td>
+Must be there, otherwise you can’t use the method outside the class in which it’s declared
+</td>
+</tr>
+<tr>
+<th>
+static
+</th>
+<td>
+Might or might not be there; indicates a class method
+</td>
+</tr>
+<tr>
+<th>
+<em>return_type</em>
+</th>
+<td>
+Data that is passed out of the method. Possible values are:
+<ul>
+<li>void</code> — nothing returned</li>
+<li>a primitive type (e.g., <code>int</code>, <code>double</code>, <code>char</code>, <code>boolean</code>) — a value of that type is returned</li>
+<li>a class name (e.g., <code>String</code>) — a reference to an object of that class is returned</li>
+</ul>
+Remember that it is the responsibility of the client (that is <em>you</em> if you are writing a program that uses prewritten classes) to store or use the return value. It is not a compiler error to call a method and ignore its return value
+</td>
+</tr>
+<tr>
+<th>
+<em>identifier</em>
+</th>
+<td>
+This is the name of the method; it tells you what to write for the call. Remember the syntax of a call:
+<ul>
+<li>For an object method: <code>objectIdentifier.methodIdentifier(arguments);</code></li>
+<li>For a class method: <code>ClassIdentifier.methodIdentifier(parameters);</code>
+</td>
+</tr>
+<tr>
+<th>
+(<em>parameter list</em>)
+</th>
+<td>
+Data that <em>must</em> be passed into the method when it is called.</li>
+</ul>
+Remember, when calling a method:
+<ul>
+<li>If there are no arguments required then the parameter list is empty ()</li>
+<li>If the parameter list is not empty then the arguments must be of a compatible type to those specified in each position of the parameter list
+</td>
+</tr>
+</table></li>
+</ul></li>
+</ol>
+<h2 id="activities">Activities</h2>
+<ol type="1">
+<li><a href="selfstudy0301.html">Create and use objects of prewritten classes</a></li>
+<li><a href="selfstudy0302.html">Create an interactive program that uses prewritten classes</a></li>
+<li><a href="selfstudy0303.html">Use class data and class methods</a></li>
+</ol>
+<!-- <address>Last modified on 21 February 2016 by James Montgomery, School of Engineering &amp; ICT, University of Tasmania.</address> -->
+</body>
+</html>

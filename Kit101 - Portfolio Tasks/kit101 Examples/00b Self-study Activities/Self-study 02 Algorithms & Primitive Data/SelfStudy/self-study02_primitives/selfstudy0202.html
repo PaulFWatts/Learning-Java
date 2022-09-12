@@ -1,0 +1,334 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Self-study 2 Activity 2: Read, understand, and write Java code to solve a problem using data of primitive types</title>
+  <!--<style type="text/css">code{white-space: pre;}</style>-->
+  <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link rel="stylesheet" href="../../templates/utas_ict_mylo.css">
+  <script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
+  <script src="../../templates/solutions.js"></script>
+  <script type="text/javascript">
+    $(function() {
+      function toggleSection(heading, scrollTo) {
+        if (!heading) return;
+        heading.toggleClass('collapsed')
+               .children('span.expandable').toggle();
+        heading.nextUntil('h1').toggle(300)
+               .promise().then( function() {
+                 if (scrollTo) {
+                   $('body, html').animate({ scrollTop: scrollTo.offset().top });
+                 }
+               });
+      }
+
+      var headings = $('h1').not('.title, .subtitle');
+      headings.css('cursor', 'pointer')
+              .prepend('<span class="expandable noprint" style="display: none;">&#9655;</span><span class="expandable noprint">&bigtriangledown;</span> ')
+              .click( function() { toggleSection( $(this) ); } );
+      if (headings.length == 0) { /* workaround until pandoc template understood better */
+        $('.expandAll').remove();
+      }
+
+      function toggleTarget(target) {  
+        var h = target.is('h1.collapsed') ? target : ( target.is(':hidden') ? target.prevAll('h1').first() : null );
+        toggleSection(h, target);
+      }
+
+      $('a[href^="#"]').click( function() {
+        toggleTarget( $(this.hash) );
+      });
+      $('#openall').click( function(evt) {
+        evt.preventDefault();
+        var self = $(this);
+        var totoggle = self.children('.open:visible').length > 0 ? $('h1.collapsed') : $('h1').not('.collapsed');
+        self.children('.expandable').toggle();
+        totoggle.not('.title, .subtitle').each( function(i, el) { toggleSection($(el)); } );
+      });
+
+    });
+  </script>
+</head>
+<body>
+<header>
+<h1 class="title">Self-study 2 Activity 2: Read, understand, and write Java code to solve a problem using data of primitive types</h1>
+</header>
+<p class="noprint expandAll">[ <a href="#" id="openall"><span class="expandable open" style="display: none;">&harr; Expand</span><span class="expandable close">&cularr; Close</span> all sections</a> ] Only visible sections will be included when printing this document.</p>
+<!-- Consider moving this to main CSS file -->
+<style type="text/css">
+div.pseudocode { margin-left: 2em; font-style: italic; }
+</style>
+<h2 id="expected-outcomes">Expected outcomes</h2>
+<ul>
+<li>You will be able to implement the low level algorithms you planned as part of the previous activity.</li>
+<li>You will be able to implement low level algorithms written by someone else</li>
+</ul>
+<h2 id="files-to-use">Files to use</h2>
+<p>If you haven’t already, download and unzip the <a href="self-study02.zip" title="Download a zip file of the files used in the exercise">Self-study 2 starter files</a>. <strong>You will be using <code>Fahrenheit.java</code> and <code>Blank.java</code> in this activity.</strong></p>
+<h2 id="steps">Steps</h2>
+<ol type="1">
+<li>Read the source code of Fahrenheit.java. Make sure that you can identify:
+<ul>
+<li>the name of the class it defines;</li>
+<li>the block containing the class definition;</li>
+<li>the block containing the main method definition;</li>
+<li>the identifiers and types of the variables declared; and</li>
+<li><p>the assignment statements.</p>
+<div class="solution boxed">
+<!-- The 27em height was found by trial and error; someone with better CSS skills than me should work out how to give it as much height as it requires, but I expect JS is required to do it on-the-fly. -->
+<iframe src="solutions/Fahrenheit.java.html" class="code" style="height: 27em;">
+</iframe>
+</div></li>
+</ul>
+<p>Then…</p>
+<ul>
+<li>Work out what output you expect the program to produce.
+<div class="solution boxed">
+Calculate the answer to 9 * 20/5 + 32. This will be the value displayed (as a double)
+</div></li>
+<li>Compile and run the program. Was your prediction about output correct?
+<div class="solution boxed">
+The output should be something like:
+<pre><code>program begins
+68.0
+program over</code></pre>
+</div></li>
+<li>Change the code of the program to assign a different value to celTemp, then recompile the program and run it again. Are the changes what you would expect?
+<div class="solution boxed">
+Changing the value of <code>celTemp</code> to <code>25.5</code> gives:
+<pre><code>program begins
+77.9
+program over</code></pre>
+</div></li>
+</ul></li>
+<li>Save the code of <code>Blank.java</code> with the name <code>Mystery.java</code>
+<ul>
+<li>Fill in the blanks in the code so that
+<ul>
+<li>the name of the class defined is Mystery (remember the file’s root name—the part before the <code>.java</code> extension—and the name of the class must agree exactly); and</li>
+<li>the name of the author is you.</li>
+</ul></li>
+<li>Write code to implement the following low level algorithm:
+<div class="pseudocode" "="">
+<p>integer storage for num1<br> integer storage for num2<br> num1 becomes 5<br> num2 becomes 10<br> display num1 num2<br> num1 becomes num1 + num2<br> num2 becomes num1 - num2<br> num1 becomes num1 - num2<br> display num1 num2<br></p>
+</div>
+<div class="solution boxed">
+<!-- The iframe's height was found by trial and error; someone with better CSS skills than me should work out how to give it as much height as it requires. -->
+<iframe src="solutions/Mystery.java.html" class="code" style="height: 31.25em;">
+</iframe>
+</div></li>
+<li>Work out what you think this code will do.</li>
+<li>Compile and run the program; was your prediction correct?
+<div class="solution boxed">
+This is another algorithm for swapping the values of two integers. It has the advantage of not needing any extra storage space, can you think of any disadvantages?
+</div></li>
+</ul></li>
+<li><p>Try implementing the low level algorithms you planned in the <a href="selfstudy0201.html">previous activity</a>.</p>
+<div class="note box">
+<strong>Note:</strong> The example solutions each include the original algorithm as comments to help you see the relationship between algorithmic step and code to implement it. It is not generally considered good programming practice to include as many “in line” comments as this, especially when they just restate what the code does. However, you may find the approach helpful when writing your own code: start with the algorithm described as comments and then gradually replace each comment with the code that achieves that step.
+</div>
+<ul>
+<li><p>An algorithm to convert centimetres to inches (there are 2.54 centimetres in an inch).</p>
+<div class="solution boxed">
+<!-- iframe's height found by trial and error -->
+<iframe src="solutions/ConvertToInches.java.html" class="code" style="height: 35em;">
+</iframe>
+</div></li>
+<li><p>An algorithm to find the last (rightmost) digit in an integer number</p>
+<div class="solution boxed">
+<!-- iframe's height found by trial and error -->
+<iframe src="solutions/LastDigit.java.html" class="code" style="height: 34em;">
+</iframe>
+</div></li>
+<li><p>An algorithm to swap the values of two integers</p>
+<div class="solution boxed">
+<!-- iframe's height found by trial and error -->
+<iframe src="solutions/Swapping.java.html" class="code" style="height: 43em;">
+</iframe>
+</div></li>
+</ul></li>
+</ol>
+<h2 id="questions-and-further-activities">Questions and further activities</h2>
+<ol type="1">
+<li>Can you think of any other possible uses for <code>Blank.java</code>?
+<div class="solution boxed">
+You could use it as a template for the programs you write to save typing and reduce the likelihood of mistakes in those parts of the code that don’t change from one program to the next
+</div></li>
+<li>The <code>Fahrenheit.java</code> program provides the opportunity for thinking about how you can test a program to make sure that it is doing what it really should.
+<ul>
+<li>What values could you assign to <code>celTemp</code> to test whether it really does give the correct answers?
+<div class="solution boxed">
+<p>You could try any Celsius temperatures for which you have worked out (or looked up) the correct answers. Some examples that people often remember include:</p>
+<ul>
+<li>The freezing point of water: 0 Celsius, 32 Fahrenheit</li>
+<li>The boiling point of water: 100 Celsius, 212 Fahrenheit</li>
+<li>The point at which they are the same: –40 Celsius, –40 Fahrenheit</li>
+</ul>
+</div></li>
+<li>If it did not give the correct answer, what things about the solution would you need to check?
+<div class="solution boxed">
+<ul>
+<li>check the algorithm: is this really the correct formula?</li>
+<li>check the implementation: take particular notice of the precedence of operations</li>
+<li>check the output statement: has it really displayed what you meant it to display?</li>
+</ul></li>
+<li><a href="fahrenheit_attempts.zip" title="Download the three attempts (zipped)">Here are three attempts at a solution</a> (written by a programmer who has not dared to admit their name). The programmer has, however, written code to allow interactive input of the Celsius value. If you have time, try copying, compiling and running the code.
+<ul>
+<li>Do any of these programs work correctly?</li>
+<li>What is wrong with the ones that do not?</li>
+</ul>
+<div class="solution boxed">
+Here is what we find if we check these attempts with the test data suggested above. Note that two of these incorrect programs do appear to give the correct output in one case; this illustrates how important it is to do thorough checking of programs. One test input → correct output <em>does not</em> guarantee that the program worked correctly!
+<table>
+<tr>
+<th>
+Celsius input
+</th>
+<th>
+Correct Fahrenheit output
+</th>
+<th>
+Attempt 1 answer
+</th>
+<th>
+Attempt2 answer
+</th>
+<th>
+Attempt3 answer
+</th>
+</tr>
+<tr>
+<td>
+0
+</td>
+<td>
+32.0
+</td>
+<td>
+288.0
+</td>
+<td>
+32.0
+</td>
+<td>
+0.0
+</td>
+</tr>
+<tr>
+<td>
+100
+</td>
+<td>
+212.0
+</td>
+<td>
+468.0
+</td>
+<td>
+182.0
+</td>
+<td>
+100.0
+</td>
+</tr>
+<tr>
+<td>
+-40
+</td>
+<td>
+-40.0
+</td>
+<td>
+216.0
+</td>
+<td>
+-28.0
+</td>
+<td>
+-40.0
+</td>
+</tr>
+</table>
+<h4 id="conclusions">Conclusions</h4>
+<table>
+<tr>
+<td>
+Attempt1
+</td>
+<td>
+Inspecting the code shows that the programmer has implemented the algorithm incorrectly:<br> <code>fahTemp = 9 <em>(celTemp/5 + 32);</code><br> instead of:<br> <code>fahTemp = 9 </em> celTemp/5 + 32;</code>
+</td>
+</tr>
+<tr>
+<td>
+Attempt2
+</td>
+<td>
+Inspecting the code shows that the programmer has implemented the wrong algorithm :<br> <code>fahTemp = 9 * celTemp/6 + 32;</code><br> instead of<br> <code>fahTemp = 9 * celTemp/5 + 32;</code>
+</td>
+</tr>
+<tr>
+<td>
+Attempt3
+</td>
+<td>
+Inspecting the code shows that the programmer has implemented the algorithm correctly, but has displayed the wrong value:<br> <code>System.out.println(celTemp);</code><br> instead of<br> <code>System.out.println(fahTemp);</code>
+</td>
+</tr>
+</table>
+</div></li>
+<li>What would happen in the <code>Fahrenheit.java</code> program if the type of the variables was changed to <code>int</code> rather than <code>double</code>? Try it out and see. Would the effect be the same if just <code>celTemp</code> were changed? Just <code>fahTemp</code>?
+<div class="solution boxed">
+<dl>
+<dt>
+If both were changed.
+</dt>
+<dd>
+The program would still compile and run. The results would be a little different, because only the division (<code>celTemp/5</code>) would be an integer division. The effect of this could be seen by assigning celTemp the value of 22.
+<ul>
+<li>
+with <code>celTemp</code> and <code>fahTemp</code> as doubles the answer is <code> 71.6</code>
+</li>
+<li>
+with <code>celTemp</code> and <code>fahTemp</code> as ints the answer is <code>71</code>
+</li>
+</ul>
+</dd>
+<dt>
+If just <code>celTemp</code> were changed to <code>int</code>.
+</dt>
+<dd>
+The program would still compile and run, the results would be different from when both are doubles. This is because the division (<code>celTemp/5</code>) would be an integer division and so the answer calculated would be an <code>int</code>, this can be stored as a <code>double</code>, but this is after the calculations have been done, so starting with celTemp 22
+<ul>
+<li>
+with <code>celTemp</code> as <code>int</code> and <code>fahTemp</code> as <code>double</code> the answer is <code>71.0</code>
+</li>
+</ul>
+</dd>
+<dt>
+if just <code>fahTemp</code> were changed to <code>int</code>
+</dt>
+<dd>
+The program would no longer compile. This is because there would be a problem with the assignment statement:
+<pre><code>fahTemp = 9 * celTemp/5 + 32;</code></pre>
+The right hand side would be calculated as a <code>double</code> (because <code>celTemp</code> is a <code>double</code>) but the left hand side is an <code>int</code>. This gives a type mismatch.
+</dd>
+</dl>
+<p>TAKE HOME MESSAGE:</p>
+<ul>
+<li>An <code>int</code> can be stored as a <code>double</code></li>
+<li>A <code>double</code> cannot be stored as an <code>int</code></li>
+<li>There are ways around this, but these are beyond the scope of this unit.</li>
+</ul>
+</div></li>
+</ul></li>
+</ol>
+<div class="showAllSolutions">
+
+</div>
+</body>
+</html>

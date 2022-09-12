@@ -1,0 +1,613 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Self-study 4 Activity 2: Plan and implement algorithms using branching flow of control</title>
+  <!--<style type="text/css">code{white-space: pre;}</style>-->
+  <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+  </style>
+  <link rel="stylesheet" href="../../templates/utas_ict_mylo.css">
+  <script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
+  <script src="../../templates/solutions.js"></script>
+  <script type="text/javascript">
+    $(function() {
+      function toggleSection(heading, scrollTo) {
+        if (!heading) return;
+        heading.toggleClass('collapsed')
+               .children('span.expandable').toggle();
+        heading.nextUntil('h1').toggle(300)
+               .promise().then( function() {
+                 if (scrollTo) {
+                   $('body, html').animate({ scrollTop: scrollTo.offset().top });
+                 }
+               });
+      }
+
+      var headings = $('h1').not('.title, .subtitle');
+      headings.css('cursor', 'pointer')
+              .prepend('<span class="expandable noprint" style="display: none;">&#9655;</span><span class="expandable noprint">&bigtriangledown;</span> ')
+              .click( function() { toggleSection( $(this) ); } );
+      if (headings.length == 0) { /* workaround until pandoc template understood better */
+        $('.expandAll').remove();
+      }
+
+      function toggleTarget(target) {  
+        var h = target.is('h1.collapsed') ? target : ( target.is(':hidden') ? target.prevAll('h1').first() : null );
+        toggleSection(h, target);
+      }
+
+      $('a[href^="#"]').click( function() {
+        toggleTarget( $(this.hash) );
+      });
+      $('#openall').click( function(evt) {
+        evt.preventDefault();
+        var self = $(this);
+        var totoggle = self.children('.open:visible').length > 0 ? $('h1.collapsed') : $('h1').not('.collapsed');
+        self.children('.expandable').toggle();
+        totoggle.not('.title, .subtitle').each( function(i, el) { toggleSection($(el)); } );
+      });
+
+    });
+  </script>
+</head>
+<body>
+<header>
+<h1 class="title">Self-study 4 Activity 2: Plan and implement algorithms using branching flow of control</h1>
+</header>
+<p class="noprint expandAll">[ <a href="#" id="openall"><span class="expandable open" style="display: none;">&harr; Expand</span><span class="expandable close">&cularr; Close</span> all sections</a> ] Only visible sections will be included when printing this document.</p>
+<h2 id="expected-outcomes">Expected outcomes</h2>
+<ul>
+<li>Know the syntax for the branching flow of control constructs (if and switch)</li>
+<li>Predict the flow of control in programs using if and switch constructs</li>
+<li>Plan algorithms that use a branching flow of control
+<ul>
+<li>Plan and write the conditional tests needed</li>
+</ul></li>
+<li>Implement algorithms that use a branching flow of control
+<ul>
+<li>Test the implementation</li>
+<li>Find and correct (debug) solutions.</li>
+</ul></li>
+</ul>
+<h2 id="starting-point">Starting point</h2>
+<p>If you haven’t already, download and unzip the <a href="self-study04.zip" title="Download a zip file of the files used in the exercise">Self-study 4 starter files</a>. <strong>You will be using <code>DebugExperiment.java</code>, <code>Guessing.java</code>, <code>DayName.java</code>, <code>MonthDays.java</code> and <code>LeapTest.java</code> in this activity.</strong></p>
+<h2 id="steps">Steps</h2>
+<h3 id="plan-and-implement-algorithms-with-2-way-branching-using-if-construct-with-and-without-else">1. Plan and implement algorithms with 2-way branching (using if construct, with and without else)</h3>
+<h3 id="write-debugging-messages-that-can-be-easily-switched-off">1.1 Write “debugging” messages that can be easily switched off</h3>
+<p>Open the file <code>DebugExperiment.java</code>.</p>
+<p>Read the code and predict what will happen when the program runs.</p>
+<p>Compile and run the program. Were you correct?</p>
+<p>Look at the code and answer the following:</p>
+<ol type="1">
+<li>Which are the “debugging” messages? <sol class="boxed">These are the ones that are not needed for the user to make sense of what the program does, but tell us something about the flow of control in the program. The code that could be considered as “debugging message” here are the statements:
+<table>
+<tr>
+<td>
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java">System.<span class="fu">out</span>.<span class="fu">println</span>(<span class="st">&quot;program beginning&quot;</span>);</code></pre></div>
+</td>
+<td>
+Assures us the program has begun to execute
+</td>
+</tr>
+<tr>
+<td>
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java">System.<span class="fu">out</span>.<span class="fu">println</span>(<span class="st">&quot;condition evaluated to true continuing with letter&quot;</span>)</code></pre></div>
+</td>
+<td>
+Shows that the if block of the if statement has been reached. We can use this to assure ourselves that the test has behaved as expected. If we saw this statement when we were expecting the else part to be executed then this would indicate that there was probably something wrong with our conditional test
+</td>
+</tr>
+<tr>
+<td>
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java">System.<span class="fu">out</span>.<span class="fu">println</span>(<span class="st">&quot;condition evaluated to false - no letter&quot;</span>);</code></pre></div>
+</td>
+<td>
+Shows that the else block of the if statement has been reached. We can use this to assure ourselves that the test has behaved as expected. If we saw this statement when we were expecting the if part to be executed then this would indicate that there was probably something wrong with our conditional test
+</td>
+</tr>
+<tr>
+<td>
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java">System.<span class="fu">out</span>.<span class="fu">println</span>(<span class="st">&quot;Program over&quot;</span> );</code></pre></div>
+</td>
+<td>
+Assures us that the program has reached the end of its execution (since this is the last statement)
+</td>
+</tr>
+</table>
+</sol></li>
+<li>Is the <code>final</code> variable <code>DEBUGON</code> used in the code? <sol class="boxed">No.</sol></li>
+</ol>
+<p>Work out what the effect of this code would be:</p>
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java"><span class="kw">if</span> (DEBUGON) {
+    System.<span class="fu">out</span>.<span class="fu">println</span>(<span class="st">&quot;debugging message to screen&quot;</span>);
+}</code></pre></div>
+<ul>
+<li>In the program as it is now <sol class="boxed">With DEBUGON set to <code>true</code> all of the messages would be seen (as now), so this code would display the message “debugging message to screen”.</sol></li>
+<li>If the value of <code>DEBUGON</code> were changed to false <sol class="boxed">With DEBUGON set to <code>false</code> this message would not be displayed.</sol></li>
+</ul>
+<p>Put each of the debugging messages in the code inside an if statement (like the one above).</p>
+<div class="boxed solution">
+<p>The following modified <code>DebugExperiment.java</code> is available in the <code>activity02/solutions</code> folder.</p>
+<!-- iframe's height found by trial and error -->
+<iframe src="solutions/DebugExperiment.java.html" class="code" style="height: 63em;">
+</iframe>
+</div>
+<p>Change the value of the variable <code>DEBUGON</code> to false. Check that this does switch off the messages.</p>
+<div class="boxed solution">
+<p>Example user input is indicted by a <code class="kb">different colour</code> below.</p>
+<table>
+<tr>
+<th>
+Sample output with DEBUGON set to true
+</th>
+<th>
+Sample output with DEBUGON set to false
+</th>
+</tr>
+<tr>
+<td>
+<pre><code>program beginning
+This program will automatically generate thank you letters
+Enter your name: <kb>David</kb>
+Enter the name of the person who gave the gift: <kb>Mum</kb>
+What was the gift? <kb>book</kb>
+Values entered are:
+sender: David
+recipient: Mum
+gift: book
+Enter y if these are all correct
+<kb>y</kb>
+condition evaluated to true - continuing with letter
+Dear Mum,
+    Thank you very much for the beautiful book.
+I will enjoy using it every day.
+I hope you are well and saving up for Christmas.
+love from
+David
+program over</code></pre>
+</td>
+<td>
+<pre><code>This program will automatically generate thank you letters
+Enter your name: <kb>Julie</kb>
+Enter the name of the person who gave the gift: <kb>Mum</kb>
+What was the gift? <kb>hat</kb>
+Values entered are:
+sender: Julie
+recipient: Mum
+gift: hat
+Enter y if these are all correct
+<kb>y</kb>
+Dear Mum,
+    Thank you very much for the beautiful hat.
+I will enjoy using it every day.
+I hope you are well and saving up for Christmas.
+love from
+Julie</code></pre>
+</td>
+</tr>
+</table>
+</div>
+<h4 id="use-a-branch-to-give-appropriate-feedback-to-the-user">1.2 Use a branch to give appropriate feedback to the user</h4>
+<p>Open the file <code>Guessing.java</code>.</p>
+<p>Compile and run the program. What happens?</p>
+<p><sol class="boxed">Nothing much! The user is asked to enter a guess, then the program ends.</sol></p>
+<p>Edit the code of the program so that if the user enters a character which is exactly the same as the character <code>SECRET</code> stored in the program they see a message which says <code>&quot;Congratulations, you chose the correct letter&quot;</code>, otherwise they see a message that says <code>&quot;Bad luck, you chose the wrong letter&quot;</code></p>
+<div class="solution boxed">
+<p>What is needed here is a simple branch so that</p>
+<ul>
+<li>there is a “step” between accepting the user’s guess and the end of the program;</li>
+<li>the “step” is the appropriate message; and</li>
+<li>the condition to branch on will be the value of the guess (stored in the variable guess);</li>
+</ul>
+<p>The simplest way to implement this would be something like:</p>
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java"><span class="kw">if</span> (guess == SECRET) {
+    System.<span class="fu">out</span>.<span class="fu">println</span>(<span class="st">&quot;Congratulations, you chose the correct letter&quot;</span>);
+} <span class="kw">else</span> {
+    System.<span class="fu">out</span>.<span class="fu">println</span>(<span class="st">&quot;Bad luck, you chose the wrong letter&quot;</span>);
+}</code></pre></div>
+</div>
+<p>Compile and run the program again</p>
+<ul>
+<li>Check that it behaves correctly</li>
+<li>How many guesses does the user get? Why is this?</li>
+</ul>
+<p><sol class="boxed">Just one. This is because we have used an if construct. This allows for a single pass through the code. If we wanted the user to have multiple guesses, some sort of looping construct would be needed.</sol></p>
+<p>Modified code for <code>Guessing.java</code> is available in the <code>activity02/solutions</code> folder.</p>
+<h3 id="plan-and-implement-algorithms-with-multiway-branching-using-switch-construct">2. Plan and implement algorithms with multiway branching (using switch construct)</h3>
+<h4 id="understand-the-function-of-the-break-statement-in-the-switch-construct.">2.1 Understand the function of the break statement in the switch construct.</h4>
+<p>Open the file <code>DayName.java</code> (a variation on the one demonstrated in lecture 4 as an example of the switch construct). (Note that is uses some special features of enums that you won’t use in this unit to enable a user to select a day of the week using the keyboard.)</p>
+<p>Edit the code and remove the first <code>break</code> statement within the <code>switch</code>.</p>
+<ul>
+<li>Recompile and run the code. Enter the value 0 when prompted
+<ul>
+<li>What happens?</li>
+<li>Why to you think this happens?</li>
+</ul></li>
+</ul>
+<p>Edit the code and remove the all the <code>break</code> statements within the <code>switch</code>.</p>
+<ul>
+<li>Recompile and run the code and run it several times. Enter various values when prompted
+<ul>
+<li>What happens?</li>
+<li>Why to you think this happens?</li>
+</ul></li>
+</ul>
+<div class="solution">
+<table>
+<colgroup>
+<col style="width: 40%">
+<col style="width: 20%">
+<col>
+</colgroup>
+<thead>
+<tr>
+<th>
+Action
+</th>
+<th>
+Output from sample run(s)
+</th>
+<th>
+Explanation
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<p>Remove the first <code>break</code> statement within the <code>switch</code>, which makes the code:</p>
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java"><span class="kw">switch</span>( day ) {
+    <span class="kw">case</span> SUNDAY: dayName = <span class="st">&quot;Sunday&quot;</span>;
+                 <span class="co">// break;</span>
+    <span class="kw">case</span> MONDAY: dayName = <span class="st">&quot;Monday&quot;</span>;
+                 <span class="kw">break</span>;
+    <span class="kw">case</span> TUESDAY: dayName = <span class="st">&quot;Tuesday&quot;</span>;
+                  <span class="kw">break</span>;
+    <span class="kw">case</span> WEDNESDAY: dayName = <span class="st">&quot;Wednesday&quot;</span>;
+                    <span class="kw">break</span>;
+    <span class="kw">case</span> THURSDAY: dayName = <span class="st">&quot;Thursday&quot;</span>;
+                   <span class="kw">break</span>;
+    <span class="kw">case</span> FRIDAY: dayName = <span class="st">&quot;Friday&quot;</span>;
+                 <span class="kw">break</span>;
+    <span class="kw">case</span> SATURDAY: dayName = <span class="st">&quot;Saturday&quot;</span>;
+                   <span class="kw">break</span>;
+    <span class="kw">default</span>: dayName = <span class="st">&quot;Unknown&quot;</span>;
+}</code></pre></div>
+</td>
+<td>
+<pre><code>Pick a day by its number
+0: SUNDAY
+1: MONDAY
+2: TUESDAY
+3: WEDNESDAY
+4: THURSDAY
+5: FRIDAY
+6: SATURDAY
+0
+The selected day is Monday</code></pre>
+</td>
+<td>
+<p>In the <code>switch</code> construct the following occurs:</p>
+<ol type="1">
+<li>The value of the expression (<code>dayNum</code> in this case) is tested (for exact equality) against each of the case values in turn until one matches. (Here the test <code>dayNum == Day.SUNDAY</code> will evaluate to <code class="sourceCode java"><span class="kw">true</span></code>)</li>
+<li>Once a match is found then every statement in the switch up to the next break statement is executed. Here this means that <code class="sourceCode java">dayName = <span class="st">&quot;Sunday&quot;</span>;</code> will be executed and then <code class="sourceCode java">dayName = <span class="st">&quot;Monday&quot;</span>;</code> will be executed.</li>
+<li>If no match is found, the <code class="sourceCode java"><span class="kw">default</span></code> statement (if any) will be executed. If there is no match and no default statement, nothing will be executed.</li>
+</ol>
+This means that when the switch is over the value in the <code>String</code> referenced by <code>dayName</code> will be <code>&quot;Monday&quot;</code>
+</td>
+</tr>
+<tr>
+<td>
+<p>Remove the all the <code>break</code> statements within the <code>switch</code>:</p>
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java"><span class="kw">switch</span>( day ) {
+    <span class="kw">case</span> SUNDAY: dayName = <span class="st">&quot;Sunday&quot;</span>;
+                 <span class="co">// break;</span>
+    <span class="kw">case</span> MONDAY: dayName = <span class="st">&quot;Monday&quot;</span>;
+                 <span class="co">// break;</span>
+    <span class="kw">case</span> TUESDAY: dayName = <span class="st">&quot;Tuesday&quot;</span>;
+                  <span class="co">// break;</span>
+    <span class="kw">case</span> WEDNESDAY: dayName = <span class="st">&quot;Wednesday&quot;</span>;
+                    <span class="co">// break;</span>
+    <span class="kw">case</span> THURSDAY: dayName = <span class="st">&quot;Thursday&quot;</span>;
+                   <span class="co">// break;</span>
+    <span class="kw">case</span> FRIDAY: dayName = <span class="st">&quot;Friday&quot;</span>;
+                 <span class="co">// break;</span>
+    <span class="kw">case</span> SATURDAY: dayName = <span class="st">&quot;Saturday&quot;</span>;
+                   <span class="co">// break;</span>
+    <span class="kw">default</span>: dayName = <span class="st">&quot;Unknown&quot;</span>;
+}</code></pre></div>
+</td>
+<td>
+<p>Run 1: (user enters 0)</p>
+<pre><code>Pick a day by its number
+0: SUNDAY
+1: MONDAY
+2: TUESDAY
+3: WEDNESDAY
+4: THURSDAY
+5: FRIDAY
+6: SATURDAY
+0
+The selected day is Unknown</code></pre>
+<p>Run 2: (user enters 3)</p>
+<pre><code>Pick a day by its number
+0: SUNDAY
+1: MONDAY
+2: TUESDAY
+3: WEDNESDAY
+4: THURSDAY
+5: FRIDAY
+6: SATURDAY
+3
+The selected day is Unknown</code></pre>
+<p>Run 3: (user enters 6)</p>
+<pre><code>Pick a day by its number
+0: SUNDAY
+1: MONDAY
+2: TUESDAY
+3: WEDNESDAY
+4: THURSDAY
+5: FRIDAY
+6: SATURDAY
+6
+The selected day is Unknown</code></pre>
+<p>Run 4: (user enters 15)</p>
+<pre><code>Pick a day by its number
+0: SUNDAY
+1: MONDAY
+2: TUESDAY
+3: WEDNESDAY
+4: THURSDAY
+5: FRIDAY
+6: SATURDAY
+15
+The selected day is Unknown</code></pre>
+</td>
+<td>
+See above. In this case the last statement executed will always be the default (since there are now no break statements). This means that when the <code>switch</code> is over the value in the <code>String</code> referenced by <code>dayName</code> will always be <code>&quot;Unknown&quot;</code>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h4 id="use-the-switch-construct-to-implement-a-multiway-branch">2.2 Use the switch construct to implement a multiway branch</h4>
+<p>Open the file <code>MonthDays.java</code>.</p>
+<p>Read the code of this program. The plan is to use the <code>switch</code> statement to assign the correct number of days in the month for the month entered by the user (1 = January, 2 = February, etc.) (assume for the moment that February always has 28 days). As you can see the <code>switch</code> statement has not been fully implemented.</p>
+<p>Consider how to complete this implementation. Think about:</p>
+<ul>
+<li>Listing each month in order. What are the advantages and disadvantages of this? <sol class="boxed">This would be clear and easy to code (in principle) because it follows the same pattern as the DayName example <em>but</em> it would be necessary to write 12 different cases. This would be a bit tedious, especially as many of the cases would require the same code to be executed.</sol></li>
+<li>Grouping together months with the same number of days.
+<ul>
+<li>How can this be done? (Remember no conditional tests are allowed within the case labels) <sol class="boxed">People often try things like <code>case 1 || case 3</code> but this is not syntactically correct; the case label <em>must</em> be a single value that will be compared against the expression appearing after <code>switch</code>. But if some <code>break</code>s are removed then multiple cases can execute the same code.</sol></li>
+<li>Compare ideas with other students and see who can come up with the neatest solution.
+<div class="boxed solution">
+<p>Here’s one possibility:</p>
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java"><span class="kw">switch</span> (monthNum) {
+    <span class="kw">case</span> <span class="dv">1</span>:
+    <span class="kw">case</span> <span class="dv">3</span>:
+    <span class="kw">case</span> <span class="dv">5</span>:
+    <span class="kw">case</span> <span class="dv">7</span>:
+    <span class="kw">case</span> <span class="dv">8</span>:
+    <span class="kw">case</span> <span class="dv">10</span>:
+    <span class="kw">case</span> <span class="dv">12</span>: numDays = <span class="dv">31</span>;
+             <span class="kw">break</span>;
+    <span class="kw">case</span> <span class="dv">4</span>:
+    <span class="kw">case</span> <span class="dv">6</span>:
+    <span class="kw">case</span> <span class="dv">9</span>:
+    <span class="kw">case</span> <span class="dv">11</span>: numDays = <span class="dv">30</span>;
+             <span class="kw">break</span>;
+    <span class="kw">case</span> <span class="dv">2</span>: numDays = <span class="dv">28</span>;
+            <span class="kw">break</span>;
+    <span class="kw">default</span>: numDays = <span class="dv">0</span>;
+             System.<span class="fu">out</span>.<span class="fu">println</span>(<span class="st">&quot;unknown month&quot;</span>);
+}</code></pre></div>
+<div class="note box">
+<strong>Note:</strong> This is taking advantage of the odd way the switch construct works. Matching any of the <code>monthNum</code> values 1, 3, 5, 7, 8, 10, 12 (the months with 31 days) will execute everything up to the next break. This means we need only write the <code>numDays = 31;</code> once.
+</div>
+</div></li>
+</ul></li>
+</ul>
+<p>Modified code for <code>MonthDays.java</code> is available in the <code>activity02/solutions</code> folder.</p>
+<h3 id="plan-and-implement-algorithms-with-multiway-branching">3. Plan and implement algorithms with multiway branching</h3>
+<p>In this task you will decide between nested if constructs, single if constructs and sequential if constructs.</p>
+<h4 id="write-and-test-code-to-test-whether-a-year-is-a-leap-year">3.1 Write and test code to test whether a year is a leap year</h4>
+<p>Open the program <code>LeapTest.java</code>. Look at the code and predict what will happen when it is run.</p>
+<p>Compile and run the program. Were you correct?</p>
+<p><sol class="boxed">The program will give the output stating that it is NOT a leap year, no matter what year is entered. Note that this will be correct most of the time (since most years are not leap years). </sol></p>
+<p>The goal here is to add code to the program so that it correctly determines whether or not a year is a leap year. Note that as the program stands although there is NO test at all, it gives the correct answer for most years. Why is this? <sol class="boxed">Most years are not leap years. Doing absolutely nothing about calculating the leap year (except to assume that it is <code>false</code>) gives a correct response rate of just over 75%. But is this good enough?</sol></p>
+<p>The rules for a leap year are as follows. A year is a leap year if:</p>
+<ul>
+<li>The year number is evenly divisible by 400<br>OR</li>
+<li>The year number is evenly divisible by 4 AND NOT evenly divisible by 100</li>
+</ul>
+<p>Plan how you will write the code to implement these rules. Note there are several ways this can be done, some easier to implement and understand than others. Ask yourself the following questions:</p>
+<ul>
+<li>Will you use a single <code>if</code> statement or nested statements?
+<ul>
+<li>if single, how will you combine the tests?
+<div class="boxed solution">
+<p>Grouping — the important thing is to get the <em>and</em>s and <em>or</em>s correctly sorted out. To follow the way the rules are set out above a single <code>if</code> statement that would do it is:</p>
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java"><span class="kw">if</span> ((year % <span class="dv">400</span> == <span class="dv">0</span>) || (year % <span class="dv">4</span> == <span class="dv">0</span> &amp;&amp; year % <span class="dv">100</span> != <span class="dv">0</span>)) {
+    isLeapYear =  <span class="kw">true</span>;
+}</code></pre></div>
+<p>Note that, unless we do something else inside the <code>if</code>, the above is identical to the following:</p>
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java">isLeapYear = (year % <span class="dv">400</span> == <span class="dv">0</span>) || (year % <span class="dv">4</span> == <span class="dv">0</span> &amp;amp;&amp;amp; year % <span class="dv">100</span> != <span class="dv">0</span>);</code></pre></div>
+</div></li>
+<li>if nested, what is the correct sequence or nesting to use? (Try not to repeat the same test on different branches.)
+<div class="boxed solution">
+<p>Here the important thing is the order of tests. Notice that if <code>(year % 400 == 0)</code> is true then the year is a leap year no matter what, whereas if this is false it can still be a leap year provided that it is <em>both</em> divisible by 4 and not divisible by 100. A nested <code>if</code> statement that would implement this is:</p>
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java"><span class="kw">if</span> (year % <span class="dv">400</span> == <span class="dv">0</span>) {
+    isLeapYear =  <span class="kw">true</span>;
+} <span class="kw">else</span> {
+    <span class="kw">if</span> (year % <span class="dv">4</span> == <span class="dv">0</span> &amp;amp;&amp;amp; year % <span class="dv">100</span> != <span class="dv">0</span>) {
+        isLeapYear =  <span class="kw">true</span>;
+    }
+}</code></pre></div>
+<div class="note box">
+<strong>Note:</strong> There are other groupings and nesting that would give the correct result.
+</div>
+</div></li>
+</ul></li>
+<li><p>Would a “guilty until proven innocent” strategy work well here? <sol class="boxed">Perhaps “innocent until proven guilty” is a better way of looking at it. Since most years are not leap years, it makes sense to set the boolean <code>isLeapYear</code> to <code>false</code> and just test for the relatively rare cases where it is a leap year. This the coding easier since we only need to worry about one <code>else</code> branch.</sol></p>
+<ul>
+<li>What are the appropriate tests for the strategy you have chosen?
+<div class="boxed solution">
+<p>The important thing is to think of all the ways in which the value of <code>isLeapYear</code> could become <code>true</code> (or remain <code>false</code>) and make sure that each of these are tested.</p>
+<table>
+<colgroup>
+<col style="width: 55%" />
+<col style="width: 37%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">isLeapYear becomes true if</th>
+<th style="text-align: left;">example years to test this</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">year is divisible by 400</td>
+<td style="text-align: left;">2000, 2400</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">year is divisible by 4 and not by 100</td>
+<td style="text-align: left;">2004, 1976</td>
+</tr>
+</tbody>
+</table>
+<p><span/></p>
+<table>
+<colgroup>
+<col style="width: 55%" />
+<col style="width: 37%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">isLeapYear remains false if</th>
+<th style="text-align: left;">example years to test this</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">year is not divisible by 4</td>
+<td style="text-align: left;">1947, 2001</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">year is divisible by 4 and also divisible by 100</td>
+<td style="text-align: left;">1900, 1800</td>
+</tr>
+</tbody>
+</table>
+<p><span/></p>
+</div></li>
+</ul></li>
+</ul>
+<p>When you are confident that you have planned an effective solution, insert code in your program to implement your plan.</p>
+<p>Test your program on the following groups of years:</p>
+<ul>
+<li>Group 1: 1999, 2000, 2001, 2002</li>
+<li>Group 2: 1684, 1817, 1947, 2021, 1899, 1999, 2001</li>
+<li>Group 3: 1800, 2000, 1947, 1976</li>
+</ul>
+<p>Each of these groups of years can be considered as a “test set” of data to test whether the program is working correctly. Comment on how good a test set you think each of these are.</p>
+<div class="solution">
+<table>
+<colgroup>
+<col style="width:10%;">
+<col style="width:25%;">
+<col style="width:65%;">
+</colgroup>
+<tr>
+<th>
+Test Set
+</th>
+<th>
+Results for each year
+</th>
+<th>
+Comment
+</th>
+</tr>
+<tr>
+<td>
+Group 1
+</td>
+<td>
+1999 false (not divisible by 4)<br>2000 true (divisible by 400)<br>2001 false (not divisible by 4)<br>2002 false (not divisible by 4)
+</td>
+<td>
+<p>Not a good set: only tests 2 of the possible “branches” <br>If code had been written that did not correctly assign false for years that are divisible by 4 and also divisible by 100 - this test set would not detect that there was a problem.<br>If code had been written that did not correctly assign true for years that are divisible by 4 and not divisible by 100 - this test set would not detect that there was a problem</p>
+For example code that only checked if the year was divisible by 400 would give the correct answer on all of these test cases.
+</td>
+</tr>
+<tr>
+<td>
+Group 2
+</td>
+<td>
+1684 true(divisible by 4 and not by 100)<br>1817 false (not divisible by 4)<br>1947 false (not divisible by 4)<br>2021 false (not divisible by 4)<br>1899 false (not divisible by 4)<br>1999 false (not divisible by 4)<br>2001 false (not divisible by 4)
+</td>
+<td>
+<p>Not a good set: only tests 2 of the possible “branches” <br>If code had been written that did not correctly assign false for years that are divisible by 4 and also divisible by 100 - this test set would not detect that there was a problem.<br>If code had been written that did not correctly assign true for years that are divisible by 400 - this test set may not detect that there was a problem.</p>
+For example code that only checked if the year was divisible by 4 would give the correct answer on all of these test cases.
+</td>
+</tr>
+<tr>
+<td>
+Group 3
+</td>
+<td>
+1800 false (divisible by 4 and by 100)<br>2000 true (divisible by 400)<br>1947 false (not divisible by 4)<br>1976 true(divisible by 4 and not by 100)
+</td>
+<td>
+A good set: it tests all of the possibilities.
+</td>
+</tr>
+</table>
+</div>
+<p>Modified code for <code>LeapTest.java</code> is available in the <code>activity02/solutions</code> folder.</p>
+<div class="showAllSolutions">
+
+</div>
+</body>
+</html>

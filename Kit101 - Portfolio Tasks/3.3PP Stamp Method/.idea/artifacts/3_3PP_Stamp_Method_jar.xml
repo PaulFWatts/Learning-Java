@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="3.3PP Stamp Method:jar">
+    <output-path>$PROJECT_DIR$/../../java-jars</output-path>
+    <root id="archive" name="3.3PP Stamp Method.jar">
+      <element id="module-output" name="3.3PP Stamp Method" />
+    </root>
+  </artifact>
+</component>

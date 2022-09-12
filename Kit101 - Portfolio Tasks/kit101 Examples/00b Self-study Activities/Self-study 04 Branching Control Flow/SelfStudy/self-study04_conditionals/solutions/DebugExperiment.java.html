@@ -1,0 +1,88 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title></title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <style type="text/css">
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; }
+code > span.dt { color: #902000; }
+code > span.dv { color: #40a070; }
+code > span.bn { color: #40a070; }
+code > span.fl { color: #40a070; }
+code > span.ch { color: #4070a0; }
+code > span.st { color: #4070a0; }
+code > span.co { color: #60a0b0; font-style: italic; }
+code > span.ot { color: #007020; }
+code > span.al { color: #ff0000; font-weight: bold; }
+code > span.fu { color: #06287e; }
+code > span.er { color: #ff0000; font-weight: bold; }
+  </style>
+</head>
+<body>
+<pre class="sourceCode java"><code class="sourceCode java"><span class="kw">import java.util.Scanner;</span>
+
+<span class="co">/**</span>
+<span class="co"> * Demonstrates the use of conditionals to control whether debugging messages</span>
+<span class="co"> * are displayed or not. The actual program is an automated letter writer.</span>
+<span class="co"> */</span>
+<span class="kw">public</span> <span class="kw">class</span> DebugExperiment {
+
+    <span class="kw">public</span> <span class="dt">static</span> <span class="dt">void</span> <span class="fu">main</span>(String[] args) {
+        Scanner sc = <span class="kw">new</span> Scanner(System.<span class="fu">in</span>);
+        String sender, recipient, gift;
+        <span class="dt">char</span> allOK;
+        <span class="dt">final</span> <span class="dt">boolean</span> DEBUGON = <span class="kw">false</span>;
+        <span class="dt">final</span> <span class="dt">char</span> YES = &#39;y&#39;;
+
+        <span class="kw">if</span> (DEBUGON) {
+            System.<span class="fu">out</span>.<span class="fu">println</span>(<span class="st">&quot;program beginning&quot;</span>); <span class="co">// debugging statement</span>
+        }
+
+        System.<span class="fu">out</span>.<span class="fu">println</span>(<span class="st">&quot;This program will automatically generate thank you letters&quot;</span>);
+        System.<span class="fu">out</span>.<span class="fu">print</span>(<span class="st">&quot;Enter your name: &quot;</span>);
+        sender = sc.<span class="fu">nextLine</span>();
+        System.<span class="fu">out</span>.<span class="fu">print</span>(<span class="st">&quot;Enter the name of the person who gave the gift: &quot;</span>);
+        recipient = sc.<span class="fu">nextLine</span>();
+        System.<span class="fu">out</span>.<span class="fu">print</span>(<span class="st">&quot;What was the gift? &quot;</span>);
+        gift = sc.<span class="fu">nextLine</span>();
+        System.<span class="fu">out</span>.<span class="fu">println</span>(<span class="st">&quot;Values entered are:&quot;</span>);
+        System.<span class="fu">out</span>.<span class="fu">println</span>(<span class="st">&quot;sender: &quot;</span> + sender);
+        System.<span class="fu">out</span>.<span class="fu">println</span>(<span class="st">&quot;recipient: &quot;</span> + recipient);
+        System.<span class="fu">out</span>.<span class="fu">println</span>(<span class="st">&quot;gift: &quot;</span> + gift);
+
+        System.<span class="fu">out</span>.<span class="fu">println</span>(<span class="st">&quot;Enter y if these are all correct&quot;</span>);
+        allOK = sc.<span class="fu">next</span>().<span class="fu">charAt</span>(<span class="dv">0</span>);
+
+        <span class="kw">if</span> (allOK == YES) {
+            <span class="kw">if</span> (DEBUGON) {
+                System.<span class="fu">out</span>.<span class="fu">println</span>(<span class="st">&quot;condition evaluated to true - continuing with letter&quot;</span>); <span class="co">// debugging statement</span>
+            }
+            System.<span class="fu">out</span>.<span class="fu">println</span>(<span class="st">&quot;Dear &quot;</span> + recipient + <span class="st">&quot;,&quot;</span>);
+            System.<span class="fu">out</span>.<span class="fu">println</span>(<span class="st">&quot;</span><span class="ch">\t</span><span class="st"> Thank you very much for the beautiful &quot;</span> + gift + <span class="st">&quot;.&quot;</span>);
+            System.<span class="fu">out</span>.<span class="fu">println</span>(<span class="st">&quot;I will enjoy using it every day. &quot;</span>);
+            System.<span class="fu">out</span>.<span class="fu">println</span>(<span class="st">&quot;I hope you are well and saving up for Christmas.&quot;</span> );
+            System.<span class="fu">out</span>.<span class="fu">println</span>(<span class="st">&quot;love from&quot;</span>);
+            System.<span class="fu">out</span>.<span class="fu">println</span>(sender);
+        } <span class="kw">else</span> {
+            <span class="kw">if</span> (DEBUGON) {
+                System.<span class="fu">out</span>.<span class="fu">println</span>(<span class="st">&quot;condition evaluated to false - no letter&quot;</span>);<span class="co">// debugging statement</span>
+            }
+        }
+        <span class="kw">if</span> (DEBUGON) {
+            System.<span class="fu">out</span>.<span class="fu">println</span>(<span class="st">&quot;Program over&quot;</span> );<span class="co">// debugging statement</span>
+        }
+    }
+}</code></pre>
+</body>
+</html>

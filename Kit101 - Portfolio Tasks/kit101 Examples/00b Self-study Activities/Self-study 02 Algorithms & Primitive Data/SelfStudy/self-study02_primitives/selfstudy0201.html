@@ -1,0 +1,276 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Self-study 2 Activity 1: Plan algorithms</title>
+  <!--<style type="text/css">code{white-space: pre;}</style>-->
+  <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+  </style>
+  <link rel="stylesheet" href="../../templates/utas_ict_mylo.css">
+  <script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
+  <script src="../../templates/solutions.js"></script>
+  <script type="text/javascript">
+    $(function() {
+      function toggleSection(heading, scrollTo) {
+        if (!heading) return;
+        heading.toggleClass('collapsed')
+               .children('span.expandable').toggle();
+        heading.nextUntil('h1').toggle(300)
+               .promise().then( function() {
+                 if (scrollTo) {
+                   $('body, html').animate({ scrollTop: scrollTo.offset().top });
+                 }
+               });
+      }
+
+      var headings = $('h1').not('.title, .subtitle');
+      headings.css('cursor', 'pointer')
+              .prepend('<span class="expandable noprint" style="display: none;">&#9655;</span><span class="expandable noprint">&bigtriangledown;</span> ')
+              .click( function() { toggleSection( $(this) ); } );
+      if (headings.length == 0) { /* workaround until pandoc template understood better */
+        $('.expandAll').remove();
+      }
+
+      function toggleTarget(target) {  
+        var h = target.is('h1.collapsed') ? target : ( target.is(':hidden') ? target.prevAll('h1').first() : null );
+        toggleSection(h, target);
+      }
+
+      $('a[href^="#"]').click( function() {
+        toggleTarget( $(this.hash) );
+      });
+      $('#openall').click( function(evt) {
+        evt.preventDefault();
+        var self = $(this);
+        var totoggle = self.children('.open:visible').length > 0 ? $('h1.collapsed') : $('h1').not('.collapsed');
+        self.children('.expandable').toggle();
+        totoggle.not('.title, .subtitle').each( function(i, el) { toggleSection($(el)); } );
+      });
+
+    });
+  </script>
+</head>
+<body>
+<header>
+<h1 class="title">Self-study 2 Activity 1: Plan algorithms</h1>
+</header>
+<p class="noprint expandAll">[ <a href="#" id="openall"><span class="expandable open" style="display: none;">&harr; Expand</span><span class="expandable close">&cularr; Close</span> all sections</a> ] Only visible sections will be included when printing this document.</p>
+<p><strong>Note: This activity does not involve <em>writing</em> programs, just <em>planning</em> the algorithms that will later be implemented.</strong></p>
+<h2 id="expected-outcomes">Expected outcomes</h2>
+<p>You will have several algorithms planned ready to be implemented in Java code. (The implementation is not part of this exercise.) There will be some low level algorithms and some high level algorithms.</p>
+<h2 id="background-information">Background information</h2>
+<p>It is useful, when planning algorithms, to use a style of language that can readily be converted into program code. This is sometimes called “structured English” or “pseudocode”. The important point about it is that one statement in this can be directly converted into a single instruction to the computer. <!--Take a look at some [suggested pseudocode](selfstudy0201bg.html) in preparation.--></p>
+<p>We suggest you use the following pseudocode for the common operations of declaring constants, declaring variables, changing a variable’s value, and displaying a variable’s value:</p>
+<table>
+<colgroup>
+<col style="width: 11%" />
+<col style="width: 35%" />
+<col style="width: 26%" />
+<col style="width: 26%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Action</th>
+<th style="text-align: left;">Pseudocode</th>
+<th style="text-align: left;">Example pseudocode</th>
+<th style="text-align: left;">Example Java code</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><p>Declaring constants</p></td>
+<td style="text-align: left;"><p>Constants: <br><strong>type</strong> <strong>identifier</strong> = <strong>expression</strong> <em>, short description</em></p></td>
+<td style="text-align: left;"><p>Constants:<br> int MAX = 10<em>, upper limit</em><br> int DAYS = 7<em>, days per week</em><br></p></td>
+<td style="text-align: left;"><div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java"><span class="dt">final</span> <span class="dt">int</span> MAX = <span class="dv">10</span>; <span class="co">//upper limit</span>
+<span class="dt">final</span> <span class="dt">int</span> DAYS = <span class="dv">7</span>; <span class="co">//days per week</span></code></pre></div></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><p>Declaring variables</p></td>
+<td style="text-align: left;"><p>Variables: <br><strong>type</strong> <strong>identifier</strong><em>, short description</em> <br><strong>type</strong> <strong>identifier</strong><em>, short description</em></p></td>
+<td style="text-align: left;"><p>Variables:<br> int age<em>, age in years</em><br> double weight<em>, weight in kg</em><br></p></td>
+<td style="text-align: left;"><div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java"><span class="dt">int</span> age; <span class="co">//age in years</span>
+<span class="dt">double</span> weight; <span class="co">//weight in kg</span></code></pre></div></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><p>Change variable’s value</p></td>
+<td style="text-align: left;"><p><strong>identifier</strong> becomes <strong>expression value</strong> <br><em>or</em> <br><strong>identifier</strong> = <strong>expression value</strong> <br>(where you should read = as ‘becomes’) <br><em>or</em> <br><strong>identifier</strong> ⟵ <strong>expression value</strong> <br><strong>type</strong> <strong>identifier</strong><em>, short description</em> <br><strong>type</strong> <strong>identifier</strong><em>, short description</em></p></td>
+<td style="text-align: left;"><p>age becomes 21 <br><em>or</em> <br>age = 21 <br><em>or</em> <br>weight ⟵ 72</p></td>
+<td style="text-align: left;"><div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java">age = <span class="dv">21</span>;
+weight = <span class="dv">72</span>;</code></pre></div></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><p>Display a message</p></td>
+<td style="text-align: left;"><p>display <strong>expression</strong></p></td>
+<td style="text-align: left;"><p>display age <br>display “Your age is” + age <br>display formatted weight</p></td>
+<td style="text-align: left;"><div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java">System.<span class="fu">out</span>.<span class="fu">println</span>(age);
+System.<span class="fu">out</span>.<span class="fu">println</span>(<span class="st">&quot;Your age is &quot;</span>);
+System.<span class="fu">out</span>.<span class="fu">println</span>(<span class="st">&quot;Weight: &quot;</span> + weight + <span class="st">&quot;kg&quot;</span>);</code></pre></div></td>
+</tr>
+</tbody>
+</table>
+<h2 id="steps">Steps</h2>
+<!-- Consider moving this to main CSS file -->
+<style type="text/css">
+div.pseudocode { margin-left: 2em; font-style: italic; }
+</style>
+<h3 id="low-level-algorithmsworked-example">Low level algorithms—worked example</h3>
+<p>This is an algorithm to convert a temperature in degrees Celsius into degrees Fahrenheit (handy if you are travelling in the US or the UK!). To solve this problem the first thing to do is to work out what the rule relating the two scales is. It would be possible to do this from first principles knowing that the freezing point of water is 0°C and 32°F and boiling point is 100°C and 212°F (Google or equivalent could supply this information; we’ll ignore the fact that it can also do the conversion too!).</p>
+<pre class="listing box">Variables:
+double celTemp<em>, temperature in Celsius</em>
+double fahTemp<em>, temperature in Fahrenheit</em>
+
+Steps:
+celTemp = temperature to convert (say 20)
+fahTemp = 9 * celTemp / 5 + 32
+display fahTemp</pre>
+<p>Try writing algorithms for these tasks (remember to make an attempt before you show the sample solutions):</p>
+<ol type="1">
+<li>An algorithm to convert centimetres to inches (there are 2.54 centimetres in an inch).
+<div class="solution boxed">
+<pre class="listing box">Variables:
+double cmDist<em>, distance in cm</em>
+double inDist<em>distance in inches</em>
+
+Steps:
+cmDist = distance to convert (say 20)
+inDist = cmDist / 2.54
+display inDist</pre>
+<p>This is a case where it would be a good idea to use a <em>constant</em> for the conversion factor. (Can you think why this is so?) The solution would then be:</p>
+<pre class="listing box">Constants:
+double CM_PER_INCH = 2.54<em>, conversion factor</em>
+
+Variables:
+double cmDist<em>, distance in cm</em>
+double inDist<em>, distance in inches</em>
+
+Steps:
+cmDist = distance to convert (say 20)
+inDist = cmDist / CM_PER_INCH
+display inDist</pre>
+</div></li>
+<li>An algorithm to find the last (rightmost) digit in an integer number
+<div class="solution boxed">
+The thing to spot here is that the operator we need to use is the remainder operator (%). If we take any integer and look at the remainder after dividing by 10 the value (the remainder) will always be the rightmost digit of the original integer (the number in the “ones” column in primary school arithmetic terms).
+<pre class="listing box">Variables:
+int originalNumber
+int lastDigit<em>, will hold number of units</em>
+
+Steps:
+originalNumber = number to divide up (say 123)
+lastDigit = originalNumber % 10
+display lastDigit</pre>
+<h4 id="bonus-point-a-bit-of-discrete-mathematics">Bonus Point (a bit of discrete mathematics)</h4>
+<p>This illustrates an interesting and often useful property of the % operator.</p>
+<p>If we take any positive integer and calculate its remainder after dividing by 10 the answer will always be either 0,1,2,3,4,5,6,7,8,9; nothing else is possible. So, <em>what are the possible values if we take the remainder after diving by 6? And what are the possible values if we take the remainder afer dividing by 4?</em></p>
+</div></li>
+<li>An algorithm to swap the values of two integers
+<div class="solution boxed">
+There are various ways of doing this. The simplest is to work with 3 variables: the 2 numbers to be swapped and a third variable as temporary storage.
+<pre class="listing box">Variables:
+int number1
+int number2
+int tempNumber<em>, will hold value of number1</em>
+
+Steps:
+number1 = first value to store (say 15)
+number2 = second value to store (say 20)
+display number1 number2 (to check the original values)
+tempNumber = number1
+number1 = number2
+number2 = tempNumber
+display number1 number2 (to check the final values)</pre>
+</div></li>
+</ol>
+<h3 id="high-level-algorithmsworked-example">High level algorithms—worked example</h3>
+<p>This is an algorithm to instruct a Turtle object (an abstract plotting/drawing device, described in the <em>Using Objects</em> lecture and notes) to draw a rectangle with width 100 units and height 50 units. The Turtle will begin at its current location and will draw in its default pen colour.</p>
+<pre class="listing box">Variables:
+Turtle mrT<em>, the graphics object</em>
+
+Steps:
+create mrT
+mrT move(100)
+mrT turn(90)
+mrT move(50)
+mrT turn(90)
+mrT move(100)
+mrT turn(90)
+mrT move(50)</pre>
+<p>Try these:</p>
+<ol type="1">
+<li>Instruct a Turtle to draw a rectangle (width 35 units, height 150 units)
+<div class="solution boxed">
+This is the same as the example above. All that will need to change are the distances the Turtle is asked to move (technically we are changing the parameter to the move instruction).
+<pre class="listing box">Variables:
+Turtle mrT<em>, the graphics object</em>
+
+Steps:
+mrT move(35)
+mrT turn(90)
+mrT move(150)
+mrT turn(90)
+mrT move(35)
+mrT turn(90)
+mrT move(150)</pre>
+</div></li>
+<li>Instruct a Turtle to draw a triangle
+<div class="solution boxed">
+<pre class="listing box">Variables:
+Turtle mrT<em>, the graphics object</em>
+
+Steps:
+create mrT
+mrT move(100)
+mrT turn(120)
+mrT move(100)
+mrT turn(120)
+mrT move(100)
+mrT turn(120)</pre>
+</div></li>
+</ol>
+<h2 id="questionsfurther-activities">Questions/further activities</h2>
+<p>Many of these algorithms would be more interesting (and useful) if there were a bit interactive (i.e., if the user were able to enter the Celsius temperature they wanted converted)</p>
+<div class="showAllSolutions">
+
+</div>
+</body>
+</html>

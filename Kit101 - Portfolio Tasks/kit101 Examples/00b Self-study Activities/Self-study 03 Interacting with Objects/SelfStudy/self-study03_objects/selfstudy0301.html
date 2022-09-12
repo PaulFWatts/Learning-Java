@@ -1,0 +1,1334 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Self-study 3 Activity 1: Create and use objects of prewritten classes</title>
+  <!--<style type="text/css">code{white-space: pre;}</style>-->
+  <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+  </style>
+  <link rel="stylesheet" href="../../templates/utas_ict_mylo.css">
+  <script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
+  <script src="../../templates/solutions.js"></script>
+  <script type="text/javascript">
+    $(function() {
+      function toggleSection(heading, scrollTo) {
+        if (!heading) return;
+        heading.toggleClass('collapsed')
+               .children('span.expandable').toggle();
+        heading.nextUntil('h1').toggle(300)
+               .promise().then( function() {
+                 if (scrollTo) {
+                   $('body, html').animate({ scrollTop: scrollTo.offset().top });
+                 }
+               });
+      }
+
+      var headings = $('h1').not('.title, .subtitle');
+      headings.css('cursor', 'pointer')
+              .prepend('<span class="expandable noprint" style="display: none;">&#9655;</span><span class="expandable noprint">&bigtriangledown;</span> ')
+              .click( function() { toggleSection( $(this) ); } );
+      if (headings.length == 0) { /* workaround until pandoc template understood better */
+        $('.expandAll').remove();
+      }
+
+      function toggleTarget(target) {  
+        var h = target.is('h1.collapsed') ? target : ( target.is(':hidden') ? target.prevAll('h1').first() : null );
+        toggleSection(h, target);
+      }
+
+      $('a[href^="#"]').click( function() {
+        toggleTarget( $(this.hash) );
+      });
+      $('#openall').click( function(evt) {
+        evt.preventDefault();
+        var self = $(this);
+        var totoggle = self.children('.open:visible').length > 0 ? $('h1.collapsed') : $('h1').not('.collapsed');
+        self.children('.expandable').toggle();
+        totoggle.not('.title, .subtitle').each( function(i, el) { toggleSection($(el)); } );
+      });
+
+    });
+  </script>
+</head>
+<body>
+<header>
+<h1 class="title">Self-study 3 Activity 1: Create and use objects of prewritten classes</h1>
+</header>
+<p class="noprint expandAll">[ <a href="#" id="openall"><span class="expandable open" style="display: none;">&harr; Expand</span><span class="expandable close">&cularr; Close</span> all sections</a> ] Only visible sections will be included when printing this document.</p>
+<h2 id="expected-outcomes">Expected outcomes</h2>
+<ul>
+<li>Understand the distinction between classes and objects</li>
+<li>Know how to recognise and write code that:
+<ul>
+<li>declares a reference variable for an object</li>
+<li>instantiates an object</li>
+</ul></li>
+<li>Know how to read a method header and use the information in it to call methods “belonging” to objects of prewritten classes including
+<ul>
+<li>passing parameters correctly</li>
+<li>making appropriate use of return values.</li>
+</ul></li>
+</ul>
+<h2 id="starting-point">Starting point</h2>
+<p>If you haven’t already, download and unzip the <a href="self-study03.zip" title="Download a zip file of the files used in the exercise">Self-study 3 starter files</a>. <strong>You will be using <code>StringExample.java</code>, <code>kit101/Balloon.java</code> and <code>AbstractionExample.java</code> in this activity.</strong></p>
+<h2 id="steps">Steps</h2>
+<h3 id="read-and-understand-the-code-in-the-program-stringexample.java">Read and understand the code in the program <code>StringExample.java</code></h3>
+<p>Read the code in <code>StringExample.java</code> and answer the following:</p>
+<ol type="1">
+<li>How many <code>String</code> classes exist in the Java standard class library? <sol class="boxed">one</sol></li>
+<li>How many reference variables for <code>String</code> objects are there in <code>StringExample.java</code>?
+<div class="boxed solution">
+<p>six:</p>
+<pre><code>myString
+yourString
+yourGuess
+end1
+end2
+MAGIC_STRING</code></pre>
+</div></li>
+<li>How many statements are there that instantiate <code>String</code> objects?
+<div class="boxed solution">
+<p>This is not quite as straightforward as it sounds. The question could be looked at in different ways.</p>
+<ol type="1">
+<li><p>Where in the code can we see statements that actually instantiate an object (that is the operator <code>new</code> is actually there or understood to be there). This gives the answer 2.</p>
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java">myString = <span class="kw">new</span> String(<span class="st">&quot;programming is cool&quot;</span>);
+<span class="dt">final</span> String MAGIC_STRING = <span class="st">&quot;pro&quot;</span>;</code></pre></div>
+<p>(note no use of <code>new</code> in the second case, a shortcut possible for Strings)</p></li>
+<li><p>Where in the code we can deduce that there must have been a String instantiated in a method (so that the reference to that String could be returned by the method). There are 4 of these:</p>
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java">yourString = scan.<span class="fu">nextLine</span>();
+yourGuess = scan.<span class="fu">nextLine</span>();
+end1 = myString.<span class="fu">substring</span>(length1 - <span class="dv">3</span>, length1);
+end2 = yourString.<span class="fu">substring</span>(length2 - <span class="dv">3</span>, length2);</code></pre></div></li>
+<li>There is also the issue of the <code>String</code> literals used as prompts, and whether the objects associated with them should be considered, which would give an even higher number.</li>
+</ol>
+</div></li>
+</ol>
+<p>Which methods of the <code>String</code> class are called (excluding constructors)? For each of the method calls fill in the table below.</p>
+<table>
+<colgroup>
+<col style="width: 38%">
+<col style="width: 12%">
+<col style="width: 13%">
+<col style="width: 17%">
+<col style="width: 20%">
+</colgroup>
+<tr>
+<th>
+Statement where method call appears
+</th>
+<th>
+Method
+</th>
+<th>
+Identifier of object containing the method
+</th>
+<th>
+What parameters are passed?
+</th>
+<th>
+How is the return value used?<br>(N/A if there is no return value)
+</th>
+</tr>
+<tr>
+<td>
+<sol><code>length1 = myString.length();</code></sol>
+</td>
+<td>
+<sol><code>length</code></sol>
+</td>
+<td>
+<sol><code>myString</code></sol>
+</td>
+<td>
+<sol>none</sol>
+</td>
+<td>
+<sol>stored in <code>length1</code> (an <code>int</code>)</sol>
+</td>
+</tr>
+<tr>
+<td>
+<sol><code>length2 = yourString.length();</code></sol>
+</td>
+<td>
+<sol><code>length</code></sol>
+</td>
+<td>
+<sol><code>yourString</code></sol>
+</td>
+<td>
+<sol>none</sol>
+</td>
+<td>
+<sol>stored in <code>length2</code> (an <code>int</code>)</sol>
+</td>
+</tr>
+<tr>
+<td>
+<sol><code>letter1 = myString.charAt(0);</code></sol>
+</td>
+<td>
+<sol><code>charAt</code></sol>
+</td>
+<td>
+<sol><code>myString</code></sol>
+</td>
+<td>
+<sol>0</sol>
+</td>
+<td>
+<sol>stored in <code>letter1</code> (a <code>char</code>)</sol>
+</td>
+</tr>
+<tr>
+<td>
+<sol><code>letter2 = yourString.charAt(0);</code></sol>
+</td>
+<td>
+<sol><code>charAt</code></sol>
+</td>
+<td>
+<sol><code>yourString</code></sol>
+</td>
+<td>
+<sol>0</sol>
+</td>
+<td>
+<sol>stored in <code>letter2</code> (a <code>char</code>)</sol>
+</td>
+</tr>
+<tr>
+<td>
+<sol><code>position1 = myString.indexOf(MAGIC_LETTER);</code></sol>
+</td>
+<td>
+<sol><code>indexOf</code></sol>
+</td>
+<td>
+<sol><code>myString</code></sol>
+</td>
+<td>
+<sol><code>MAGIC_LETTER</code>
+<p>
+This is a final char variable with the value ‘p’
+</p>
+</sol>
+</td>
+<td>
+<sol>stored in <code>position</code>
+<p>
+(an int)
+</p>
+</sol>
+</td>
+</tr>
+<tr>
+<td>
+<sol><code>position2 = yourString.indexOf(MAGIC_LETTER);</code></sol>
+</td>
+<td>
+<sol>i<code>ndexOf</code></sol>
+</td>
+<td>
+<sol><code>yourString</code></sol>
+</td>
+<td>
+<sol><code>MAGIC_LETTER</code>
+<p>
+This is a final char variable with the value ‘p’
+</p>
+</sol>
+</td>
+<td>
+<sol>stored in <code>position2</code> (an <code>int</code>)</sol>
+</td>
+</tr>
+<tr>
+<td>
+<sol><code>start1 = myString.startsWith(MAGIC_STRING);</code></sol>
+</td>
+<td>
+<sol><code>startsWith</code></sol>
+</td>
+<td>
+<sol><code>myString</code></sol>
+</td>
+<td>
+<sol><code>MAGIC_STRING</code>
+<p>
+This is a final String reference variable that contains a reference to the value “pro”
+</p>
+</sol>
+</td>
+<td>
+<sol>stored in <code>start1</code> (a <code>boolean</code>)</sol>
+</td>
+</tr>
+<tr>
+<td>
+<sol><code>start2 = yourString.startsWith(MAGIC_STRING);</code></sol>
+</td>
+<td>
+<sol><code>startsWith</code></sol>
+</td>
+<td>
+<sol><code>yourString</code></sol>
+</td>
+<td>
+<sol><code>MAGIC_STRING</code>
+<p>
+This is a final String reference variable that contains a reference to the value “pro”
+</p>
+</sol>
+</td>
+<td>
+<sol>stored in <code>start2</code> (a <code>boolean</code>)</sol>
+</td>
+</tr>
+<tr>
+<td>
+<sol><code>end1 = myString.substring<br> (length1 - 3,length1);</code></sol>
+</td>
+<td>
+<sol><code>substring</code></sol>
+</td>
+<td>
+<sol><code>myString</code></sol>
+</td>
+<td>
+<sol><code>length1 - 3</code> (an int)<br><code>length1</code> (an int)</sol>
+</td>
+<td>
+<sol>stored in <code>end1</code> (a String reference variable)</sol>
+</td>
+</tr>
+<tr>
+<td>
+<sol><code>end2 = yourString.substring<br>(length2 - 3,length2);</code></sol>
+</td>
+<td>
+<sol><code>substring</code></sol>
+</td>
+<td>
+<sol><code>yourString</code></sol>
+</td>
+<td>
+<sol><code>length2 - 3</code> (an int)<br><code>length2</code> (an int)</sol>
+</td>
+<td>
+<sol>stored in <code>end2</code> (a String reference variable)</sol>
+</td>
+</tr>
+<tr>
+<td>
+<sol><code>compare = myString.compareTo(yourGuess);</code></sol>
+</td>
+<td>
+<sol><code>compareTo</code></sol>
+</td>
+<td>
+<sol><code>myString</code></sol>
+</td>
+<td>
+<sol><code>yourGuess</code> (a <code>String</code>)</sol>
+</td>
+<td>
+<sol>stored in <code>compare</code> (an <code>int</code>)</sol>
+</td>
+</tr>
+</table>
+<p>Compile and run the code. Observe what happens.</p>
+<ul>
+<li>Can you relate each statement you see on the screen to a statement in the program?</li>
+<li>Can you see what the statements in between the <code>System.out.println()</code> ones are doing?</li>
+</ul>
+<div class="boxed solution">
+<p>Output from a sample run of the code (text in <code class="kb">dark orange</code>) is text entered by the user:</p>
+<pre><code>program begins
+enter a String
+<kb>hello</kb>
+Here is info about the strings
+Lengths: mine: 19   yours: 5
+First letters: mine: p yours: h
+Position of p mine: 0   yours: -1
+Starts with pro mine: true   yours: false
+Last 3 letters: mine: ool   yours: llo
+Check these for your string: hello
+Enter your guess for my string
+<kb>provide the goods</kb>
+Comparing my string with your guess gives: -15
+0 means they are the same
+less than 0 means mine is alphabetically before yours
+more than 0 means mine is alphabetically after yours
+program over</code></pre>
+<p>Relating statements to actions gives:</p>
+<table>
+<tr>
+<th width="35%">
+Statement
+</th>
+<th width="35%">
+Action
+</th>
+<th width="30%">
+What appears on screen
+</th>
+</tr>
+<tr>
+<td>
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java"><span class="kw">import java.util.Scanner;</span>
+
+<span class="kw">public</span> <span class="kw">class</span> StringExample {
+
+   <span class="kw">public</span> <span class="dt">static</span> <span class="dt">void</span> <span class="fu">main</span>(String[] args) {</code></pre></div>
+</td>
+<td>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td>
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java">System.<span class="fu">out</span>.<span class="fu">println</span>(<span class="st">&quot;program begins&quot;</span>);</code></pre></div>
+</td>
+<td>
+</td>
+<td>
+<code>program begins</code>
+</td>
+</tr>
+<tr>
+<td>
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java">String myString = <span class="st">&quot;programming is cool&quot;</span>;
+String yourString, yourGuess;
+<span class="dt">char</span> letter1, letter2;
+<span class="dt">boolean</span> start1, start2;
+<span class="dt">int</span> position1, position2;
+<span class="dt">int</span> length1, length2;
+<span class="dt">int</span> compare;
+String end1, end2;
+Scanner scan;
+
+<span class="dt">final</span> String MAGIC_STRING = <span class="st">&quot;pro&quot;</span>;
+<span class="dt">final</span> <span class="dt">char</span> MAGIC_LETTER = &#39;p&#39;;</code></pre></div>
+</td>
+<td>
+variables declared
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td>
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java">System.<span class="fu">out</span>.<span class="fu">println</span>(<span class="st">&quot;enter a String&quot;</span>)</code></pre></div>
+</td>
+<td>
+prompt appears
+</td>
+<td>
+<code>enter a String</code>
+</td>
+</tr>
+<tr>
+<td>
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java">yourString = scan.<span class="fu">nextLine</span>()</code></pre></div>
+</td>
+<td>
+user’s entry, “hello” in this case, is stored in the memory location referred to by the variable <code>yourString</code>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td>
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java">length1 = myString.<span class="fu">length</span>();</code></pre></div>
+</td>
+<td>
+<code>length1</code> assigned value returned by <code>length()</code> method of the String <code>myString</code> value stored in length1 will be 19 (the number of characters, including spaces) in <code>&quot;programming is cool&quot;</code>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td>
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java">length2  = yourString.<span class="fu">length</span>();</code></pre></div>
+</td>
+<td>
+<code>length2</code> assigned value returned by <code>length()</code> method of the String <code>yourString</code>. In this case, the value stored in <code>length1</code> will be 5 (the number of characters, including spaces) in <code>&quot;hello&quot;</code>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td>
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java">letter1 = myString.<span class="fu">charAt</span>(<span class="dv">0</span>);</code></pre></div>
+</td>
+<td>
+<code>charAt()</code> method of the String <code>myString</code> called with the argument <br>return value stored in the char variable <code>letter1</code><br> letter1 will have the value ‘p’, the first letter in the String referred to by myString
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td>
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java">letter2 = yourString.<span class="fu">charAt</span>(<span class="dv">0</span>);</code></pre></div>
+</td>
+<td>
+<code>charAt()</code> method of the String <code>yourString</code> called with argument 0<br>return value stored in the char variable letter2<br> In this case letter2 will have the value ‘h’, the first letter in the String referred to by yourString
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td>
+<pre class="javas"><code>position1 = myString.indexOf(MAGIC_LETTER);</code></pre>
+</td>
+<td>
+<code>indexOf()</code> method of the String <code>myString</code> called with argument ‘p’ (the value stored in MAGIC_LETTER)<br>return value stored in the int variable position1<br>position1 will have the value 0 (the first position where the letter ‘p’ is found in the String “programming is cool”)
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td>
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java">position2 = yourString.<span class="fu">indexOf</span>(MAGIC_LETTER);</code></pre></div>
+</td>
+<td>
+<code>indexOf()</code> method of the String <code>yourString</code> called with argument ‘p’ (the value stored in MAGIC_LETTER)<br>return value stored in the int variable position2<br>In this case position2 will have the value -1 (because the letter ‘p’ is not found in the String “hello”)
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td>
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java">start1 = myString.<span class="fu">startsWith</span>(MAGIC_STRING);</code></pre></div>
+</td>
+<td>
+<code>startsWith()</code> method of the String <code>myString</code> called with argument “pro” (the value stored in the String referenced by MAGIC_STRING)<br>return value is stored in the boolean variable start1<br>start1 will be assigned the value true (because the String “programming is cool” <em>does</em> start with the String “pro”)
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td>
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java">start2 = yourString.<span class="fu">startsWith</span>(MAGIC_STRING);</code></pre></div>
+</td>
+<td>
+<code>startsWith()</code> method of the String <code>yourString</code> called with argument “pro” (the value stored in the String referenced by MAGIC_STRING)<br>return value is stored in the boolean variable start2<br>In this case start2 will be assigned the value false (because the String “hello” <em>does not</em> start with the String “pro” )
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td>
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java">end1 = myString.<span class="fu">substring</span>(length1 - <span class="dv">3</span>, length1);</code></pre></div>
+</td>
+<td>
+<code>substring()</code> method of the String <code>myString</code> called with argument length1 - 3 (in this case 19 - 3; this indicates the position to start the substring, which in this case is the first ‘o’ in cool)<br>length1 (in this case 19; this indicates the position to stop before, which means the last position included will be 18, corresponding to the ‘l’)<br>return value stored in the String reference variable end1 (it will be assigned the reference of the String “ool”)
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td>
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java">end2 = yourString.<span class="fu">substring</span>(length2 - <span class="dv">3</span>, length2);</code></pre></div>
+</td>
+<td>
+<code>substring()</code> method of the String <code>yourString</code> called with argument length2 - 3 (in this case 5 - 3; this indicates the position to start the substring, corresponding to the first ‘l’)<br>length2 (in this case 5; this indicates the position to stop before, which means the last position include will be 4, the ‘o’)<br>return value stored in the String reference variable end1; it will be assigned the reference of the String “llo”
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td>
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java">System.<span class="fu">out</span>.<span class="fu">println</span>(<span class="st">&quot;Here is info about the strings&quot;</span>);</code></pre></div>
+</td>
+<td>
+String parameter of System.out.println is displayed on the screen
+</td>
+<td>
+<code>Here is info about the strings</code>
+</td>
+</tr>
+<tr>
+<td>
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java">System.<span class="fu">out</span>.<span class="fu">println</span>(<span class="st">&quot;lengths - mine:&quot;</span> + length1 + <span class="st">&quot;yours:&quot;</span> + length2);</code></pre></div>
+</td>
+<td>
+String parameter of System.out.println is displayed on the screen
+</td>
+<td>
+<code>lengths - mine: 5 yours: 19</code>
+</td>
+</tr>
+<tr>
+<td>
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java">System.<span class="fu">out</span>.<span class="fu">println</span>(<span class="st">&quot;first letters - mine:&quot;</span> + letter1 + <span class="st">&quot;yours:&quot;</span> + letter2);</code></pre></div>
+</td>
+<td>
+String parameter of System.out.println is displayed on the screen
+</td>
+<td>
+<code>first letters - mine: p yours: h</code>
+</td>
+</tr>
+<tr>
+<td>
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java">System.<span class="fu">out</span>.<span class="fu">println</span>(<span class="st">&quot;position of &quot;</span> + MAGIC_LETTER + <span class="st">&quot; mine: &quot;</span> + position1 + <span class="st">&quot; yours: &quot;</span> + position2);</code></pre></div>
+</td>
+<td>
+String parameter of System.out.println is displayed on the screen
+</td>
+<td>
+<code>position of p mine: 0 yours: -1</code>
+</td>
+</tr>
+<tr>
+<td>
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java">System.<span class="fu">out</span>.<span class="fu">println</span>(<span class="st">&quot;starts with &quot;</span> + MAGIC_STRING + <span class="st">&quot; mine: &quot;</span> + start1 + <span class="st">&quot; yours: &quot;</span> + start2);</code></pre></div>
+</td>
+<td>
+String parameter of System.out.println is displayed on the screen
+</td>
+<td>
+<code>starts with pro mine: true yours: false</code>
+</td>
+</tr>
+<tr>
+<td>
+<code>java System.out.println(&quot;last 3 letters - mine: &quot; + end1 + &quot; yours: &quot; + end2);</code>
+</td>
+<td>
+String parameter of System.out.println is displayed on the screen
+</td>
+<td>
+<code>last 3 letters - mine: ool yours: llo</code>
+</td>
+</tr>
+<tr>
+<td>
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java">System.<span class="fu">out</span>.<span class="fu">println</span>(<span class="st">&quot;Check these for your string: &quot;</span> + yourString);</code></pre></div>
+</td>
+<td>
+String parameter of System.out.println is displayed on the screen
+</td>
+<td>
+<code>Check these for your string: hello</code>
+</td>
+</tr>
+<tr>
+<td>
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java">System.<span class="fu">out</span>.<span class="fu">println</span>(<span class="st">&quot;Enter your guess for my string&quot;</span>)</code></pre></div>
+</td>
+<td>
+prompt appears
+</td>
+<td>
+<code>Enter your guess for my string</code>
+</td>
+</tr>
+<tr>
+<td>
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java">yourGuess = scan.<span class="fu">nextLine</span>()</code></pre></div>
+</td>
+<td>
+user’s guess, in this case “provide the goods”, is stored in the memory location referred to by the variable <code>yourGuess</code>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td>
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java">System.<span class="fu">out</span>.<span class="fu">println</span>(<span class="st">&quot;Comparing my string with your guess : &quot;</span> + compare);</code></pre></div>
+</td>
+<td>
+String parameter of System.out.println is displayed on the screen
+</td>
+<td>
+<code>Comparing my string with your guess gives: -15</code>
+</td>
+</tr>
+<tr>
+<td>
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java">System.<span class="fu">out</span>.<span class="fu">println</span>(<span class="st">&quot;0 means they are the same&quot;</span>);</code></pre></div>
+</td>
+<td>
+String parameter of System.out.println is displayed on the screen
+</td>
+<td>
+<code>0 means they are the same</code>
+</td>
+</tr>
+<tr>
+<td>
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java">System.<span class="fu">out</span>.<span class="fu">println</span>(<span class="st">&quot;less than 0 - mine is alphabetically before yours&quot;</span>);</code></pre></div>
+</td>
+<td>
+String parameter of System.out.println is displayed on the screen
+</td>
+<td>
+<code>less than 0 - mine is alphabetically before yours</code>
+</td>
+</tr>
+<tr>
+<td>
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java">System.<span class="fu">out</span>.<span class="fu">println</span>(<span class="st">&quot;more than 0 - mine is alphabetically after yours&quot;</span>);</code></pre></div>
+</td>
+<td>
+String parameter of System.out.println is displayed on the screen
+</td>
+<td>
+<code>more than 0 - mine is alphabetically after yours</code>
+</td>
+</tr>
+<tr>
+<td>
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java">System.<span class="fu">out</span>.<span class="fu">println</span>(<span class="st">&quot;program over&quot;</span>);</code></pre></div>
+</td>
+<td>
+String parameter of System.out.println is displayed on the screen
+</td>
+<td>
+<code>program over</code>
+</td>
+</tr>
+<tr>
+<td>
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java">   }
+}</code></pre></div>
+</td>
+<td>
+</td>
+<td>
+</td>
+</tr>
+</table>
+<p><br></p>
+</div>
+<h3>
+Create and use objects of the Balloon class
+</h3>
+<p>
+Read the documentation for the <code><a href="../../Resources/kit101_lib_api/kit101/Balloon.html">Balloon class</a></code> (in the <code>kit101</code> package)
+</p>
+<p>Open the file <code>AbstractionExample.java</code>, included in this self-study’s starter files.</p>
+<p>Make sure that you understand what each statement in this program will do.</p>
+<ul>
+<li>Can you tell from the code what will you see on the screen if you compile and run this program?</li>
+<li>Compile and run the program and see what happens.</li>
+</ul>
+<div class="solution">
+<table>
+<tr>
+<th>
+Statement
+</th>
+<th>
+Effect
+</th>
+<th>
+Output during sample run
+</th>
+</tr>
+<tr>
+<td>
+<code>System.out.println<br>( “Testing balloons” );</code>
+</td>
+<td>
+prints String to screen
+</td>
+<td>
+<code>Testing balloons</code>
+</td>
+</tr>
+<tr>
+<td>
+<code>Balloon b1, b2;</code>
+</td>
+<td>
+declares reference variables for Balloons b1 and b2
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td>
+<code>b1 = new Balloon();</code>
+</td>
+<td>
+creates Balloon object b1
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td>
+<code>b2 =new Balloon();</code>
+</td>
+<td>
+creates Balloon object b2
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td>
+<code>b1.setUp();</code>
+</td>
+<td>
+calls setUp method of b1; this leads to prompts for the user to enter values that are used to set the internal state of the object
+</td>
+<td>
+<code>Enter height for Balloon number 1<br>30</code> <em>entered by user</em><br><code>Enter duration for Balloon number 1<br>10</code> <em>entered by user</em>
+</td>
+</tr>
+<tr>
+<td>
+<code>b2.setUp();</code>
+</td>
+<td>
+calls setUp method of b2 - this leads to prompts for the user to enter values that are used to set the internal state of the object
+</td>
+<td>
+<code>enter height for Balloon number 2<br>20</code> <em>entered by user</em><code><br>enter duration for Balloon number 2<br>8</code> <em>entered by user</em>
+</td>
+</tr>
+<tr>
+<td>
+<code>b1.ascend();</code>
+</td>
+<td>
+calls ascend method of b1<br>leads to messages on the screen simulating ascent to the height set (during the execution of the setUp method)
+</td>
+<td>
+<pre><code>**** Balloon number 
+1 (Height = 0) Ascending to 30 metres ****
+
+Balloon number 1 0 metres Burn! ...
+Balloon number 1 10 metres Burn! ...
+Balloon number 1 20 metres Burn! ...</code></pre>
+</td>
+</tr>
+<tr>
+<td>
+<code>b1.cruise();</code>
+</td>
+<td>
+calls the cruise method of b1<br>this leads to messages on the screen simulating the effect of cruising for the duration set (during the execution of the setUp method)
+</td>
+<td>
+<pre><code>**** Cruising at 30 metres with margin +/ 5 for 10 time steps ****
+
+Balloon number 1 30 metres (time step 0)
+Balloon number 1 30 metres (time step 1)
+Balloon number 1 30 metres (time step 2) wind shear bump up 3 metres
+Balloon number 1 33 metres (time step 3) wind shear bump up 1 metres
+Balloon number 1 34 metres (time step 4) wind shear drop 5 metres
+Balloon number 1 29 metres (time step 5) wind shear bump up 3 metres
+Balloon number 1 32 metres (time step 6) wind shear bump up 2 metres
+Balloon number 1 34 metres (time step 7) wind shear drop 2 metres
+Balloon number 1 32 metres (time step 8)
+Balloon number 1 32 metres (time step 9) wind shear bump up 2 metres</code></pre>
+</td>
+</tr>
+<tr>
+<td>
+<code>b1.descend();</code>
+</td>
+<td>
+calls the descend method of b1<br>this leads to messages on the screen simulating descent from the cruising altitude to the ground
+</td>
+<td>
+<pre><code>**** (Balloon number 1 Height = 34) Descending to 0 metres ****
+
+Balloon number 1 34 metres Wooosh! ...
+Balloon number 1 24 metres Wooosh! ...
+Balloon number 1 14 metres Wooosh! ...
+Balloon number 1 4 metres Wooosh! ...</code></pre>
+</td>
+</tr>
+<tr>
+<td>
+<code>b2.ascend();</code>
+</td>
+<td>
+calls ascend method of b2<br>leads to messages on the screen simulating ascent to the height set (during the execution of the setUp method)
+</td>
+<td>
+<pre><code>**** Balloon number 2 (Height = 0) Ascending to 20 metres ****
+
+Balloon number 2 0 metres Burn! ...
+Balloon number 2 10 metres Burn! ...</code></pre>
+</td>
+</tr>
+<tr>
+<td>
+<code>b2.cruise();</code>
+</td>
+<td>
+calls the cruise method of b2<br>this leads to messages on the screen simulating the effect of cruising for the duration set (during the execution of the setUp method)
+</td>
+<td>
+<pre><code>**** Cruising at 20 metres with margin +/ 5 for 8 time steps ****
+
+Balloon number 2 20 metres (time step 0)
+Balloon number 2 20 metres (time step 1)
+Balloon number 2 20 metres (time step 2) wind shear bump up 3 metres
+Balloon number 2 23 metres (time step 3) wind shear bump up 1 metres
+Balloon number 2 24 metres (time step 4) wind shear drop 5 metres
+Balloon number 2 19 metres (time step 5) wind shear bump up 3 metres
+Balloon number 2 22 metres (time step 6) wind shear bump up 2 metres
+Balloon number 2 24 metres (time step 7) wind shear drop 2 metres</code></pre>
+</td>
+</tr>
+<tr>
+<td>
+<code>b2.descend();</code>
+</td>
+<td>
+calls the descend method of b1<br>this leads to messages on the screen simulating descent from the cruising altitude to the ground
+</td>
+<td>
+<pre><code>**** (Balloon number 2 Height = 22) Descending to 0 metres ****
+
+Balloon number 2 22 metres Wooosh! ...
+Balloon number 2 12 metres Wooosh! ...
+Balloon number 2 2 metres Wooosh! ...</code></pre>
+</td>
+</tr>
+<tr>
+<td>
+<code>System.out.println();</code>
+</td>
+<td>
+adds blank line to the output
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td>
+<code>System.out.println(&quot;program over&quot;);</code>
+</td>
+<td>
+prints debugging message
+</td>
+<td>
+<code>program over</code>
+</td>
+</tr>
+</table>
+</div>
+<p>Write a new program called <code>BalloonExperiment.java</code>. Write in it code to do each of the following (compile and run between each addition).</p>
+<table>
+<colgroup>
+<col style="width: 35%;">
+<col style="width: 30%;">
+<col style="width: 35%;">
+</colgroup>
+<thead>
+<tr>
+<th>
+Action
+</th>
+<th>
+High Level Algorithm
+</th>
+<th>
+Code to Achieve This
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+declare reference variables for 2 <code>Balloon</code> objects <code>b1, b2</code>
+</td>
+<td>
+<em>Balloon ref storage for b1, b2</em>
+</td>
+<td>
+<div class="solution">
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java">Baloon b1, b2;</code></pre></div>
+</div>
+</td>
+</tr>
+<tr>
+<td>
+instantiate the objects
+</td>
+<td>
+<em>create b1<br>create b2</em>
+</td>
+<td>
+<div class="solution">
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java">b1 = <span class="kw">new</span> <span class="fu">Balloon</span>();
+b2 = <span class="kw">new</span> <span class="fu">Balloon</span>();</code></pre></div>
+</div>
+</td>
+</tr>
+<tr>
+<td>
+call the setUp method for b1
+</td>
+<td>
+<em>b1 setUp</em>
+</td>
+<td>
+<div class="solution">
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java">b1.<span class="fu">setUp</span>();</code></pre></div>
+</div>
+</td>
+</tr>
+<tr>
+<td>
+call the <code>setAltitude</code> method for <code>b2</code> with a parameter of <code>20</code><br> and the <code>setDuration</code> methods for <code>b2</code> with a parameter of <code>5</code>
+</td>
+<td>
+<em>b2 setAltitude with 20<br>b2 setDuration with 5</em>
+</td>
+<td>
+<div class="solution">
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java">b2.<span class="fu">setAltitude</span>(<span class="dv">20</span>);
+b2.<span class="fu">setDuration</span>(<span class="dv">5</span>);</code></pre></div>
+</div>
+</td>
+</tr>
+<tr>
+<td>
+call the <code>beginFlight</code> method for <code>b1</code><br>call the <code>beginFlight</code> method for <code>b2</code>
+</td>
+<td>
+<em>b1 begin flight<br>b2 begin flight</em>
+</td>
+<td>
+<div class="solution">
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java">b1.<span class="fu">beginFlight</span>();
+b2.<span class="fu">beginFlight</span>();</code></pre></div>
+</div>
+</td>
+</tr>
+<tr>
+<td>
+call the <code>waitForLanding</code> method for <code>b1</code><br> call the <code>waitForLanding</code> method for <code>b2</code>
+</td>
+<td>
+<em>b1 wait for landing<br>b2 wait for landing</em>
+</td>
+<td>
+<div class="solution">
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java">b1.<span class="fu">waitForLanding</span>();
+b2.<span class="fu">waitForLanding</span>();</code></pre></div>
+</div>
+</td>
+</tr>
+<tr>
+<td>
+print a message to say that both balloons have landed
+</td>
+<td>
+<em>println “Both balloons have landed”</em>
+</td>
+<td>
+<div class="solution">
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java">System.<span class="fu">out</span>.<span class="fu">println</span>(<span class="st">&quot;Balloons have landed&quot;</span>);</code></pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Run the program several times (but each time enter altitude 15 and duration 5 for <code>b1</code>. Note that <code>b2</code> will always have and altitude 20, duration 5. Does the output always look exactly the same?</p>
+<div class="boxed solution">
+<p>No. The messages from the two balloons, while they are cruising, seem to be sort of jumbled, as if the two balloons are operating independently. (See the output from two sample runs below.)</p>
+<p>In fact, they <em>are</em> operating independently. The Balloon class has been implemented so that Balloon objects can make use of a programming feature known as “multi-threading” where each object can have its code execute (sort of) independently from other objects.</p>
+<div class="note box">
+<strong>Note:</strong> Threads are outside the scope of this unit; you will not be expected to write code to implement this, but notice that you can use objects of the Balloon class without needing to understand how they do this.
+</div>
+<table>
+<tr>
+<th>
+Sample run 1
+</th>
+<th>
+Sample run 2
+</th>
+</tr>
+<tr>
+<td>
+<pre><code>program begins
+enter height for Balloon number 1
+15
+enter duration for Balloon number 1
+5
+**** Balloon number 2 (Height = 0) Ascending to 20 metres ****
+
+Balloon number 2 0 metres Burn! ...**** Balloon number 1 (Height = 0) 
+Ascending to 15 metres ****
+
+Balloon number 1 0 metres Burn! ...
+Balloon number 2 10 metres Burn! ...
+Balloon number 1 10 metres Burn! ...
+Balloon number 1**** Cruising at 15 metres with margin +/ 5 for 5 time 
+steps ****
+
+Balloon number 1 15 metres (time step 0) wind shear drop 2 metres
+Balloon number 2**** Cruising at 20 metres with margin +/ 5 for 5 time 
+steps ****
+
+Balloon number 2 20 metres (time step 0) wind shear drop 2 metres
+Balloon number 1 13 metres (time step 1)
+Balloon number 2 18 metres (time step 1) wind shear bump up 4 metres
+Balloon number 1 13 metres (time step 2)
+Balloon number 2 22 metres (time step 2) wind shear bump up 2 metres
+Balloon number 2 24 metres (time step 3) wind shear drop 5 metres
+Balloon number 1 13 metres (time step 3) wind shear drop 5 metres too 
+low! Burn! ...
+Balloon number 2 19 metres (time step 4) wind shear drop 4 metres
+Balloon number 1 15 metres (time step 4) wind shear drop 1 metres
+
+**** (Balloon number 2 Height = 15) Descending to 0 metres ****
+
+Balloon number 2 15 metres Wooosh! ...
+Balloon number 2 5 metres Wooosh! ...
+
+**** (Balloon number 1 Height = 14) Descending to 0 metres ****
+
+Balloon number 1 14 metres Wooosh! ...
+Balloon number 1 4 metres Wooosh! ...
+program over</code></pre>
+</td>
+<td>
+<pre><code>program begins
+enter height for Balloon number 1
+15
+enter duration for Balloon number 1
+5
+**** Balloon number 2 (Height = 0) Ascending to 20 metres ****
+
+Balloon number 2 0 metres Burn! ...**** Balloon number 1 (Height = 0) 
+Ascending to 15 metres ****
+
+Balloon number 1 0 metres Burn! ...
+Balloon number 2 10 metres Burn! ...
+Balloon number 1 10 metres Burn! ...
+Balloon number 2**** Cruising at 20 metres with margin +/ 5 for 5 time 
+steps ****
+
+Balloon number 2 20 metres (time step 0) wind shear drop 3 metres
+Balloon number 1**** Cruising at 15 metres with margin +/ 5 for 5 time 
+steps ****
+
+Balloon number 1 15 metres (time step 0) wind shear drop 2 metres
+Balloon number 2 17 metres (time step 1)
+Balloon number 1 13 metres (time step 1) wind shear bump up 2 metres
+Balloon number 2 17 metres (time step 2) wind shear drop 1 metres
+Balloon number 1 15 metres (time step 2) wind shear drop 3 metres
+Balloon number 2 16 metres (time step 3) wind shear bump up 1 metres
+Balloon number 1 12 metres (time step 3) wind shear bump up 1 metres
+Balloon number 2 17 metres (time step 4) wind shear bump up 4 metres
+Balloon number 1 13 metres (time step 4) wind shear bump up 1 metres
+
+**** (Balloon number 2 Height = 21) Descending to 0 metres ****
+
+Balloon number 2 21 metres Wooosh! ...
+Balloon number 2 11 metres Wooosh! ...
+Balloon number 2 1 metres Wooosh! ...
+
+**** (Balloon number 1 Height = 14) Descending to 0 metres ****
+
+Balloon number 1 14 metres Wooosh! ...
+Balloon number 1 4 metres Wooosh! ...
+program over</code></pre>
+</td>
+</tr>
+</table>
+</div>
+<p>If you have time try calling some of the other methods in the class, before calling <code>start()</code> and <code>finish()</code>. Check the documentation for the parameters required, and see how these affect the way the program works. It might be clearer to do this for just one <code>Balloon</code>. Possible methods to try are:</p>
+<ul>
+<li><code>setIdentifier</code></li>
+<li><code>setSafetyMargin</code></li>
+<li><code>setDebugging</code></li>
+</ul>
+<div class="boxed solution">
+<p>Completed versions for each variation of BalloonExperiment are also available in the <code>activity01/solutions</code> folder.</p>
+<table>
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 34%">
+</colgroup>
+<thead>
+<tr>
+<th>
+Method to try out
+</th>
+<th>
+Code to do this
+</th>
+<th>
+Sample output for this code
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<p><code>setIdentifier()</code></p>
+<a href="../../Resources/kit101_lib_api/kit101/Balloon.html#setIdentifier(java.lang.String)">the documentation</a> shows that this expects a String parameter. An intelligent guess would suggest that this will be the new identifier of the Balloon
+</td>
+<td>
+File demonstrating this is <code>BalloonExIdentifier.java</code>. The crucial code added is: <code>b1.setIdentifier(&quot;Julie's balloon&quot;);</code>
+</td>
+<td>
+<pre><code>**** Julie&#39;s balloon (Height = 0) Ascending to 20 metres ****
+
+Julie&#39;s balloon 0 metres Burn! ...
+Julie&#39;s balloon 10 metres Burn! ...
+Julie&#39;s balloon**** Cruising at 20 metres with margin +/ 5 for 5 time steps 
+****
+
+Julie&#39;s balloon 20 metres (time step 0) wind shear bump up 4 metres
+Julie&#39;s balloon 24 metres (time step 1) wind shear bump up 2 metres too 
+high! Wooosh! ...
+Julie&#39;s balloon 16 metres (time step 2) wind shear bump up 4 metres
+Julie&#39;s balloon 20 metres (time step 3) wind shear bump up 2 metres
+Julie&#39;s balloon 22 metres (time step 4) wind shear bump up 1 metres
+
+**** (Julie&#39;s balloon Height = 23) Descending to 0 metres ****
+
+Julie&#39;s balloon 23 metres Wooosh! ...
+Julie&#39;s balloon 13 metres Wooosh! ...
+Julie&#39;s balloon 3 metres Wooosh! ...program over</code></pre>
+</td>
+</tr>
+<tr>
+<td>
+<p><code>setSafetyMargin()</code></p>
+<a href="../../Resources/kit101_lib_api/kit101/Balloon.html#setSafetyMargin(int)">the documentation</a>shows that this expects an int parameter. An intelligent guess would suggest that this will be the new safety margin (i.e., amount by which altitude is permitted to vary before an adjustment is made)
+</td>
+<td>
+File demonstrating this is <code>BalloonExSafety.java</code>. The crucial code added is: <code>b1.setSafetyMargin(2);</code>
+</td>
+<td>
+<pre><code>program begins
+**** Balloon number 1 (Height = 0) Ascending to 20 metres ****
+
+Balloon number 1 0 metres Burn! ...
+Balloon number 1 10 metres Burn! ...
+Balloon number 1**** Cruising at 20 metres with margin +/ 2 for 5 time steps 
+****
+
+Balloon number 1 20 metres (time step 0) wind shear bump up 1 metres
+Balloon number 1 21 metres (time step 1) wind shear bump up 1 metres
+Balloon number 1 22 metres (time step 2) wind shear bump up 5 metres too 
+high! Wooosh! ...
+Balloon number 1 17 metres (time step 3) too low! Burn! ...
+Balloon number 1 20 metres (time step 4) wind shear bump up 4 metres too 
+high! Wooosh! ...
+
+**** (Balloon number 1 Height = 14) Descending to 0 metres ****
+
+Balloon number 1 14 metres Wooosh! ...
+Balloon number 1 4 metres Wooosh! ...program over</code></pre>
+</td>
+</tr>
+<tr>
+<td>
+<p><code>setDebugging()</code></p>
+<a href="../../Resources/kit101_lib_api/kit101/Balloon.html#method_summary&quot;">the documentation</a>) shows that this expects a boolean parameter. An intelligent guess would suggest that this will have something to do with whether or not debugging messages are shown
+</td>
+<td>
+File demonstrating this is <code>BalloonExDebug.java</code>. The crucial code added is: <code>b1.setDebugging(true);</code>
+</td>
+<td>
+<pre><code>program begins
+Balloon number 1 :Balloon Balloon number 1 will finish.
+**** Balloon number 1 (Height = 0) Ascending to 20 metres ****
+
+Balloon number 1 0 metres Burn! ...
+Balloon number 1 10 metres Burn! ...
+Balloon number 1**** Cruising at 20 metres with margin +/ 5 for 5 time steps 
+****
+
+Balloon number 1 20 metres (time step 0) Balloon number 1 :Balloon will 
+sleep
+
+Balloon number 1 20 metres (time step 1) wind shear drop 4 metresBalloon 
+number 1 :Balloon will sleep
+
+Balloon number 1 16 metres (time step 2) wind shear bump up 4 metresBalloon 
+number 1 :Balloon will sleep
+
+Balloon number 1 20 metres (time step 3) wind shear drop 4 metresBalloon 
+number 1 :Balloon will sleep
+
+Balloon number 1 16 metres (time step 4) wind shear drop 4 metres too low! 
+Burn! ...Balloon number 1 :Balloon will sleep
+
+
+**** (Balloon number 1 Height = 20) Descending to 0 metres ****
+
+Balloon number 1 20 metres Wooosh! ...
+Balloon number 1 10 metres Wooosh! ...Balloon number 1 :Balloon run over
+Balloon number 1 :Balloon join done
+Balloon number 1 :Balloon Balloon number 1 has finished.
+program over</code></pre>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h2 id="questions-further-activities">Questions/ Further Activities</h2>
+<p>Good code should be “robust”, this means that it does not easily “break” or fail when the user makes a silly mistake. Try to see how robust the Balloon class is (the answer is not very robust at all, but try to see this for yourself.</p>
+<ul>
+<li>Try giving nonsensical values for height and duration (e.g., ask it to cruise at an altitude of -50, or for a duration of -20).</li>
+<li>Try doing things in a nonsensical order, such as calling the cruise method before an altitude or duration is set.</li>
+</ul>
+<div class="note box">
+<strong>Note:</strong> It is the responsibility of the programmer who writes a class to make it robust; this does not happen automatically.
+</div>
+<div class="showAllSolutions">
+
+</div>
+</body>
+</html>

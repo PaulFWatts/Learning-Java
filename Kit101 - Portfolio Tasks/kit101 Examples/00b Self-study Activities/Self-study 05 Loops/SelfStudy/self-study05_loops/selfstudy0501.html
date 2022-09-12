@@ -1,0 +1,253 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Self-study 5 Activity 1: Identify components of loops in existing program code</title>
+  <!--<style type="text/css">code{white-space: pre;}</style>-->
+  <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+  </style>
+  <link rel="stylesheet" href="../../templates/utas_ict_mylo.css">
+  <script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
+  <script src="../../templates/solutions.js"></script>
+  <script type="text/javascript">
+    $(function() {
+      function toggleSection(heading, scrollTo) {
+        if (!heading) return;
+        heading.toggleClass('collapsed')
+               .children('span.expandable').toggle();
+        heading.nextUntil('h1').toggle(300)
+               .promise().then( function() {
+                 if (scrollTo) {
+                   $('body, html').animate({ scrollTop: scrollTo.offset().top });
+                 }
+               });
+      }
+
+      var headings = $('h1').not('.title, .subtitle');
+      headings.css('cursor', 'pointer')
+              .prepend('<span class="expandable noprint" style="display: none;">&#9655;</span><span class="expandable noprint">&bigtriangledown;</span> ')
+              .click( function() { toggleSection( $(this) ); } );
+      if (headings.length == 0) { /* workaround until pandoc template understood better */
+        $('.expandAll').remove();
+      }
+
+      function toggleTarget(target) {  
+        var h = target.is('h1.collapsed') ? target : ( target.is(':hidden') ? target.prevAll('h1').first() : null );
+        toggleSection(h, target);
+      }
+
+      $('a[href^="#"]').click( function() {
+        toggleTarget( $(this.hash) );
+      });
+      $('#openall').click( function(evt) {
+        evt.preventDefault();
+        var self = $(this);
+        var totoggle = self.children('.open:visible').length > 0 ? $('h1.collapsed') : $('h1').not('.collapsed');
+        self.children('.expandable').toggle();
+        totoggle.not('.title, .subtitle').each( function(i, el) { toggleSection($(el)); } );
+      });
+
+    });
+  </script>
+</head>
+<body>
+<header>
+<h1 class="title">Self-study 5 Activity 1: Identify components of loops in existing program code</h1>
+</header>
+<p class="noprint expandAll">[ <a href="#" id="openall"><span class="expandable open" style="display: none;">&harr; Expand</span><span class="expandable close">&cularr; Close</span> all sections</a> ] Only visible sections will be included when printing this document.</p>
+<h2 id="expected-outcomes">Expected outcomes</h2>
+<p>Read code and identify the statements that do the following:</p>
+<ul>
+<li>Initialisation</li>
+<li>Body</li>
+<li>Test</li>
+<li>Update</li>
+</ul>
+<p>Correctly predict the outcome of code with pre-tested and post-tested loops.</p>
+<h2 id="starting-point">Starting point</h2>
+<p>If you haven’t already, download and unzip the <a href="self-study05.zip" title="Download a zip file of the files used in the exercise">Self-study 5 starter files</a>. <strong>You will be using <code>AddIntegers.java</code>, <code>NumberGuessBasic.java</code> and <code>TurtleSquare.java</code> in this activity. (Some of these may have been covered as lecture demonstrations.)</strong></p>
+<h2 id="steps">Steps</h2>
+<h3 id="addintegers.java">1. AddIntegers.java</h3>
+<p>Open the file <code>AddIntegers.java</code>. Compile and run the program.</p>
+<ul>
+<li>What does the program do?
+<div class="boxed solution">
+<p>Prompts the user to enter numbers, when the entry is finished (indicated by user entering -1) displays the sum (total) of all the numbers entered.</p>
+<p>Output from sample run:</p>
+<pre><code>Enter an integer (or -1 to finish and display total)
+6
+Enter an integer (or -1 to finish and display total)
+7
+Enter an integer (or -1 to finish and display total)
+2
+Enter an integer (or -1 to finish and display total)
+-1
+Total is: 15</code></pre></li>
+<li>What makes the program stop (from the viewpoint of the user)? <sol class="boxed">Entry of the number -1. Technically this is sometimes referred to as the ‘sentinel’ value, the one which signals that the entry is over.</sol></li>
+<li>Which java loop construct is used in the program? <sol class="boxed">A while loop</sol></li>
+<li>Look at the code of the program. Identify the statements that implement each of:
+<ul>
+<li>I: Initialisation
+<div class="boxed solution">
+<p>The stuff done before the loop starts</p>
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java"><span class="dt">int</span> total = <span class="dv">0</span>;
+System.<span class="fu">out</span>.<span class="fu">println</span>(PROMPT)
+currentEntry = sc.<span class="fu">nextInt</span>();</code></pre></div>
+<div class="note box">
+<strong>Note:</strong> This could also be seen as including the declarations
+</div>
+</div></li>
+<li>T: Test
+<div class="boxed solution">
+<p>The boolean expression that controls the loop: <code class="sourceCode java">nextNum != SENTINEL</code></p>
+<p>Control will enter the body of the loop if (and only if) this expression evaluates to true. When the body of the loop has been executed, this test will be done again.</p>
+<p>Note that because the test is done at the beginning of the loop, nextNum must have a value stored in it BEFORE the test is done (that is why reading a value has to be part of the initialisation)</p>
+</div></li>
+<li>B: Body
+<div class="boxed solution">
+<p>The stuff done over and over:</p>
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java">total = total + currentEntry;
+System.<span class="fu">out</span>.<span class="fu">println</span>(PROMPT);
+currentEntry = sc.<span class="fu">nextInt</span>();</code></pre></div>
+<p>Note the sequence of instructions: the addition can be done as the first thing in the loop because a value was read into <code>nextNum</code> <em>before</em> the loop began (see initialisation above)</p>
+</div></li>
+<li>U: Update
+<div class="boxed solution">
+<p>The thing that has the potential to change the value of the boolean expression controlling the loop. In this case it is part of the body of the loop: the last statement in the loop sets things up for the next go through the loop (the posh term for this is the next iteration).</p>
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java">currentEntry = sc.<span class="fu">nextInt</span>();</code></pre></div>
+<p>NOTE that this code has to be repeated: before the loop so that the test will make sense (this is sometimes referred to as the priming read) and inside the loop to prepare for the next</p>
+</div></li>
+</ul></li>
+<li><p>Is the test done before the loop body or after the loop body? <sol class="boxed">Before. This means that the loop may not execute at all. In this case, if the user entered -1 as the first number, the loop would not execute at all.</sol></p></li>
+</ul>
+<h3 id="numberguessbasic.java">2. NumberGuessBasic.java</h3>
+<p>Open the file <code>NumberGuessBasic.java</code> Compile and run the program.</p>
+<ul>
+<li>What does the program do?
+<div class="boxed solution">
+<p>Prompts the user to enter a number (it needs to be the ‘correct’ number). The program continues until this is entered.</p>
+<p>Output from a sample run:</p>
+<pre><code>Enter the correct number (between 1 and 10): 10
+Enter the correct number (between 1 and 10): 6
+Enter the correct number (between 1 and 10): 1
+Enter the correct number (between 1 and 10): 5  
+Well done</code></pre>
+</div></li>
+<li>What makes the program stop (from the viewpoint of the user)? <sol class="boxed">Entering the ‘correct’ number. This happened to be 5 in the sample run above.</sol></li>
+<li>Which java loop construct is used in the program? <sol class="boxed">A do-while loop</sol></li>
+<li>Look at the code of the program. Identify the statements that implement each of:
+<ul>
+<li>I: Initialisation
+<div class="boxed solution">
+<p>The stuff done before the loop starts:</p>
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java">hidden = rand.<span class="fu">nextInt</span>(MAX) + <span class="dv">1</span>;</code></pre></div>
+<div class="note box">
+<strong>Note:</strong> This could also be seen as including the declarations
+</div>
+</div></li>
+<li>T: Test
+<div class="boxed solution">
+<p>The boolean expression that controls the loop:</p>
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java">guess != hidden</code></pre></div>
+<p>Control will <em>always</em> enter the body of the loop when the loop construct in encountered.</p>
+<p>When the body of the loop has been executed, this test will be done. Control will return to the beginning of the body of the loop if (and only if) the condition evaluates to true.</p>
+<p>Note that because the test is done at the end of the loop, guess does not need to have a value before the loop begins</p>
+</div></li>
+<li>B: Body
+<div class="boxed solution">
+<p>The stuff done over and over:</p>
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java">System.<span class="fu">out</span>.<span class="fu">print</span>(<span class="st">&quot;Enter the correct number (between 1 and &quot;</span>; + MAX + <span class="st">&quot;): &quot;</span>);
+guess = sc.<span class="fu">nextInt</span>();</code></pre></div>
+</div></li>
+<li>U: Update
+<div class="boxed solution">
+<p>The thing that has the potential to change the value of the boolean expression controlling the loop. In this case it is part of the body of the loop. The last statement in the loop sets things up for the test at the end of the loop.</p>
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java">guess = sc.<span class="fu">nextInt</span>();</code></pre></div>
+<div class="note box">
+<strong>Note:</strong> Look at the position of the “congratulations” message and note that it is <em>outside</em> the loop. This is perfectly OK, the code will only reach this point when the loop is completed, which means that the user <em>must</em> by then have guessed the correct number (otherwise they would still be in the loop).
+</div>
+</div></li>
+</ul></li>
+<li>Is the test done before the loop body or after the loop body? <sol class="boxed">after</sol></li>
+</ul>
+<h3 id="turtlesquare.java">3. TurtleSquare.java</h3>
+<p>Open the file <code>TurtleSquare.java</code>. Compile and run the program.</p>
+<ul>
+<li>What does the program do? <sol class="boxed">Draws a square using a Turtle</sol></li>
+<li>What makes the program stop (from the viewpoint of the user)?
+<div class="boxed solution">
+<p>A bit hard to answer this. Two possible ways of looking at it:</p>
+<ul>
+<li>The drawing of the square finishes when the last side is drawn</li>
+<li>The program finishes when the user closes the window the Turtle is in</li>
+</ul>
+</div></li>
+<li>Which java loop construct is used in the program? <sol class="boxed">A for loop</sol></li>
+<li>Look at the code of the program. Identify the statements that implement each of:
+<ul>
+<li>I: Initialisation <sol class="boxed"><code class="sourceCode java"><span class="dt">int</span> sides = <span class="dv">0</span></code></sol></li>
+<li>T: Test <sol class="boxed"><code class="sourceCode java">sides &lt; <span class="dv">4</span></code></sol></li>
+<li>B: Body
+<div class="boxed solution">
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java">mrStrong.<span class="fu">move</span>(<span class="dv">100</span>);
+mrStrong.<span class="fu">turn</span>(<span class="dv">90</span>);</code></pre></div>
+</div></li>
+<li>U: Update
+<div class="boxed solution">
+<p><code class="sourceCode java">sides++;</code></p>
+<p>Note this code has the same effect as <code class="sourceCode java">sides = sides + <span class="dv">1</span>;</code></p>
+</div></li>
+</ul>
+<div class="boxed solution">
+<p>Note that the initialisation, test, update are all in the “heading” part of the <code class="sourceCode java"><span class="kw">for</span></code> statement:</p>
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java"><span class="kw">for</span> (<span class="dt">int</span> sides = <span class="dv">0</span>; sides &lt; <span class="dv">4</span>; sides++)</code></pre></div>
+<p>Because the initialisation includes the declaration of the variable <code>sides</code> that will be the “counter” for the loop it means that <code>sides</code> will only be “visible” (in scope) in the body of the for loop and nowhere else in the program.</p>
+</div></li>
+<li>Is the test done before the loop body or after the loop body? <sol class="boxed">before</sol></li>
+</ul>
+<div class="showAllSolutions">
+
+</div>
+<hr />
+</body>
+</html>

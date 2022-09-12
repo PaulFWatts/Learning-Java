@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="7.4DN Custom Program:jar">
+    <output-path>$PROJECT_DIR$/../../java-jars</output-path>
+    <root id="archive" name="7.4DN Custom Program.jar">
+      <element id="module-output" name="7.4DN Custom Program" />
+    </root>
+  </artifact>
+</component>

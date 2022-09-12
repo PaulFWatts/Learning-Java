@@ -1,0 +1,301 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <meta name="author" content="James Montgomery">
+  <meta name="dcterms.date" content="2017-04-23">
+  <title>Simple Snakes and Ladders Game: A Development Walkthrough</title>
+  <!--<style type="text/css">code{white-space: pre;}</style>-->
+  <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+  </style>
+  <link rel="stylesheet" href="../../templates/utas_ict_mylo.css">
+  <!--<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>-->
+  <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+  <!--<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script> Breaks toggling of sections, making style & script visible! -->
+  <script type="text/javascript">
+    let onMyLO = () => window.location.host === 'mylo.utas.edu.au';
+    var MYLO_SCROLL_DELAY = 350; //appears to work OK when hosted on MyLO
+    $(function() {
+      function toggleSection(heading, scrollTo) {
+        if (!heading) return;
+        heading.toggleClass('collapsed')
+               .children('span.expandable').toggle();
+        heading.nextUntil('h1').toggle(300)
+               .promise().done( function() {
+                 if (scrollTo) {
+                   let scrollIt = () => { scrollTo[0].scrollIntoView(true); };
+                   onMyLO() ? setTimeout(scrollIt, MYLO_SCROLL_DELAY) : scrollIt();
+                 }
+               });
+      }
+
+      var headings = $('h1').not('.title, .subtitle');
+      headings.css('cursor', 'pointer')
+              .prepend('<span class="expandable noprint" style="display: none;">&#9655;</span><span class="expandable noprint">&bigtriangledown;</span> ')
+              .click( function() { toggleSection( $(this) ); } );
+      if (headings.length == 0) { /* workaround until pandoc template understood better */
+        $('.expandAll').remove();
+      }
+
+      function toggleTarget(target, evt) { //evt is optional event that triggered this (indirectly)
+        var h = target.is('h1.collapsed') ? target : ( target.is(':hidden') ? target.prevAll('h1').first() : null );
+        if (h) {
+          if (evt) { evt.preventDefault(); } //Added so browser doesn't attempt to scroll to not-yet-visible element
+          toggleSection(h, target);
+        }
+      }
+
+      $('a[href^="#"]').click( function(evt) {
+        toggleTarget( $(this.hash), evt ); }
+      );
+      $('#openall').click( function(evt) {
+        evt.preventDefault();
+        var self = $(this);
+        var totoggle = self.children('.open:visible').length > 0 ? $('h1.collapsed') : $('h1').not('.collapsed');
+        self.children('.expandable').toggle();
+        totoggle.not('.title, .subtitle').each( function(i, el) { toggleSection($(el)); } );
+      });
+
+      headings.toggleClass('collapsed').nextUntil('h1').hide();
+      $('.expandable').toggle();
+      if (location.hash.length) {
+        toggleTarget($(location.hash));
+      }
+    });
+  </script>
+</head>
+<body>
+<header>
+<h1 class="title">Simple Snakes and Ladders Game: A Development Walkthrough</h1>
+<h2 class="author">James Montgomery</h2>
+<h3 class="date">23 April 2017</h3>
+</header>
+<nav id="TOC">
+<ul>
+<li><a href="#overview">Overview</a></li>
+<li><a href="#part-1-developing-the-die-class">Part 1: Developing the Die class</a></li>
+<li><a href="#part-2-an-improved-die-class">Part 2: An improved Die class</a><ul>
+<li><a href="#replace-all-literal-numbers-with-named-constants">Replace all literal numbers with named constants</a></li>
+<li><a href="#using-this-in-a-constructor">Using <code>this</code> in a constructor</a></li>
+</ul></li>
+<li><a href="#top-level-alg">Part 3: The top-level algorithm for Snakes and Ladders</a><ul>
+<li><a href="#the-approach-we-took">The approach we took</a><ul>
+<li><a href="#identify-subtasks-methods">Identify subtasks (methods)</a></li>
+<li><a href="#identify-data-instance-variables">Identify data (instance variables)</a></li>
+<li><a href="#identify-data-local-variables">Identify data (local variables)</a></li>
+<li><a href="#identify-data-parameters-and-results">Identify data (Parameters and Results)</a></li>
+</ul></li>
+<li><a href="#inspecting-the-partially-completed-game">Inspecting the partially completed game</a></li>
+<li><a href="#completing-the-game">Completing the game</a></li>
+</ul></li>
+<li><a href="#part-4-compare-your-completed-game-with-ours">Part 4: Compare your completed game with ours</a></li>
+</ul>
+</nav>
+<p class="noprint expandAll">[ <a href="#" id="openall"><span class="expandable open" style="display: none;">&harr; Expand</span><span class="expandable close">&cularr; Close</span> all sections</a> ] Only visible sections will be included when printing this document.</p>
+<h1 id="overview">Overview</h1>
+<p>This document is a kind of development walkthrough that takes you through developing a new class to represent a <code>Die</code> (which you’ve likely done previously) and then using this to complete a basic <a href="https://en.wikipedia.org/wiki/Snakes_and_Ladders">Snakes &amp; Ladders game</a>.</p>
+<p><a href="SaL_game.zip">Download the sample code</a> for this exercise. The code, or at least one <em>possible</em> solution, to parts 1, 2 and 4, is in a folder with the same name. If you get stuck, look at the example solution. The code for Part 3 represents the <em>starting point</em> for that section.</p>
+<h1 id="part-1-developing-the-die-class">Part 1: Developing the Die class</h1>
+<p>This was covered in Lecture 7 and the notes in some detail. We want to model game dice with differing numbers of sides and which take responsibility for randomly selecting their next ‘upward facing’ side. In this part you’ll write a <code>Die</code> class and a <code>DieTester</code> class (which will contain a <code>main()</code> method that instantiates one or more <code>Die</code> objects and calls their methods to check that they behave as expected).</p>
+<p>The <code>Die</code> class should have the following characteristics:</p>
+<p><strong>Attributes:</strong></p>
+<ul>
+<li>how many sides/faces it has<br />
+</li>
+<li>current side facing ‘up’ (its current value)</li>
+<li>a <code>java.util.Random</code> object to obtain random numbers (which will need to be <code class="sourceCode java"><span class="kw">import</span></code>ed)</li>
+</ul>
+<p><strong>Behaviours:</strong></p>
+<ul>
+<li>report (get) how many sides it has</li>
+<li>report its current face value</li>
+<li>roll a new value; this can also return the new value</li>
+</ul>
+<p><strong>Constructors:</strong></p>
+<ul>
+<li>one that sets the number of sides and initial face value to sensible defaults</li>
+<li>an alternative that accepts (as a parameter) the number of sides</li>
+</ul>
+<p>When writing the alternative constructor that accepts the number of sides, make sure that it enforces a sensible lower limit on the number of sides. For instance, the call <code class="sourceCode java"><span class="kw">new</span> <span class="fu">Die</span>(<span class="dv">2</span>)</code> should probably create a new <code>Die</code> with four or more sides (you can choose which in the code you write).</p>
+<p>When you’re done check out the example code for Part 1. It’s probably not the <em>only</em> way to solve the problem of modelling a <code>Die</code> but illustrates some elements of good coding style.</p>
+<h1 id="part-2-an-improved-die-class">Part 2: An improved Die class</h1>
+<p>Depending on how you implemented the <code>Die</code> class earlier you may have noticed there are a lot of literal values (unnamed constants) spread through the code. Also, there’s a lot of similarity between the two constructors: both set the initial face value to the same value, and both instantiate a <code>Random</code> object. The main difference is that one of them accepts the number of die sides as a parameter.</p>
+<!--
+## Protecting the Die's data
+
+In the example code for Part 1, the number of faces for each `Die` was declared as `int numFaces`{.java}, and the current face value with `int faceValue`{.java}. With no access modifier these variables can be read from and written to from outside an object of class `Die`. Since the `Die` is taking responsibility for managing its own data this should not be allowed. Mark each of the three instance variables with the access modifier `private`{.java}, as in:
+
+```java
+private int numFaces;
+```
+-->
+<h2 id="replace-all-literal-numbers-with-named-constants">Replace all literal numbers with named constants</h2>
+<p>Anywhere you see a literal <code class="sourceCode java"><span class="dt">int</span></code> value in your code (like 4 or 6), replace it with a named constant. This will make these values easier to change, if we ever need to, and make it less likely that the wrong value will be written somewhere. Above the instance data declarations (for <code class="sourceCode java">numFaces</code>, etc.) declare and initialise some new variables preceded by the keyword <code class="sourceCode java"><span class="dt">final</span></code> for each constant value you need, as in:</p>
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java"><span class="dt">final</span> <span class="dt">int</span> DEFAULT_FACES = <span class="dv">6</span>;</code></pre></div>
+<p>In fact, constants like this, which will be the same for <em>every</em> <code>Die</code> object, can be turned into class constants (rather than a separate copy for each instance), as in:</p>
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java"><span class="dt">static</span> <span class="dt">final</span> <span class="dt">int</span> DEFAULT_FACES = <span class="dv">6</span>;</code></pre></div>
+<p>And, finally, if the constant could be useful information in other parts of the program then it can be marked as <code class="sourceCode java"><span class="kw">public</span></code>, whereas if it represents information that should be known only to the <code>Die</code> class, then it can be marked <code class="sourceCode java"><span class="kw">private</span></code>. This would give the (rather long) constant declaration of:</p>
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java"><span class="kw">public</span> <span class="dt">static</span> <span class="dt">final</span> <span class="dt">int</span> DEFAULT_FACES = <span class="dv">6</span>;</code></pre></div>
+<p>which means we are declaring a publicly accessible, constant integer value called <code>DEFAULT_FACES</code>, with the value of 6, and which belongs to the whole class of <code>Die</code> objects.</p>
+<h2 id="using-this-in-a-constructor">Using <code>this</code> in a constructor</h2>
+<p>Now to reduce the amount of code duplication between the parameterless constructor and the constructor that accepts the number of faces as a parameter. The keyword <code class="sourceCode java"><span class="kw">this</span></code> can be used inside the code for a class to refer to the current object (i.e., <code class="sourceCode java"><span class="kw">this</span></code> object). It can also be used as the first line of one constructor to call another, which is useful if the two constructors differ only slightly. In the case of the <code>Die</code>, the difference is the number of die faces.</p>
+<p>Refer to the sample code for Part 2 to see <code class="sourceCode java"><span class="kw">this</span></code> being used.</p>
+<h1 id="top-level-alg">Part 3: The top-level algorithm for Snakes and Ladders</h1>
+<p>The classes that make up this program (which are mostly already implemented) are:</p>
+<ul>
+<li><code>Die</code>: represents a game die (as described above)</li>
+<li><code>Board</code>: A snakes and ladders game board, which knows how many squares there are, where the snakes and ladders start and end and what messages appear at the beginning of each.</li>
+<li><code>SALGame</code>: A partially interactive snakes and ladders game that (after you’ve finished it) knows where two players are located on the board and can run multiple games in sequence (until the user doesn’t want to play any more).</li>
+<li><code>SnakesAndLadders</code>: Contains a <code>main()</code> method whose sole responsibility it to instantiate a <code>SALGame</code> object (which will then run the game).</li>
+</ul>
+<p>Before opening the .java files in the Part 3 folder, consider the following top level algorithm that will be implemented in <code>SALGame</code>:</p>
+<ul>
+<li>create one <code>Die</code> object and one <code>Board</code> object</li>
+<li>declare <code class="sourceCode java"><span class="dt">int</span></code> variables for player positions and the current player</li>
+<li>see if user wants to play</li>
+<li>while user wants to play
+<ul>
+<li>play one game
+<ul>
+<li>set both positions to 0</li>
+<li>set current player</li>
+<li>while the game is not over
+<ul>
+<li>current player makes a move</li>
+<li>if game is not over (now)
+<ul>
+<li>swap players</li>
+</ul></li>
+</ul></li>
+<li>announce winner</li>
+</ul></li>
+<li>see if user wants to play again</li>
+</ul></li>
+</ul>
+<p>On paper, write down how you would break up that algorithm into different sub-tasks (each of which would eventually become a method). Draw a structure chart that shows how these sub-tasks would be related. Next you’ll see how we decided to break up the game. Your approach may be different, it may even be <em>better</em>.</p>
+<h2 id="the-approach-we-took">The approach we took</h2>
+<p>Open <code>SALGame.java</code> to see how our approach resulted in a partial implementation of the game.</p>
+<h3 id="identify-subtasks-methods">Identify subtasks (methods)</h3>
+<ul>
+<li>Constructor: creates <code>Die</code> and <code>Board</code> objects (the game is ‘ready’ to be played by another part of the code—the main program—calling <code>startPlaying()</code>)</li>
+<li><code>startPlaying()</code>: The outer loop (does the user want to play?); calls <code>playAGame()</code> to play a single game</li>
+<li><code>playAGame()</code>: inner loop (while game is not over)
+<ul>
+<li>calls <code>makeAMove()</code>, which makes one move for the current player and reports if the game is over now</li>
+<li>(if the game is not yet over) calls <code>swapPlayer()</code>, which swaps the current player</li>
+</ul></li>
+<li>For ‘housekeeping’ purposes:
+<ul>
+<li><code>trace()</code>, which displays a given debugging message on screen</li>
+<li><code>setTracing()</code>, which controls whether debugging messages are displayed or not</li>
+</ul></li>
+</ul>
+<p>Then write “stub” versions of the methods. Looking at the code you can see that the algorithm for each method is described by calls to <code>trace()</code>, so if we run the <code>SnakesAndLadders</code> program we’ll see a description of what <em>should</em> happen when it’s completed.</p>
+<h3 id="identify-data-instance-variables">Identify data (instance variables)</h3>
+<p>What data need to be shared <em>between</em> methods?</p>
+<ul>
+<li>reference variables for the <code>Die</code> object and <code>Board</code> object</li>
+<li>“counters”/“tokens”: the position on the board of each player</li>
+<li>the current player</li>
+<li>the tracing switch (the boolean value that indicates if tracing messages will be printed or not)</li>
+</ul>
+<h3 id="identify-data-local-variables">Identify data (local variables)</h3>
+<p>What data is needed only <em>within</em> the methods?</p>
+<ul>
+<li><code>startPlaying()</code>
+<ul>
+<li>needs a variable to hold the user’s response (do they want to play again?)</li>
+</ul></li>
+<li><code>playGame()</code>
+<ul>
+<li>needs a variable (<code class="sourceCode java"><span class="dt">boolean</span></code>) to indicate whether or not the game is over</li>
+</ul></li>
+<li><code>makeAMove()</code>, needs variables to hold
+<ul>
+<li>the value that <code>Die</code> rolled (so it can print it to the screen)</li>
+<li>the value of the last square on the <code>Board</code> (so it can tell whether the current player has reached the last square and won the game)</li>
+<li>the <code class="sourceCode java"><span class="dt">boolean</span></code> value it will return to indicate if the game has been won</li>
+</ul></li>
+</ul>
+<h3 id="identify-data-parameters-and-results">Identify data (Parameters and Results)</h3>
+<p>What values are needed and/or produced?</p>
+<ul>
+<li><code>makeAMove()</code>
+<ul>
+<li>Needs to ‘know’ which player will move
+<ul>
+<li>Pass this as a parameter<br />
+</li>
+<li>This is a cleaner solution than writing two methods (one to move player 1 and a very similar one to move player 2)</li>
+</ul></li>
+<li>Needs to ‘tell’ <code>playGame()</code> whether the latest move has reached the last square (which will mean the game is over).
+<ul>
+<li>Use a boolean return value to do this</li>
+</ul></li>
+</ul></li>
+</ul>
+<h2 id="inspecting-the-partially-completed-game">Inspecting the partially completed game</h2>
+<p>If you haven’t already, open all the .java files in the Part 3 folder in DrJava. You’ll see that <code>Die</code> and <code>SnakesAndLadders</code> are not very interesting, the first because you’ve already seen it and the second because all it does is create an object of class <code>SALGame</code>.</p>
+<p>The <code>Board</code> represents a snakes and ladders game board, which knows how many squares there are, where the snakes and ladders start and end and what messages appear at the beginning of each. It has these public methods:</p>
+<ul>
+<li><code class="sourceCode java"><span class="dt">int</span> <span class="fu">moveOn</span>(<span class="dt">int</span> start, <span class="dt">int</span> dist)</code>: returns the new square after moving <code>dist</code> places from square <code>start</code></li>
+<li><code class="sourceCode java"><span class="dt">int</span> <span class="fu">getLastSquare</span>()</code>: returns the number of the last square on the board (with a few changes the game board could be made customisable to have a different size)</li>
+<li><code class="sourceCode java"><span class="dt">void</span> <span class="fu">setTracing</span>(<span class="dt">boolean</span> on)</code> and <code class="sourceCode java"><span class="dt">void</span> <span class="fu">checkBoards</span>()</code> are development-time debugging methods; there’s also a <code class="sourceCode java"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">trace</span>(<span class="bu">String</span> message)</code> method that prints the given message if tracing (debugging) messages are enabled.</li>
+</ul>
+<p>You do not need to understand all the code in <code>Board</code> yet.</p>
+<h2 id="completing-the-game">Completing the game</h2>
+<p>Using the <a href="#the-approach-we-took">details above</a> and the text in the tracing messages, implement the top-level algorithm. After each change, re-run the program (remember to select <code>SnakesAndLadders.java</code> in DrJava before clicking Run, since <code>SnakesAndLadders</code> contains the <code class="sourceCode java"><span class="fu">main</span>()</code> method).</p>
+<p>If you get stuck at any point, take a quick look at the completed <code>SALGame.java</code> file in the Part 4 folder.</p>
+<h1 id="part-4-compare-your-completed-game-with-ours">Part 4: Compare your completed game with ours</h1>
+<p>The Part 4 folder contains the completed game. It’s not the most fun game to play, since a human user only has control over whether a game is played (to completion) or not. Perhaps you’d like to give the user more control, or simply slow down the play a bit. If you’d like to add a delay between each move, add the following method to <code>SALGame.java</code> and call it after each move has been completed, with the delay in milliseconds you want.</p>
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">pauseFor</span>(<span class="dt">long</span> ms) {
+    <span class="kw">try</span> {
+        <span class="bu">Thread</span>.<span class="fu">sleep</span>(ms);
+    } <span class="kw">catch</span> (<span class="bu">InterruptedException</span> e) {
+        <span class="bu">System</span>.<span class="fu">err</span>.<span class="fu">println</span>(<span class="st">&quot;Game interrupted while pausing&quot;</span>);
+    }
+}</code></pre></div>
+<p>And if you have any questions about any part of the exercise then ask your tutor or the lecturer.</p>
+<hr />
+</body>
+</html>

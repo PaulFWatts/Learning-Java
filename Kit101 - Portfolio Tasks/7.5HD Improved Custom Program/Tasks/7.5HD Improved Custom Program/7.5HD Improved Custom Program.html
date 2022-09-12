@@ -1,0 +1,190 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>HD Task 7.5 Improved Custom Program</title>
+  <!--<style type="text/css">code{white-space: pre;}</style>-->
+  <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link rel="stylesheet" href="../../templates/utas_ict_mylo.css">
+  <link rel="stylesheet" href="../../templates/task.css">
+  <!--<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script> Breaks toggling of sections, making style & script visible! -->
+  <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+  <script src="../../templates/solutions.js"></script>
+  <script type="text/javascript">
+    let onMyLO = () => window.location.host === 'mylo.utas.edu.au';
+    $(function() { if (onMyLO()) { $('.title, header').addClass('printonly'); } }); //avoid duplicating title, etc. in document and above iframe
+    var MYLO_SCROLL_DELAY = 350; //appears to work OK when hosted on MyLO
+    $(function() {
+      function toggleSection(heading, scrollTo) {
+        if (!heading) return;
+        heading.toggleClass('collapsed')
+               .children('span.expandable').toggle();
+        heading.nextUntil('h1').toggle(300)
+               .promise().done( function() {
+                 if (scrollTo) {
+                   let scrollIt = () => { scrollTo[0].scrollIntoView(true); };
+                   onMyLO() ? setTimeout(scrollIt, MYLO_SCROLL_DELAY) : scrollIt();
+                 }
+               });
+      }
+
+      var headings = $('h1').not('.title, .subtitle');
+      headings.css('cursor', 'pointer')
+              .prepend('<span class="expandable noprint" style="display: none;">&#9655;</span><span class="expandable noprint">&bigtriangledown;</span> ')
+              .click( function() { toggleSection( $(this) ); } );
+      if (headings.length == 0) { /* workaround until pandoc template understood better */
+        $('.expandAll').remove();
+      }
+
+      function toggleTarget(target, evt) { //evt is optional event that triggered this (indirectly)
+        var h = target.is('h1.collapsed') ? target : ( target.is(':hidden') ? target.prevAll('h1').first() : null );
+        if (h) {
+          if (evt) { evt.preventDefault(); } //Added so browser doesn't attempt to scroll to not-yet-visible element
+          toggleSection(h, target);
+        }
+      }
+
+      $('a[href^="#"]').click( function(evt) {
+        toggleTarget( $(this.hash), evt ); }
+      );
+      $('#openall').click( function(evt) {
+        evt.preventDefault();
+        var self = $(this);
+        var totoggle = self.children('.open:visible').length > 0 ? $('h1.collapsed') : $('h1').not('.collapsed');
+        self.children('.expandable').toggle();
+        totoggle.not('.title, .subtitle').each( function(i, el) { toggleSection($(el)); } );
+      });
+
+    });
+  </script>
+  <script type="text/javascript">
+  $(function() {
+    /* Formats learning outcomes, if present (revised 2019-1 as ILOs 6-8 were removed) */
+    //let iloIcons = ['', 'eye-open', 'random', 'pencil', 'th', 'duplicate', 'user', 'comment', 'question-sign'];
+    let iloIcons = ['', 'eye-open', 'random', 'pencil', 'th', 'duplicate'];
+    let ilos = ['',
+      'read code or identify errors',
+      'think algorithmically and use structured programming',
+      'write small programs',
+      'use functional decomposition to break down problems and solutions into smaller parts',
+      'document programs, both externally and within the code'];
+
+    function addILOIcons($ilos) {
+      let verb = $ilos.hasClass('assesses') ? 'assesses' : 'develops';
+      var formattedILOs = [];
+
+      for (let ilo of $ilos.html().split(', ')) {
+        let i = parseInt(ilo);
+	formattedILOs.push( `<span class="ilo" title="This task ${verb} your ability to ${ilos[i]}">${ilo} <span class="glyphicon glyphicon-${iloIcons[i]}"></span></span>` );
+      }
+      $ilos.html(formattedILOs.join('&emsp;'));
+    }
+
+    $('.ilos').each(function (i, e) { addILOIcons($(e)); });
+
+    /* Injects the cumbersome glyphicon for videos in front of my own tag <minilecture> */
+    $('<span class="glyphicon glyphicon-facetime-video" style="margin-right: 0.25em;"></span>').insertBefore('minilecture');
+  });
+  </script>
+</head>
+<body>
+<h1 class="unit title">KIT101 Programming Fundamentals</h1>
+<header>
+<h1 class="title">HD Task 7.5 Improved Custom Program</h1>
+</header>
+<!--
+<p class="noprint expandAll">[ <a href="#" id="openall"><span class="expandable open" style="display: none;">&harr; Expand</span><span class="expandable close">&cularr; Close</span> all sections</a> ] Only visible sections will be included when printing this document.</p>
+-->
+<h1 id="overview">Overview</h1>
+<!-- To be eligible for a High Distinction grade you must demonstrate that you can use the skills you have learnt to create high quality software solutions that demonstrate the highest programming and design standards. -->
+<table>
+<colgroup>
+<col width="22%" />
+<col width="77%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><p>Purpose:</p></td>
+<td><p>Demonstrate that you can create high quality software and use broader features of the Java Standard Library.</p></td>
+</tr>
+<tr class="even">
+<td><p>Task:</p></td>
+<td><p>Tidy and extend your custom program, demonstrating that you can create high quality software and use broader features from the Java Standard Library than those covered by the pass-level tasks.</p></td>
+</tr>
+<tr class="odd">
+<td><p>Learning Outcomes:</p></td>
+<td><p><span class="ilos">2, 3, 4, 5</span></p></td>
+</tr>
+<tr class="even">
+<td><p>Time:</p></td>
+<td><p>This must be completed before you submit your portfolio, but it is advisable to submit progress for feedback at earlier stages.</p></td>
+</tr>
+<tr class="odd">
+<td><p>Resources:</p></td>
+<td><ul>
+<li>Introductory Programming Notes</li>
+<li>Stack overflow</li>
+<li>Search engines</li>
+</ul></td>
+</tr>
+</tbody>
+</table>
+<div class="note box">
+<strong>Note:</strong> If you are not currently up to date you should skip this task and return to it once you are up to date with the DN Tasks. Do not allow HD Tasks to delay you in keeping up with the unit’s work.
+</div>
+<h2 id="submission-details">Submission Details</h2>
+<p>Upload the following to the MyLO submission folder for this task:</p>
+<ul>
+<li>Program <strong>source code</strong></li>
+<li>A <strong>screenshot</strong> of the program in action</li>
+<li>Design Report (revised)</li>
+</ul>
+<h2 id="assessment-criteria">Assessment Criteria</h2>
+<p>A <span class="status completed">Completed</span> submission will:</p>
+<ul>
+<li>Be a program of reasonable complexity (aim for more complex than the <em>Object-oriented Collection Manager</em>)</li>
+<li>Use functional decomposition effectively</li>
+<li>Use abstraction effectively</li>
+<li>Use good programming practices</li>
+</ul>
+<h1 id="instructions">Instructions</h1>
+<p>Demonstrate that you can design programs and implement them to a very high standard. It is recommended that you do this by ensuring that your Custom Program for Distinction (Task 7.4DN) meets both the Distinction and High Distinction standards. However, you can design and implement a second program to meet these standards if desired.</p>
+<div class="tip box">
+<strong>Tip:</strong> Show your program to tutors and lecturers and ask “How can I make this better?”. This task is more about quality than it is about quantity.
+</div>
+<p>Your program must demonstrate the following:</p>
+<ul>
+<li>Ability to design and implement a program of reasonable complexity:
+<ul>
+<li>Program does more than have the user respond to random actions (e.g., a number guessing game), or simply manipulate data (e.g., the array of objects program)</li>
+<li>The program must demonstrate the need to think about its structure and implementation</li>
+</ul></li>
+<li>Effective use of functional decomposition:
+<ul>
+<li>The program consists of small methods with little code duplication</li>
+<li>Data is used intelligently to minimise the amount of code required</li>
+</ul></li>
+<li>Effective use of abstraction:
+<ul>
+<li>Methods represent meaningful tasks</li>
+<li>Classes are used to model entities associated with the program</li>
+</ul></li>
+<li>Use of good programming practices:
+<ul>
+<li>Code is correctly indented, with meaningful names assigned to all identifiers</li>
+<li>Code is commented to help the reader understand the abstractions and how they work</li>
+</ul></li>
+</ul>
+<div class="tip box">
+<strong>Tip:</strong> Consider adding things like levels to a game (different maps or different difficulties). Adding things like use of files to store program data can also help you increase the complexity of a program. But do not keep adding complexity at the expense of good program design. An excellently designed and implemented program is more likely to meet the assessment criteria than an overly complex mess.
+</div>
+<div class="tip box">
+<strong>Tip:</strong> Keep a journal of the programming ideas you have and notes on your design decisions. These can help you explain how your program meets these criteria in your portfolio.
+</div>
+<hr />
+</body>
+</html>
