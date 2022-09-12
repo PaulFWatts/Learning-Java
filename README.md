@@ -2,6 +2,8 @@
 
 [My Java resources in Notion](https://www.notion.so/Java-8523741de9924754b9f3c751a17e6330)
 
+[Awesome Java](https://github.com/akullpp/awesome-java#readme)
+
 **Using IntelliJ IDEA under Windows and Linux**
 
 
